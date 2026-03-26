@@ -19,7 +19,7 @@
 
 ### 🚗 About This Project
 
-A **mobile-friendly web calculator** designed specifically for **GAC Aion electric vehicle owners** in Indonesia. Calculate your charging needs instantly based on remaining range or battery percentage.
+A **mobile-friendly web calculator** designed specifically for **GAC Aion electric vehicle owners** in Indonesia. Calculate your charging needs with **real-world efficiency losses** factored in, based on research from EPA, ADAC, and industry studies.
 
 **Live Demo**: [https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
 
@@ -29,12 +29,25 @@ A **mobile-friendly web calculator** designed specifically for **GAC Aion electr
 |---------|-------------|
 | 🚙 **7 Car Models** | Supports all GAC Aion variants (V, Y Plus, UT, Hyptec series) |
 | 🔢 **Dual Input** | Calculate by remaining range (km) OR battery percentage (%) |
+| ⚡ **Real-World Efficiency** | Accounts for charging losses (AC: ~10%, DC: ~7%) |
+| 💡 **Dual Energy Display** | Shows both grid energy (paid) and battery energy (stored) |
 | ⚡ **7 Charger Types** | From Home AC (7.4kW) to Ultra Fast DC (480kW) |
 | 💰 **Indonesian Rates** | PLN R1/R2/R3 and Public charger rates in Rupiah |
 | 📍 **Maps Integration** | One-click to find nearest SPKLU charging stations |
 | 🔋 **Battery Tips** | Health guidelines for new EV owners |
 | 🌐 **Bilingual** | Toggle between English and Bahasa Indonesia |
 | 📱 **Mobile First** | Optimized for smartphones, works offline |
+
+### 🔋 Charging Efficiency (Research-Based)
+
+This calculator applies **real-world efficiency factors** based on research from EPA, ADAC, and industry studies (2023-2024):
+
+| Charger Type | Efficiency | Energy Loss | Research Sources |
+|-------------|-----------|-------------|------------------|
+| **AC Charging** (Home/Public) | ~90% | ~10% | EPA testing, ADAC studies |
+| **DC Fast Charging** | ~93% | ~7% | Industry data, peer-reviewed studies |
+
+**Note**: Extreme temperatures (hot/cold), battery age, and equipment quality can affect actual efficiency.
 
 ### 🛠️ Supported Models
 
@@ -55,7 +68,10 @@ A **mobile-friendly web calculator** designed specifically for **GAC Aion electr
 3. **Enter current status**: Remaining range or battery percentage
 4. **Select charger type**: Home, Public AC, or DC Fast Charging
 5. **Select electricity rate**: PLN R1/R2/R3 or Public charger rate
-6. **View results**: kWh needed, charging time, and estimated cost
+6. **View results**: 
+   - **Energy Required from Grid** - What you actually pay for (includes charging losses)
+   - **Battery Energy to Add** - What actually gets stored in your battery
+   - Charging time and estimated cost
 7. **Find stations**: Tap "Find Nearest Charging Station" for Google Maps
 
 ### ⚡ Charger Types Available
@@ -87,6 +103,19 @@ A **mobile-friendly web calculator** designed specifically for **GAC Aion electr
 - Store at 50-60% for long-term parking
 - Precondition while plugged in extreme temperatures
 
+### ⚠️ Important Disclaimer
+
+This calculator provides **estimates** based on manufacturer specifications and **typical** charging efficiency data from EPA, ADAC, and industry research. **Actual results may vary** due to:
+
+- Battery temperature and ambient conditions (hot/cold weather increases losses)
+- Battery age and health degradation over time
+- Charging cable quality and length
+- Actual charger efficiency varying by brand/model
+- Charging above 80% is less efficient due to cell balancing
+- AC charging: ~10% loss | DC charging: ~7% loss (typical values)
+
+**Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data.**
+
 ### 🤝 Community
 
 Made with ❤️ for **[Aioners.id](https://aioners.id)** - Indonesia's GAC Aion Community
@@ -100,7 +129,7 @@ Share this tool with fellow Aion owners!
 
 ### 🚗 Tentang Proyek Ini
 
-**Kalkulator web ramah ponsel** yang dirancang khusus untuk **pemilik kendaraan listrik GAC Aion** di Indonesia. Hitung kebutuhan cas Anda secara instan berdasarkan sisa jarak atau persentase baterai.
+**Kalkulator web ramah ponsel** yang dirancang khusus untuk **pemilik kendaraan listrik GAC Aion** di Indonesia. Hitung kebutuhan cas Anda dengan **rugi efisiensi dunia nyata** yang dihitung, berdasarkan riset EPA, ADAC, dan studi industri.
 
 **Demo Langsung**: [https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
 
@@ -110,12 +139,25 @@ Share this tool with fellow Aion owners!
 |-------|-----------|
 | 🚙 **7 Model Mobil** | Mendukung semua varian GAC Aion (seri V, Y Plus, UT, Hyptec) |
 | 🔢 **Input Ganda** | Hitung berdasarkan sisa jarak (km) ATAU persentase baterai (%) |
+| ⚡ **Efisiensi Dunia Nyata** | Memperhitungkan rugi cas (AC: ~10%, DC: ~7%) |
+| 💡 **Tampilan Energi Ganda** | Menunjukkan energi grid (dibayar) dan energi baterai (tersimpan) |
 | ⚡ **7 Tipe Charger** | Dari Cas Rumah AC (7,4kW) sampai DC Ultra Cepat (480kW) |
 | 💰 **Tarif Indonesia** | Tarif PLN R1/R2/R3 dan charger publik dalam Rupiah |
 | 📍 **Integrasi Maps** | Satu klik mencari stasiun SPKLU terdekat |
 | 🔋 **Tips Baterai** | Panduan kesehatan baterai untuk pemilik EV baru |
 | 🌐 **Dua Bahasa** | Beralih antara Inggris dan Bahasa Indonesia |
 | 📱 **Mobile First** | Dioptimalkan untuk ponsel, berfungsi offline |
+
+### 🔋 Efisiensi Cas (Berdasarkan Riset)
+
+Kalkulator ini menerapkan **faktor efisiensi dunia nyata** berdasarkan riset EPA, ADAC, dan studi industri (2023-2024):
+
+| Tipe Charger | Efisiensi | Rugi Energi | Sumber Riset |
+|-------------|-----------|-------------|--------------|
+| **Cas AC** (Rumah/Publik) | ~90% | ~10% | Uji EPA, studi ADAC |
+| **Cas Cepat DC** | ~93% | ~7% | Data industri, studi peer-reviewed |
+
+**Catatan**: Suhu ekstrem (panas/dingin), usia baterai, dan kualitas peralatan dapat mempengaruhi efisiensi aktual.
 
 ### 🛠️ Model yang Didukung
 
@@ -136,7 +178,10 @@ Share this tool with fellow Aion owners!
 3. **Masukkan status saat ini**: Sisa jarak atau persentase baterai
 4. **Pilih tipe charger**: Rumah, Publik AC, atau DC Cas Cepat
 5. **Pilih tarif listrik**: PLN R1/R2/R3 atau tarif charger publik
-6. **Lihat hasil**: kWh dibutuhkan, waktu cas, dan estimasi biaya
+6. **Lihat hasil**:
+   - **Energi Dibutuhkan dari Grid** - Yang Anda bayar (termasuk rugi cas)
+   - **Energi Baterai Ditambah** - Yang benar-benar tersimpan di baterai
+   - Waktu cas dan estimasi biaya
 7. **Cari stasiun**: Ketuk "Cari Stasiun Cas Terdekat" untuk Google Maps
 
 ### ⚡ Tipe Charger Tersedia
@@ -168,6 +213,19 @@ Share this tool with fellow Aion owners!
 - Simpan di 50-60% untuk parkir jangka panjang
 - Kondisikan saat tercolok di suhu ekstrem
 
+### ⚠️ Penyangkalan Penting
+
+Kalkulator ini memberikan **estimasi** berdasarkan spesifikasi pabrik dan data efisiensi cas **tipikal** dari riset EPA, ADAC, dan industri. **Hasil aktual dapat bervariasi** karena:
+
+- Suhu baterai dan kondisi sekitar (cuaca panas/dingin meningkatkan rugi)
+- Usia baterai dan penurunan kesehatan seiring waktu
+- Kualitas dan panjang kabel cas
+- Efisiensi charger aktual bervariasi menurut merek/model
+- Cas di atas 80% kurang efisien karena penyeimbangan sel
+- Cas AC: hilang ~10% | Cas DC: hilang ~7% (angka tipikal)
+
+**Gunakan kalkulator ini sebagai panduan referensi saja. Selalu pantau sesi cas aktual Anda untuk data akurat.**
+
 ### 🤝 Komunitas
 
 Dibuat dengan ❤️ untuk **[Aioners.id](https://aioners.id)** - Komunitas GAC Aion Indonesia
@@ -196,6 +254,12 @@ aion-calculator/
 ├── index.html          # Main calculator file
 └── README.md           # This file
 ```
+
+### Research Sources | Sumber Riset
+- EPA (US Environmental Protection Agency) EV efficiency data
+- ADAC (German Automobile Club) charging studies
+- Peer-reviewed industry journals (2023-2024)
+- Real-world EV owner testing data
 
 ---
 
