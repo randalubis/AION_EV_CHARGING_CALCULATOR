@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION EV Charging Calculator - Indonesia</title>
+    <title>AION EV Charging Calculator | Kalkulator Cas AION</title>
     <style>
         * {
             margin: 0;
@@ -45,7 +45,6 @@
             font-size: 0.85rem;
         }
 
-        /* Language Toggle */
         .language-toggle {
             display: flex;
             justify-content: center;
@@ -418,6 +417,20 @@
             color: #fff;
         }
 
+        .efficiency-info {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        .efficiency-info strong {
+            color: #00ff88;
+        }
+
         .maps-button {
             display: block;
             width: 100%;
@@ -483,6 +496,39 @@
             color: #00d4ff;
             font-size: 1rem;
             flex-shrink: 0;
+        }
+
+        .disclaimer-section {
+            background: rgba(255,193,7,0.1);
+            border-left: 4px solid #ffc107;
+            border-radius: 0 12px 12px 0;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .disclaimer-title {
+            font-size: 0.9rem;
+            color: #ffc107;
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .disclaimer-text {
+            font-size: 0.8rem;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        .disclaimer-text ul {
+            margin-top: 8px;
+            margin-left: 16px;
+        }
+
+        .disclaimer-text li {
+            margin-bottom: 5px;
         }
 
         .community-badge {
@@ -582,6 +628,17 @@
             </div>
         </div>
 
+        <!-- Efficiency Info Box -->
+        <div class="efficiency-info" id="efficiencyInfo">
+            <strong data-en="⚡ Charging Efficiency Applied:" data-id="⚡ Efisiensi Cas Diterapkan:">⚡ Charging Efficiency Applied:</strong><br>
+            <span data-en="AC Charging (Home/Public): ~90% efficiency (10% loss)" data-id="Cas AC (Rumah/Publik): ~90% efisiensi (10% rugi)">AC Charging (Home/Public): ~90% efficiency (10% loss)</span><br>
+            <span data-en="DC Fast Charging: ~93% efficiency (7% loss)" data-id="Cas Cepat DC: ~93% efisiensi (7% rugi)">DC Fast Charging: ~93% efficiency (7% loss)</span><br><br>
+            <small style="color: #888; font-size: 0.75rem;" data-en="*Based on research from EPA, ADAC, and industry studies (2023-2024). Actual efficiency varies by temperature, battery health, and equipment." 
+                   data-id="*Berdasarkan riset EPA, ADAC, dan studi industri (2023-2024). Efisiensi aktual bervariasi tergantung suhu, kesehatan baterai, dan peralatan.">
+                *Based on research from EPA, ADAC, and industry studies (2023-2024). Actual efficiency varies by temperature, battery health, and equipment.
+            </small>
+        </div>
+
         <!-- Calculator Card -->
         <div class="calculator-card">
             <div class="input-mode-toggle">
@@ -633,27 +690,27 @@
 
             <!-- Results -->
             <div class="result-card">
-                <div class="result-label" data-en="Charge Needed" data-id="Daya yang Dibutuhkan">Charge Needed</div>
-                <div class="result-value" id="kwhResult">56.2</div>
+                <div class="result-label" data-en="Energy Required from Grid" data-id="Energi Dibutuhkan dari Grid">Energy Required from Grid</div>
+                <div class="result-value" id="kwhResult">62.4</div>
                 <div class="result-unit">kWh</div>
             </div>
 
             <div class="details-grid">
                 <div class="detail-item">
+                    <div class="detail-label" data-en="Battery Energy to Add" data-id="Energi Baterai Ditambah">Battery Energy to Add</div>
+                    <div class="detail-value" id="batteryToAdd">56.2 kWh</div>
+                </div>
+                <div class="detail-item">
                     <div class="detail-label" data-en="Range to Add" data-id="Jarak Ditambah">Range to Add</div>
                     <div class="detail-value" id="rangeToAdd">452 km</div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label" data-en="Battery % to Add" data-id="% Baterai Ditambah">Battery % to Add</div>
-                    <div class="detail-value" id="percentToAdd">75%</div>
-                </div>
-                <div class="detail-item">
                     <div class="detail-label" data-en="Est. Time" data-id="Estimasi Waktu">Est. Time</div>
-                    <div class="detail-value" id="chargeTime">67 min</div>
+                    <div class="detail-value" id="chargeTime">75 min</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label" data-en="Est. Cost" data-id="Estimasi Biaya">Est. Cost</div>
-                    <div class="detail-value" id="estCost">Rp 168,600</div>
+                    <div class="detail-value" id="estCost">Rp 187,000</div>
                 </div>
             </div>
         </div>
@@ -662,31 +719,31 @@
         <div class="charger-section">
             <div class="section-title" data-en="Select Charger Type" data-id="Pilih Tipe Charger">Select Charger Type</div>
             <div class="charger-grid" id="chargerGrid">
-                <div class="charger-option active" onclick="selectCharger(7.4, 'Home AC')" data-power="7.4">
+                <div class="charger-option active" onclick="selectCharger(7.4, 'Home AC', 'ac')" data-power="7.4" data-type="ac">
                     <div class="charger-name" data-en="Home Charger" data-id="Rumah">Home Charger</div>
                     <div class="charger-power">AC 7.4 kW</div>
                 </div>
-                <div class="charger-option" onclick="selectCharger(22, 'Public AC')" data-power="22">
+                <div class="charger-option" onclick="selectCharger(22, 'Public AC', 'ac')" data-power="22" data-type="ac">
                     <div class="charger-name" data-en="Public AC" data-id="Publik AC">Public AC</div>
                     <div class="charger-power">22 kW</div>
                 </div>
-                <div class="charger-option" onclick="selectCharger(60, 'Fast DC')" data-power="60">
+                <div class="charger-option" onclick="selectCharger(60, 'Fast DC', 'dc')" data-power="60" data-type="dc">
                     <div class="charger-name" data-en="Fast DC" data-id="Cepat DC">Fast DC</div>
                     <div class="charger-power">60 kW</div>
                 </div>
-                <div class="charger-option" onclick="selectCharger(100, 'Rapid DC')" data-power="100">
+                <div class="charger-option" onclick="selectCharger(100, 'Rapid DC', 'dc')" data-power="100" data-type="dc">
                     <div class="charger-name" data-en="Rapid DC" data-id="Super DC">Rapid DC</div>
                     <div class="charger-power">100 kW</div>
                 </div>
-                <div class="charger-option" onclick="selectCharger(120, 'Rapid DC')" data-power="120">
+                <div class="charger-option" onclick="selectCharger(120, 'Rapid DC', 'dc')" data-power="120" data-type="dc">
                     <div class="charger-name" data-en="Rapid DC" data-id="Super DC">Rapid DC</div>
                     <div class="charger-power">120 kW</div>
                 </div>
-                <div class="charger-option" onclick="selectCharger(180, 'Ultra DC')" data-power="180">
+                <div class="charger-option" onclick="selectCharger(180, 'Ultra DC', 'dc')" data-power="180" data-type="dc">
                     <div class="charger-name" data-en="Ultra DC" data-id="Ultra DC">Ultra DC</div>
                     <div class="charger-power">180 kW</div>
                 </div>
-                <div class="charger-option" onclick="selectCharger(480, 'Ultra Fast')" data-power="480" style="grid-column: span 2;">
+                <div class="charger-option" onclick="selectCharger(480, 'Ultra Fast', 'dc')" data-power="480" data-type="dc" style="grid-column: span 2;">
                     <div class="charger-name" data-en="Ultra Fast DC" data-id="Ultra Cepat">Ultra Fast DC</div>
                     <div class="charger-power">480 kW</div>
                 </div>
@@ -776,6 +833,47 @@
             </ul>
         </div>
 
+        <!-- Disclaimer Section -->
+        <div class="disclaimer-section">
+            <div class="disclaimer-title">
+                <span>⚠️</span> <span data-en="Important Disclaimer" data-id="Penting: Penyangkalan">Important Disclaimer</span>
+            </div>
+            <div class="disclaimer-text" data-en="This calculator provides estimates based on manufacturer specifications and typical charging efficiency data. Actual results may vary due to:"
+                 data-id="Kalkulator ini memberikan estimasi berdasarkan spesifikasi pabrik dan data efisiensi cas tipikal. Hasil aktual dapat bervariasi karena:">
+                This calculator provides estimates based on manufacturer specifications and typical charging efficiency data. Actual results may vary due to:
+                <ul>
+                    <li data-en="Battery temperature and ambient conditions (hot/cold weather increases losses)" 
+                        data-id="Suhu baterai dan kondisi sekitar (cuaca panas/dingin meningkatkan rugi)">
+                        Battery temperature and ambient conditions (hot/cold weather increases losses)
+                    </li>
+                    <li data-en="Battery age and health degradation over time" 
+                        data-id="Usia baterai dan penurunan kesehatan seiring waktu">
+                        Battery age and health degradation over time
+                    </li>
+                    <li data-en="Charging cable quality and length" 
+                        data-id="Kualitas dan panjang kabel cas">
+                        Charging cable quality and length
+                    </li>
+                    <li data-en="Actual charger efficiency varying by brand/model" 
+                        data-id="Efisiensi charger aktual bervariasi menurut merek/model">
+                        Actual charger efficiency varying by brand/model
+                    </li>
+                    <li data-en="Charging above 80% is less efficient due to cell balancing" 
+                        data-id="Cas di atas 80% kurang efisien karena penyeimbangan sel">
+                        Charging above 80% is less efficient due to cell balancing
+                    </li>
+                    <li data-en="AC charging: ~10% loss | DC charging: ~7% loss (typical)" 
+                        data-id="Cas AC: ~10% rugi | Cas DC: ~7% rugi (tipikal)">
+                        AC charging: ~10% loss | DC charging: ~7% loss (typical)
+                    </li>
+                </ul>
+                <p style="margin-top: 10px;" data-en="Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data."
+                   data-id="Gunakan kalkulator ini sebagai panduan referensi saja. Selalu pantau sesi cas aktual Anda untuk data akurat.">
+                    Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data.
+                </p>
+            </div>
+        </div>
+
         <div class="community-badge">
             <p data-en="Made for <strong>Aioners.id</strong> Community" 
                data-id="Dibuat untuk Komunitas <strong>Aioners.id</strong>">
@@ -799,8 +897,17 @@
             aionHyptec_HT: { name: 'Aion Hyptec HT Premium', battery: 83, maxRange: 620, presets: [50, 100, 200, 300] }
         };
 
+        // Charging efficiency factors based on research
+        // AC charging: ~90% efficiency (10% loss) - typical for onboard chargers
+        // DC charging: ~93% efficiency (7% loss) - direct DC bypasses onboard charger
+        const CHARGING_EFFICIENCY = {
+            ac: 0.90,  // 10% loss for AC charging (Home 7.4kW, Public 22kW)
+            dc: 0.93   // 7% loss for DC fast charging (60kW and above)
+        };
+
         let currentCar = 'aionV_Luxury';
         let currentChargerPower = 7.4;
+        let currentChargerType = 'ac';
         let currentCostPerKwh = 3000;
         let inputMode = 'range';
         let currentLang = 'en';
@@ -865,11 +972,31 @@
             calculate();
         }
 
-        function selectCharger(power, name) {
+        function selectCharger(power, name, type) {
             currentChargerPower = power;
+            currentChargerType = type;
+
             document.querySelectorAll('.charger-option').forEach(opt => opt.classList.remove('active'));
             event.currentTarget.classList.add('active');
+
+            // Update efficiency info box
+            updateEfficiencyInfo();
             calculate();
+        }
+
+        function updateEfficiencyInfo() {
+            const efficiencyBox = document.getElementById('efficiencyInfo');
+            const isAC = currentChargerType === 'ac';
+            const efficiency = isAC ? '90' : '93';
+            const loss = isAC ? '10' : '7';
+
+            if (currentLang === 'en') {
+                efficiencyBox.innerHTML = `<strong>⚡ Charging Efficiency Applied:</strong><br>
+                ${isAC ? 'AC Charging (Home/Public)' : 'DC Fast Charging'}: ~${efficiency}% efficiency (${loss}% loss)`;
+            } else {
+                efficiencyBox.innerHTML = `<strong>⚡ Efisiensi Cas Diterapkan:</strong><br>
+                ${isAC ? 'Cas AC (Rumah/Publik)' : 'Cas Cepat DC'}: ~${efficiency}% efisiensi (${loss}% rugi)`;
+            }
         }
 
         function selectCost(cost, name) {
@@ -891,7 +1018,7 @@
 
         function calculate() {
             const car = cars[currentCar];
-            let kwhNeeded = 0;
+            let kwhToBattery = 0;  // Actual energy stored in battery
             let percentToAdd = 0;
             let rangeToAdd = 0;
 
@@ -904,8 +1031,8 @@
                 rangeSlider.value = currentRange;
 
                 rangeToAdd = car.maxRange - currentRange;
-                kwhNeeded = (rangeToAdd / car.maxRange) * car.battery;
-                percentToAdd = (kwhNeeded / car.battery) * 100;
+                kwhToBattery = (rangeToAdd / car.maxRange) * car.battery;
+                percentToAdd = (kwhToBattery / car.battery) * 100;
             } else {
                 let currentPercent = parseFloat(percentageInput.value) || 0;
                 if (currentPercent < 0) currentPercent = 0;
@@ -915,24 +1042,30 @@
                 percentageSlider.value = currentPercent;
 
                 percentToAdd = 100 - currentPercent;
-                kwhNeeded = (percentToAdd / 100) * car.battery;
+                kwhToBattery = (percentToAdd / 100) * car.battery;
                 rangeToAdd = (percentToAdd / 100) * car.maxRange;
             }
 
-            // Calculate charging time with losses
-            let chargingTime = (kwhNeeded / currentChargerPower) * 60;
+            // Apply charging efficiency losses
+            // Energy from grid = Energy to battery / Efficiency factor
+            const efficiencyFactor = CHARGING_EFFICIENCY[currentChargerType];
+            const kwhFromGrid = kwhToBattery / efficiencyFactor;
 
-            if (currentChargerPower >= 60) {
-                chargingTime = chargingTime * 1.15; // DC losses
-            } else {
-                chargingTime = chargingTime * 1.10; // AC losses
+            // Calculate charging time based on GRID energy (what you pay for)
+            let chargingTime = (kwhFromGrid / currentChargerPower) * 60; // minutes
+
+            // Additional time factor for DC charging tapering at high SOC
+            if (currentChargerType === 'dc' && percentToAdd > 50) {
+                // DC charging slows down as battery fills, especially above 80%
+                chargingTime = chargingTime * 1.1; // Add 10% for tapering effect
             }
 
-            // Calculate cost - NO DECIMALS
-            const totalCost = Math.round(kwhNeeded * currentCostPerKwh);
+            // Calculate cost based on GRID energy (what you actually pay for)
+            const totalCost = Math.round(kwhFromGrid * currentCostPerKwh);
 
             // Update display
-            document.getElementById('kwhResult').textContent = kwhNeeded.toFixed(1);
+            document.getElementById('kwhResult').textContent = kwhFromGrid.toFixed(1);
+            document.getElementById('batteryToAdd').textContent = kwhToBattery.toFixed(1) + ' kWh';
             document.getElementById('rangeToAdd').textContent = Math.round(rangeToAdd) + ' km';
             document.getElementById('percentToAdd').textContent = Math.round(percentToAdd) + '%';
 
@@ -946,7 +1079,7 @@
                 document.getElementById('chargeTime').textContent = hours + t.hours + ' ' + mins + t.minutes;
             }
 
-            // Format cost - NO DECIMALS, clean format
+            // Format cost - NO DECIMALS
             document.getElementById('estCost').textContent = 'Rp ' + totalCost.toLocaleString('id-ID');
         }
 
