@@ -5,8 +5,7 @@
 ⚡ **Smart EV Charging Calculator for GAC Aion Owners** ⚡  
 *Kalkulator Pintar untuk Pemilik GAC Aion*
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://yourusername.github.io/aion-calculator)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR/)
 [![Community](https://img.shields.io/badge/Community-Aioners.id-red)](https://aioners.id)
 
 **[🇬🇧 English](#english) | [🇮🇩 Bahasa Indonesia](#bahasa-indonesia)**
