@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AION EV Charging Calculator - Indonesia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #888;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(123,44,191,0.3));
+            border-color: #00d4ff;
+            color: #fff;
+        }
+
+        .lang-flag {
+            font-size: 1rem;
+        }
+
+        .car-selector {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .car-selector-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 12px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .model-family {
+            margin-bottom: 15px;
+        }
+
+        .family-label {
+            font-size: 0.75rem;
+            color: #00d4ff;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .car-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .car-tab {
+            padding: 12px 8px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.03);
+            color: #aaa;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .car-tab.active {
+            background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(123,44,191,0.25));
+            border-color: #00d4ff;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0,212,255,0.25);
+        }
+
+        .car-tab:active {
+            transform: scale(0.96);
+        }
+
+        .car-name {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.85rem;
+        }
+
+        .car-specs-short {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .input-mode-toggle {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #888;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: rgba(0,212,255,0.3);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .calculator-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            font-size: 1.3rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper select {
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,0.2);
+        }
+
+        .unit {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .slider-container {
+            margin-top: 15px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            padding: 10px 5px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:active {
+            transform: scale(0.95);
+            background: rgba(0,212,255,0.2);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
+        .charger-section, .cost-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .charger-grid, .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .charger-option, .cost-option {
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .charger-option.active {
+            border-color: #00ff88;
+            background: rgba(0,255,136,0.1);
+        }
+
+        .cost-option.active {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+
+        .charger-name, .cost-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .charger-power {
+            font-size: 0.75rem;
+            color: #00ff88;
+        }
+
+        .cost-rate {
+            font-size: 0.75rem;
+            color: #ffd700;
+        }
+
+        .custom-cost {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .custom-cost input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .custom-cost span {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(123,44,191,0.15));
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(0,212,255,0.3);
+            margin-bottom: 20px;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .result-unit {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .maps-button {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .maps-button:active {
+            transform: scale(0.98);
+        }
+
+        .maps-icon {
+            margin-right: 8px;
+        }
+
+        .battery-health-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .health-title {
+            font-size: 1rem;
+            color: #00ff88;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .health-tips {
+            list-style: none;
+        }
+
+        .health-tips li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .health-tips li:last-child {
+            border-bottom: none;
+        }
+
+        .tip-icon {
+            color: #00d4ff;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .community-badge {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,212,255,0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(0,212,255,0.2);
+        }
+
+        .community-badge p {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .community-badge strong {
+            color: #00d4ff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AION EV CHARGING CALCULATOR</h1>
+            <p data-en="For Aioners.id | Indonesia Community" data-id="Untuk Aioners.id | Komunitas Indonesia">For Aioners.id | Indonesia Community</p>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="language-toggle">
+            <button class="lang-btn active" onclick="switchLanguage('en')" id="lang-en">
+                <span class="lang-flag">🇬🇧</span> English
+            </button>
+            <button class="lang-btn" onclick="switchLanguage('id')" id="lang-id">
+                <span class="lang-flag">🇮🇩</span> Bahasa
+            </button>
+        </div>
+
+        <!-- Car Selector -->
+        <div class="car-selector">
+            <label class="car-selector-label" data-en="Select Your Aion Model" data-id="Pilih Model Aion">Select Your Aion Model</label>
+
+            <div class="model-family">
+                <div class="family-label">Aion V Series</div>
+                <div class="car-tabs">
+                    <div class="car-tab active" onclick="switchCar('aionV_Luxury')" id="tab-aionV_Luxury">
+                        <span class="car-name">V Luxury</span>
+                        <span class="car-specs-short">75.3 kWh • 602 km</span>
+                    </div>
+                    <div class="car-tab" onclick="switchCar('aionV_Exclusive')" id="tab-aionV_Exclusive">
+                        <span class="car-name">V Exclusive</span>
+                        <span class="car-specs-short">64.5 kWh • 505 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="model-family">
+                <div class="family-label">Aion Y Plus Series</div>
+                <div class="car-tabs">
+                    <div class="car-tab" onclick="switchCar('aionY_Exclusive')" id="tab-aionY_Exclusive">
+                        <span class="car-name">Y Plus Exc</span>
+                        <span class="car-specs-short">50.7 kWh • 410 km</span>
+                    </div>
+                    <div class="car-tab" onclick="switchCar('aionY_Premium')" id="tab-aionY_Premium">
+                        <span class="car-name">Y Plus Prem</span>
+                        <span class="car-specs-short">63.2 kWh • 490 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="model-family">
+                <div class="family-label">Aion UT Series</div>
+                <div class="car-tabs">
+                    <div class="car-tab" onclick="switchCar('aionUT_Standard')" id="tab-aionUT_Standard">
+                        <span class="car-name">UT Standard</span>
+                        <span class="car-specs-short">44.1 kWh • 400 km</span>
+                    </div>
+                    <div class="car-tab" onclick="switchCar('aionUT_Premium')" id="tab-aionUT_Premium">
+                        <span class="car-name">UT Premium</span>
+                        <span class="car-specs-short">60 kWh • 500 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="model-family">
+                <div class="family-label">Aion Hyptec Series</div>
+                <div class="car-tabs">
+                    <div class="car-tab" onclick="switchCar('aionHyptec_HT')" id="tab-aionHyptec_HT" style="grid-column: span 2;">
+                        <span class="car-name">Hyptec HT Premium</span>
+                        <span class="car-specs-short">83 kWh • 620 km</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Card -->
+        <div class="calculator-card">
+            <div class="input-mode-toggle">
+                <button class="mode-btn active" onclick="switchInputMode('range')" id="mode-range" 
+                    data-en="By Range (km)" data-id="Berdasarkan Jarak (km)">By Range (km)</button>
+                <button class="mode-btn" onclick="switchInputMode('percentage')" id="mode-percentage"
+                    data-en="By Battery (%)" data-id="Berdasarkan Baterai (%)">By Battery (%)</button>
+            </div>
+
+            <!-- Range Input -->
+            <div id="range-input-section">
+                <div class="input-group">
+                    <label data-en="Current Remaining Range" data-id="Sisa Jarak Saat Ini">Current Remaining Range</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="rangeInput" value="150" min="0" max="602">
+                        <span class="unit">km</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="rangeSlider" min="0" max="602" value="150">
+                    </div>
+                    <div class="preset-buttons" id="presetButtons">
+                        <button class="preset-btn" onclick="setRange(50)">50</button>
+                        <button class="preset-btn" onclick="setRange(100)">100</button>
+                        <button class="preset-btn" onclick="setRange(200)">200</button>
+                        <button class="preset-btn" onclick="setRange(300)">300</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Percentage Input -->
+            <div id="percentage-input-section" class="hidden">
+                <div class="input-group">
+                    <label data-en="Current Battery Percentage" data-id="Persentase Baterai Saat Ini">Current Battery Percentage</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="percentageInput" value="25" min="0" max="100">
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="percentageSlider" min="0" max="100" value="25">
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="setPercentage(10)">10%</button>
+                        <button class="preset-btn" onclick="setPercentage(20)">20%</button>
+                        <button class="preset-btn" onclick="setPercentage(50)">50%</button>
+                        <button class="preset-btn" onclick="setPercentage(80)">80%</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="result-card">
+                <div class="result-label" data-en="Charge Needed" data-id="Daya yang Dibutuhkan">Charge Needed</div>
+                <div class="result-value" id="kwhResult">56.2</div>
+                <div class="result-unit">kWh</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label" data-en="Range to Add" data-id="Jarak Ditambah">Range to Add</div>
+                    <div class="detail-value" id="rangeToAdd">452 km</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label" data-en="Battery % to Add" data-id="% Baterai Ditambah">Battery % to Add</div>
+                    <div class="detail-value" id="percentToAdd">75%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label" data-en="Est. Time" data-id="Estimasi Waktu">Est. Time</div>
+                    <div class="detail-value" id="chargeTime">67 min</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label" data-en="Est. Cost" data-id="Estimasi Biaya">Est. Cost</div>
+                    <div class="detail-value" id="estCost">Rp 168,600</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charger Selection -->
+        <div class="charger-section">
+            <div class="section-title" data-en="Select Charger Type" data-id="Pilih Tipe Charger">Select Charger Type</div>
+            <div class="charger-grid" id="chargerGrid">
+                <div class="charger-option active" onclick="selectCharger(7.4, 'Home AC')" data-power="7.4">
+                    <div class="charger-name" data-en="Home Charger" data-id="Rumah">Home Charger</div>
+                    <div class="charger-power">AC 7.4 kW</div>
+                </div>
+                <div class="charger-option" onclick="selectCharger(22, 'Public AC')" data-power="22">
+                    <div class="charger-name" data-en="Public AC" data-id="Publik AC">Public AC</div>
+                    <div class="charger-power">22 kW</div>
+                </div>
+                <div class="charger-option" onclick="selectCharger(60, 'Fast DC')" data-power="60">
+                    <div class="charger-name" data-en="Fast DC" data-id="Cepat DC">Fast DC</div>
+                    <div class="charger-power">60 kW</div>
+                </div>
+                <div class="charger-option" onclick="selectCharger(100, 'Rapid DC')" data-power="100">
+                    <div class="charger-name" data-en="Rapid DC" data-id="Super DC">Rapid DC</div>
+                    <div class="charger-power">100 kW</div>
+                </div>
+                <div class="charger-option" onclick="selectCharger(120, 'Rapid DC')" data-power="120">
+                    <div class="charger-name" data-en="Rapid DC" data-id="Super DC">Rapid DC</div>
+                    <div class="charger-power">120 kW</div>
+                </div>
+                <div class="charger-option" onclick="selectCharger(180, 'Ultra DC')" data-power="180">
+                    <div class="charger-name" data-en="Ultra DC" data-id="Ultra DC">Ultra DC</div>
+                    <div class="charger-power">180 kW</div>
+                </div>
+                <div class="charger-option" onclick="selectCharger(480, 'Ultra Fast')" data-power="480" style="grid-column: span 2;">
+                    <div class="charger-name" data-en="Ultra Fast DC" data-id="Ultra Cepat">Ultra Fast DC</div>
+                    <div class="charger-power">480 kW</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Selection -->
+        <div class="cost-section">
+            <div class="section-title" data-en="Electricity Rate (Rp/kWh)" data-id="Tarif Listrik (Rp/kWh)">Electricity Rate (Rp/kWh)</div>
+            <div class="cost-grid">
+                <div class="cost-option" onclick="selectCost(1444, 'PLN R1')" data-cost="1444">
+                    <div class="cost-name">PLN R1</div>
+                    <div class="cost-rate">Rp 1,444</div>
+                </div>
+                <div class="cost-option" onclick="selectCost(2076, 'PLN R2')" data-cost="2076">
+                    <div class="cost-name">PLN R2</div>
+                    <div class="cost-rate">Rp 2,076</div>
+                </div>
+                <div class="cost-option" onclick="selectCost(2654, 'PLN R3')" data-cost="2654">
+                    <div class="cost-name">PLN R3</div>
+                    <div class="cost-rate">Rp 2,654</div>
+                </div>
+                <div class="cost-option active" onclick="selectCost(3000, 'Public')" data-cost="3000">
+                    <div class="cost-name" data-en="Public" data-id="Publik">Public</div>
+                    <div class="cost-rate">Rp 3,000</div>
+                </div>
+            </div>
+            <div class="custom-cost">
+                <input type="number" id="customCostInput" placeholder="Custom rate" data-en="Custom rate" data-id="Tarif lain" onchange="updateCustomCost()">
+                <span>Rp/kWh</span>
+            </div>
+        </div>
+
+        <!-- Find Charging Station -->
+        <a href="https://www.google.com/maps/search/SPKLU+charging+station+near+me/" target="_blank" class="maps-button">
+            <span class="maps-icon">📍</span> <span data-en="Find Nearest Charging Station" data-id="Cari Stasiun Cas Terdekat">Find Nearest Charging Station</span>
+        </a>
+
+        <!-- Battery Health Guide -->
+        <div class="battery-health-section">
+            <div class="health-title">
+                <span>🔋</span> <span data-en="Battery Health Tips" data-id="Tips Kesehatan Baterai">Battery Health Tips</span>
+            </div>
+            <ul class="health-tips" id="healthTips">
+                <li>
+                    <span class="tip-icon">⚡</span>
+                    <span data-en="Avoid frequent fast charging (DC). Use AC charging (7-22kW) for daily charging to preserve battery health." 
+                          data-id="Hindari cas cepat (DC) terlalu sering. Gunakan cas AC (7-22kW) untuk penggunaan harian.">
+                        Avoid frequent fast charging (DC). Use AC charging (7-22kW) for daily charging to preserve battery health.
+                    </span>
+                </li>
+                <li>
+                    <span class="tip-icon">📊</span>
+                    <span data-en="Keep battery between 20-80% for daily use. Only charge to 100% for long trips." 
+                          data-id="Pertahankan baterai 20-80% untuk pemakaian normal. Cas penuh hanya untuk perjalanan jauh.">
+                        Keep battery between 20-80% for daily use. Only charge to 100% for long trips.
+                    </span>
+                </li>
+                <li>
+                    <span class="tip-icon">🌡️</span>
+                    <span data-en="Avoid charging when battery is hot. Let it cool down 30 mins after driving before charging." 
+                          data-id="Hindari cas saat baterai panas. Tunggu 30 menit setelah berkendara.">
+                        Avoid charging when battery is hot. Let it cool down 30 mins after driving before charging.
+                    </span>
+                </li>
+                <li>
+                    <span class="tip-icon">🔌</span>
+                    <span data-en="Don't leave car plugged in at 100% for extended periods. Unplug when charging completes." 
+                          data-id="Jangan biarkan mobil tercolok di 100% terlalu lama. Cabut setelah selesai.">
+                        Don't leave car plugged in at 100% for extended periods. Unplug when charging completes.
+                    </span>
+                </li>
+                <li>
+                    <span class="tip-icon">📅</span>
+                    <span data-en="If storing car for >1 week, leave battery at 50-60% charge level." 
+                          data-id="Jika parkir >1 minggu, biarkan baterai di level 50-60%.">
+                        If storing car for >1 week, leave battery at 50-60% charge level.
+                    </span>
+                </li>
+                <li>
+                    <span class="tip-icon">🚗</span>
+                    <span data-en="Precondition battery while plugged in before driving in extreme temperatures." 
+                          data-id="Kondisikan baterai saat tercolok sebelum berkendara di suhu ekstrem.">
+                        Precondition battery while plugged in before driving in extreme temperatures.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="community-badge">
+            <p data-en="Made for <strong>Aioners.id</strong> Community" 
+               data-id="Dibuat untuk Komunitas <strong>Aioners.id</strong>">
+                Made for <strong>Aioners.id</strong> Community
+            </p>
+            <p style="margin-top: 5px; font-size: 0.75rem;" data-en="Share with fellow Aion owners 🤝" data-id="Bagikan ke sesama pemilik Aion 🤝">
+                Share with fellow Aion owners 🤝
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Car configurations
+        const cars = {
+            aionV_Luxury: { name: 'Aion V Luxury', battery: 75.3, maxRange: 602, presets: [50, 100, 200, 300] },
+            aionV_Exclusive: { name: 'Aion V Exclusive', battery: 64.5, maxRange: 505, presets: [50, 100, 150, 250] },
+            aionY_Exclusive: { name: 'Aion Y Plus Exclusive', battery: 50.66, maxRange: 410, presets: [50, 100, 150, 200] },
+            aionY_Premium: { name: 'Aion Y Plus Premium', battery: 63.2, maxRange: 490, presets: [50, 100, 200, 250] },
+            aionUT_Standard: { name: 'Aion UT Standard', battery: 44.12, maxRange: 400, presets: [50, 100, 150, 200] },
+            aionUT_Premium: { name: 'Aion UT Premium', battery: 60, maxRange: 500, presets: [50, 100, 150, 250] },
+            aionHyptec_HT: { name: 'Aion Hyptec HT Premium', battery: 83, maxRange: 620, presets: [50, 100, 200, 300] }
+        };
+
+        let currentCar = 'aionV_Luxury';
+        let currentChargerPower = 7.4;
+        let currentCostPerKwh = 3000;
+        let inputMode = 'range';
+        let currentLang = 'en';
+
+        // Translations object for dynamic content
+        const translations = {
+            en: {
+                hours: 'h',
+                minutes: 'min'
+            },
+            id: {
+                hours: 'j',
+                minutes: 'mnt'
+            }
+        };
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            document.getElementById('lang-id').classList.toggle('active', lang === 'id');
+
+            // Update all elements with data-en and data-id attributes
+            document.querySelectorAll('[data-en][data-id]').forEach(el => {
+                if (el.tagName === 'INPUT') {
+                    el.placeholder = el.getAttribute('data-' + lang);
+                } else {
+                    el.innerHTML = el.getAttribute('data-' + lang);
+                }
+            });
+
+            calculate();
+        }
+
+        function switchCar(carKey) {
+            currentCar = carKey;
+            const car = cars[carKey];
+
+            document.querySelectorAll('.car-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + carKey).classList.add('active');
+
+            rangeSlider.max = car.maxRange;
+
+            const presetContainer = document.getElementById('presetButtons');
+            presetContainer.innerHTML = '';
+            car.presets.forEach(preset => {
+                const btn = document.createElement('button');
+                btn.className = 'preset-btn';
+                btn.textContent = preset;
+                btn.onclick = () => setRange(preset);
+                presetContainer.appendChild(btn);
+            });
+
+            calculate();
+        }
+
+        function switchInputMode(mode) {
+            inputMode = mode;
+            document.getElementById('mode-range').classList.toggle('active', mode === 'range');
+            document.getElementById('mode-percentage').classList.toggle('active', mode === 'percentage');
+            document.getElementById('range-input-section').classList.toggle('hidden', mode !== 'range');
+            document.getElementById('percentage-input-section').classList.toggle('hidden', mode !== 'percentage');
+            calculate();
+        }
+
+        function selectCharger(power, name) {
+            currentChargerPower = power;
+            document.querySelectorAll('.charger-option').forEach(opt => opt.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            calculate();
+        }
+
+        function selectCost(cost, name) {
+            currentCostPerKwh = cost;
+            document.querySelectorAll('.cost-option').forEach(opt => opt.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById('customCostInput').value = '';
+            calculate();
+        }
+
+        function updateCustomCost() {
+            const customCost = parseFloat(document.getElementById('customCostInput').value);
+            if (customCost > 0) {
+                currentCostPerKwh = customCost;
+                document.querySelectorAll('.cost-option').forEach(opt => opt.classList.remove('active'));
+                calculate();
+            }
+        }
+
+        function calculate() {
+            const car = cars[currentCar];
+            let kwhNeeded = 0;
+            let percentToAdd = 0;
+            let rangeToAdd = 0;
+
+            if (inputMode === 'range') {
+                let currentRange = parseFloat(rangeInput.value) || 0;
+                if (currentRange < 0) currentRange = 0;
+                if (currentRange > car.maxRange) currentRange = car.maxRange;
+
+                rangeInput.value = currentRange;
+                rangeSlider.value = currentRange;
+
+                rangeToAdd = car.maxRange - currentRange;
+                kwhNeeded = (rangeToAdd / car.maxRange) * car.battery;
+                percentToAdd = (kwhNeeded / car.battery) * 100;
+            } else {
+                let currentPercent = parseFloat(percentageInput.value) || 0;
+                if (currentPercent < 0) currentPercent = 0;
+                if (currentPercent > 100) currentPercent = 100;
+
+                percentageInput.value = currentPercent;
+                percentageSlider.value = currentPercent;
+
+                percentToAdd = 100 - currentPercent;
+                kwhNeeded = (percentToAdd / 100) * car.battery;
+                rangeToAdd = (percentToAdd / 100) * car.maxRange;
+            }
+
+            // Calculate charging time with losses
+            let chargingTime = (kwhNeeded / currentChargerPower) * 60;
+
+            if (currentChargerPower >= 60) {
+                chargingTime = chargingTime * 1.15; // DC losses
+            } else {
+                chargingTime = chargingTime * 1.10; // AC losses
+            }
+
+            // Calculate cost - NO DECIMALS
+            const totalCost = Math.round(kwhNeeded * currentCostPerKwh);
+
+            // Update display
+            document.getElementById('kwhResult').textContent = kwhNeeded.toFixed(1);
+            document.getElementById('rangeToAdd').textContent = Math.round(rangeToAdd) + ' km';
+            document.getElementById('percentToAdd').textContent = Math.round(percentToAdd) + '%';
+
+            // Format time with language
+            const t = translations[currentLang];
+            if (chargingTime < 60) {
+                document.getElementById('chargeTime').textContent = Math.round(chargingTime) + ' ' + t.minutes;
+            } else {
+                const hours = Math.floor(chargingTime / 60);
+                const mins = Math.round(chargingTime % 60);
+                document.getElementById('chargeTime').textContent = hours + t.hours + ' ' + mins + t.minutes;
+            }
+
+            // Format cost - NO DECIMALS, clean format
+            document.getElementById('estCost').textContent = 'Rp ' + totalCost.toLocaleString('id-ID');
+        }
+
+        function setRange(val) {
+            rangeInput.value = val;
+            calculate();
+        }
+
+        function setPercentage(val) {
+            percentageInput.value = val;
+            calculate();
+        }
+
+        // Event listeners
+        rangeInput.addEventListener('input', calculate);
+        rangeSlider.addEventListener('input', function() {
+            rangeInput.value = this.value;
+            calculate();
+        });
+
+        percentageInput.addEventListener('input', calculate);
+        percentageSlider.addEventListener('input', function() {
+            percentageInput.value = this.value;
+            calculate();
+        });
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
