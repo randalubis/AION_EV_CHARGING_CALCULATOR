@@ -5,7 +5,7 @@
 ⚡ **Smart EV Charging Calculator for GAC Aion Owners** ⚡  
 *Kalkulator Pintar untuk Pemilik GAC Aion*
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
 [![Community](https://img.shields.io/badge/Community-Aioners.id-red)](https://aioners.id)
 
 **[🇬🇧 English](#english) | [🇮🇩 Bahasa Indonesia](#bahasa-indonesia)**
@@ -21,7 +21,7 @@
 
 A **mobile-friendly web calculator** designed specifically for **GAC Aion electric vehicle owners** in Indonesia. Calculate your charging needs instantly based on remaining range or battery percentage.
 
-**Live Demo**: [https://yourusername.github.io/aion-calculator](https://yourusername.github.io/aion-calculator)
+**Live Demo**: [https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
 
 ### ✨ Features
 
@@ -102,7 +102,7 @@ Share this tool with fellow Aion owners!
 
 **Kalkulator web ramah ponsel** yang dirancang khusus untuk **pemilik kendaraan listrik GAC Aion** di Indonesia. Hitung kebutuhan cas Anda secara instan berdasarkan sisa jarak atau persentase baterai.
 
-**Demo Langsung**: [https://yourusername.github.io/aion-calculator](https://yourusername.github.io/aion-calculator)
+**Demo Langsung**: [https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
 
 ### ✨ Fitur Unggulan
 
@@ -195,26 +195,7 @@ Bagikan alat ini ke sesama pemilik Aion!
 aion-calculator/
 ├── index.html          # Main calculator file
 ├── README.md           # This file
-└── LICENSE             # MIT License
 ```
-
----
-
-## 📞 Support & Contact | Dukungan & Kontak
-
-**For bugs, suggestions, or contributions:**  
-*Untuk bug, saran, atau kontribusi:*
-
-- Open an [Issue](../../issues) on GitHub
-- Contact Aioners.id community admin
-- Submit a [Pull Request](../../pulls) for improvements
-
----
-
-## 📜 License | Lisensi
-
-This project is licensed under the **MIT License** - feel free to use, modify, and share!  
-*Proyek ini menggunakan lisensi **MIT** - bebas digunakan, dimodifikasi, dan dibagikan!*
 
 ---
 
