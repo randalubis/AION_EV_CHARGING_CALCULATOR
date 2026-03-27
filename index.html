@@ -258,6 +258,49 @@
             margin-top: 15px;
         }
 
+        .target-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed rgba(0,212,255,0.3);
+            position: relative;
+        }
+
+        .target-section::before {
+            content: '↓';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a2e;
+            color: #00d4ff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 2px solid rgba(0,212,255,0.3);
+        }
+
+        .target-label {
+            color: #00ff88 !important;
+        }
+
+        .range-indicator {
+            background: rgba(0,212,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .range-indicator strong {
+            color: #00d4ff;
+        }
+
         .preset-btn {
             padding: 10px 5px;
             border: 1px solid rgba(255,255,255,0.2);
@@ -392,9 +435,21 @@
 
         .details-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-top: 20px;
+        }
+
+        /* Make cost item span both columns and stand out */
+        .detail-item:last-child {
+            grid-column: span 2;
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.2);
+        }
+
+        .detail-item:last-child .detail-value {
+            font-size: 1.5rem;
+            color: #00ff88;
         }
 
         .detail-item {
@@ -666,6 +721,36 @@
                         <button class="preset-btn" onclick="setRange(300)">300</button>
                     </div>
                 </div>
+
+                <!-- Target Range Input -->
+                <div class="input-group target-section">
+                    <label class="target-label" data-en="🎯 Target Range (Charge To)" data-id="🎯 Target Jarak (Cas Sampai)">🎯 Target Range (Charge To)</label>
+                    <div class="range-indicator" id="rangeIndicator">
+                        <span data-en="Charging from" data-id="Mengisi dari">Charging from</span> 
+                        <strong id="currentRangeDisplay">150 km</strong> 
+                        <span data-en="to" data-id="sampai">to</span> 
+                        <strong id="targetRangeDisplay" style="color: #00ff88;">500 km</strong>
+                        <span style="color: #888; font-size: 0.8rem;">(<span id="percentIndicator">58%</span>)</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="targetRangeInput" value="500" min="0" max="602">
+                        <span class="unit">km</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="targetRangeSlider" min="0" max="602" value="500">
+                    </div>
+                    <div class="preset-buttons" id="targetPresetButtons">
+                        <button class="preset-btn" onclick="setTargetRange(300)">300</button>
+                        <button class="preset-btn" onclick="setTargetRange(400)">400</button>
+                        <button class="preset-btn" onclick="setTargetRange(500)">500</button>
+                        <button class="preset-btn" onclick="setTargetRange(602)">602</button>
+                    </div>
+                    <small style="display: block; margin-top: 10px; color: #888; font-size: 0.75rem;" 
+                           data-en="💡 Tip: 80% charge (482km) is recommended for daily use" 
+                           data-id="💡 Tips: Cas 80% (482km) direkomendasikan untuk pemakaian harian">
+                        💡 Tip: 80% charge (482km) is recommended for daily use
+                    </small>
+                </div>
             </div>
 
             <!-- Percentage Input -->
@@ -686,6 +771,35 @@
                         <button class="preset-btn" onclick="setPercentage(80)">80%</button>
                     </div>
                 </div>
+
+                <!-- Target Percentage Input -->
+                <div class="input-group target-section">
+                    <label class="target-label" data-en="🎯 Target Battery % (Charge To)" data-id="🎯 Target % Baterai (Cas Sampai)">🎯 Target Battery % (Charge To)</label>
+                    <div class="range-indicator" id="percentageIndicator">
+                        <span data-en="Charging from" data-id="Mengisi dari">Charging from</span> 
+                        <strong id="currentPercentDisplay">25%</strong> 
+                        <span data-en="to" data-id="sampai">to</span> 
+                        <strong id="targetPercentDisplay" style="color: #00ff88;">80%</strong>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="targetPercentageInput" value="80" min="0" max="100">
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="targetPercentageSlider" min="0" max="100" value="80">
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="setTargetPercentage(50)">50%</button>
+                        <button class="preset-btn" onclick="setTargetPercentage(80)">80%</button>
+                        <button class="preset-btn" onclick="setTargetPercentage(90)">90%</button>
+                        <button class="preset-btn" onclick="setTargetPercentage(100)">100%</button>
+                    </div>
+                    <small style="display: block; margin-top: 10px; color: #888; font-size: 0.75rem;" 
+                           data-en="💡 Tip: 80% is recommended for daily use to preserve battery health" 
+                           data-id="💡 Tips: 80% direkomendasikan untuk pemakaian harian menjaga kesehatan baterai">
+                        💡 Tip: 80% is recommended for daily use to preserve battery health
+                    </small>
+                </div>
             </div>
 
             <!-- Results -->
@@ -698,19 +812,23 @@
             <div class="details-grid">
                 <div class="detail-item">
                     <div class="detail-label" data-en="Battery Energy to Add" data-id="Energi Baterai Ditambah">Battery Energy to Add</div>
-                    <div class="detail-value" id="batteryToAdd">56.2 kWh</div>
+                    <div class="detail-value" id="batteryToAdd">43.8 kWh</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label" data-en="Range to Add" data-id="Jarak Ditambah">Range to Add</div>
-                    <div class="detail-value" id="rangeToAdd">452 km</div>
+                    <div class="detail-value" id="rangeToAdd">350 km</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label" data-en="Battery % to Add" data-id="% Baterai Ditambah">Battery % to Add</div>
+                    <div class="detail-value" id="percentToAdd">58%</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label" data-en="Est. Time" data-id="Estimasi Waktu">Est. Time</div>
-                    <div class="detail-value" id="chargeTime">75 min</div>
+                    <div class="detail-value" id="chargeTime">395 min</div>
                 </div>
-                <div class="detail-item">
+                <div class="detail-item" style="grid-column: span 2;">
                     <div class="detail-label" data-en="Est. Cost" data-id="Estimasi Biaya">Est. Cost</div>
-                    <div class="detail-value" id="estCost">Rp 187,000</div>
+                    <div class="detail-value" id="estCost" style="font-size: 1.4rem; color: #00ff88;">Rp 146,000</div>
                 </div>
             </div>
         </div>
@@ -838,10 +956,12 @@
             <div class="disclaimer-title">
                 <span>⚠️</span> <span data-en="Important Disclaimer" data-id="Penting: Penyangkalan">Important Disclaimer</span>
             </div>
-            <div class="disclaimer-text" data-en="This calculator provides estimates based on manufacturer specifications and typical charging efficiency data. Actual results may vary due to:"
-                 data-id="Kalkulator ini memberikan estimasi berdasarkan spesifikasi pabrik dan data efisiensi cas tipikal. Hasil aktual dapat bervariasi karena:">
-                This calculator provides estimates based on manufacturer specifications and typical charging efficiency data. Actual results may vary due to:
-                <ul>
+            <div class="disclaimer-text">
+                <p id="disclaimer-intro" data-en="This calculator provides estimates based on manufacturer specifications and typical charging efficiency data. Actual results may vary due to:"
+                   data-id="Kalkulator ini memberikan estimasi berdasarkan spesifikasi pabrik dan data efisiensi cas tipikal. Hasil aktual dapat bervariasi karena:">
+                    This calculator provides estimates based on manufacturer specifications and typical charging efficiency data. Actual results may vary due to:
+                </p>
+                <ul id="disclaimer-list">
                     <li data-en="Battery temperature and ambient conditions (hot/cold weather increases losses)" 
                         data-id="Suhu baterai dan kondisi sekitar (cuaca panas/dingin meningkatkan rugi)">
                         Battery temperature and ambient conditions (hot/cold weather increases losses)
@@ -867,7 +987,7 @@
                         AC charging: ~10% loss | DC charging: ~7% loss (typical)
                     </li>
                 </ul>
-                <p style="margin-top: 10px;" data-en="Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data."
+                <p id="disclaimer-footer" style="margin-top: 10px;" data-en="Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data."
                    data-id="Gunakan kalkulator ini sebagai panduan referensi saja. Selalu pantau sesi cas aktual Anda untuk data akurat.">
                     Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data.
                 </p>
@@ -905,6 +1025,16 @@
             dc: 0.93   // 7% loss for DC fast charging (60kW and above)
         };
 
+        // DOM elements
+        const rangeInput = document.getElementById('rangeInput');
+        const rangeSlider = document.getElementById('rangeSlider');
+        const targetRangeInput = document.getElementById('targetRangeInput');
+        const targetRangeSlider = document.getElementById('targetRangeSlider');
+        const percentageInput = document.getElementById('percentageInput');
+        const percentageSlider = document.getElementById('percentageSlider');
+        const targetPercentageInput = document.getElementById('targetPercentageInput');
+        const targetPercentageSlider = document.getElementById('targetPercentageSlider');
+
         let currentCar = 'aionV_Luxury';
         let currentChargerPower = 7.4;
         let currentChargerType = 'ac';
@@ -930,13 +1060,34 @@
             document.getElementById('lang-id').classList.toggle('active', lang === 'id');
 
             // Update all elements with data-en and data-id attributes
-            document.querySelectorAll('[data-en][data-id]').forEach(el => {
+            // Process children first (deepest elements), then parents
+            const elements = Array.from(document.querySelectorAll('[data-en][data-id]'));
+
+            // Sort by depth (deepest first) to avoid overwriting parent content before children are processed
+            elements.sort((a, b) => {
+                const depthA = a.querySelectorAll('[data-en]').length;
+                const depthB = b.querySelectorAll('[data-en]').length;
+                return depthB - depthA;
+            });
+
+            elements.forEach(el => {
                 if (el.tagName === 'INPUT') {
                     el.placeholder = el.getAttribute('data-' + lang);
+                } else if (el.tagName === 'LI' || el.tagName === 'P' || el.tagName === 'SPAN' || el.tagName === 'SMALL') {
+                    // For text-only elements, update textContent to preserve any child elements
+                    el.textContent = el.getAttribute('data-' + lang);
                 } else {
-                    el.innerHTML = el.getAttribute('data-' + lang);
+                    // For other elements, check if they have translatable children
+                    const hasTranslatableChildren = el.querySelector('[data-en]');
+                    if (!hasTranslatableChildren) {
+                        // Safe to replace innerHTML for simple elements
+                        el.innerHTML = el.getAttribute('data-' + lang);
+                    }
                 }
             });
+
+            // Update efficiency info box specifically
+            updateEfficiencyInfo();
 
             calculate();
         }
@@ -948,8 +1099,11 @@
             document.querySelectorAll('.car-tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById('tab-' + carKey).classList.add('active');
 
+            // Update max values for sliders
             rangeSlider.max = car.maxRange;
+            targetRangeSlider.max = car.maxRange;
 
+            // Update current presets
             const presetContainer = document.getElementById('presetButtons');
             presetContainer.innerHTML = '';
             car.presets.forEach(preset => {
@@ -959,6 +1113,54 @@
                 btn.onclick = () => setRange(preset);
                 presetContainer.appendChild(btn);
             });
+
+            // Update target presets (80% of max range and full range)
+            const targetPresetContainer = document.getElementById('targetPresetButtons');
+            if (targetPresetContainer) {
+                targetPresetContainer.innerHTML = '';
+                const eightyPercent = Math.round(car.maxRange * 0.8);
+                const targetPresets = [
+                    Math.round(car.maxRange * 0.5),
+                    eightyPercent,
+                    Math.round(car.maxRange * 0.9),
+                    car.maxRange
+                ];
+
+                targetPresets.forEach(preset => {
+                    const btn = document.createElement('button');
+                    btn.className = 'preset-btn';
+                    btn.textContent = preset;
+                    btn.onclick = () => setTargetRange(preset);
+                    targetPresetContainer.appendChild(btn);
+                });
+
+                // Update the 80% tip text
+                const tipElement = document.querySelector('#range-input-section small');
+                if (tipElement) {
+                    const tipEn = `💡 Tip: 80% charge (${eightyPercent}km) is recommended for daily use`;
+                    const tipId = `💡 Tips: Cas 80% (${eightyPercent}km) direkomendasikan untuk pemakaian harian`;
+                    tipElement.setAttribute('data-en', tipEn);
+                    tipElement.setAttribute('data-id', tipId);
+                    if (currentLang === 'en') {
+                        tipElement.textContent = tipEn;
+                    } else {
+                        tipElement.textContent = tipId;
+                    }
+                }
+            }
+
+            // Adjust current input if it exceeds new max
+            let currentVal = parseFloat(rangeInput.value) || 0;
+            if (currentVal > car.maxRange) {
+                rangeInput.value = Math.floor(car.maxRange * 0.25);
+            }
+
+            // Adjust target input
+            let targetVal = parseFloat(targetRangeInput.value) || car.maxRange;
+            if (targetVal > car.maxRange) {
+                targetRangeInput.value = car.maxRange;
+                targetRangeSlider.value = car.maxRange;
+            }
 
             calculate();
         }
@@ -1021,27 +1223,65 @@
             let kwhToBattery = 0;  // Actual energy stored in battery
             let percentToAdd = 0;
             let rangeToAdd = 0;
+            let currentValue = 0;
+            let targetValue = 0;
 
             if (inputMode === 'range') {
+                // Get current range
                 let currentRange = parseFloat(rangeInput.value) || 0;
                 if (currentRange < 0) currentRange = 0;
                 if (currentRange > car.maxRange) currentRange = car.maxRange;
 
+                // Get target range
+                let targetRange = parseFloat(targetRangeInput.value) || car.maxRange;
+                if (targetRange < 0) targetRange = 0;
+                if (targetRange > car.maxRange) targetRange = car.maxRange;
+
+                // Ensure target is not less than current
+                if (targetRange <= currentRange) {
+                    targetRange = car.maxRange;
+                    targetRangeInput.value = targetRange;
+                }
+
+                // Sync inputs and sliders
                 rangeInput.value = currentRange;
                 rangeSlider.value = currentRange;
+                targetRangeInput.value = targetRange;
+                targetRangeSlider.value = targetRange;
 
-                rangeToAdd = car.maxRange - currentRange;
+                currentValue = currentRange;
+                targetValue = targetRange;
+
+                rangeToAdd = targetRange - currentRange;
                 kwhToBattery = (rangeToAdd / car.maxRange) * car.battery;
                 percentToAdd = (kwhToBattery / car.battery) * 100;
             } else {
+                // Get current percentage
                 let currentPercent = parseFloat(percentageInput.value) || 0;
                 if (currentPercent < 0) currentPercent = 0;
                 if (currentPercent > 100) currentPercent = 100;
 
+                // Get target percentage
+                let targetPercent = parseFloat(targetPercentageInput.value) || 100;
+                if (targetPercent < 0) targetPercent = 0;
+                if (targetPercent > 100) targetPercent = 100;
+
+                // Ensure target is not less than current
+                if (targetPercent <= currentPercent) {
+                    targetPercent = 100;
+                    targetPercentageInput.value = targetPercent;
+                }
+
+                // Sync inputs and sliders
                 percentageInput.value = currentPercent;
                 percentageSlider.value = currentPercent;
+                targetPercentageInput.value = targetPercent;
+                targetPercentageSlider.value = targetPercent;
 
-                percentToAdd = 100 - currentPercent;
+                currentValue = currentPercent;
+                targetValue = targetPercent;
+
+                percentToAdd = targetPercent - currentPercent;
                 kwhToBattery = (percentToAdd / 100) * car.battery;
                 rangeToAdd = (percentToAdd / 100) * car.maxRange;
             }
@@ -1069,15 +1309,36 @@
             document.getElementById('rangeToAdd').textContent = Math.round(rangeToAdd) + ' km';
             document.getElementById('percentToAdd').textContent = Math.round(percentToAdd) + '%';
 
-            // Format time with language
-            const t = translations[currentLang];
+            // Update range/percentage indicators
+            if (inputMode === 'range') {
+                document.getElementById('currentRangeDisplay').textContent = Math.round(currentValue) + ' km';
+                document.getElementById('targetRangeDisplay').textContent = Math.round(targetValue) + ' km';
+                // Calculate percentage of max range
+                const car = cars[currentCar];
+                const targetPercent = Math.round((targetValue / car.maxRange) * 100);
+                document.getElementById('percentIndicator').textContent = targetPercent + '%';
+            } else {
+                document.getElementById('currentPercentDisplay').textContent = Math.round(currentValue) + '%';
+                document.getElementById('targetPercentDisplay').textContent = Math.round(targetValue) + '%';
+                document.getElementById('percentIndicator').textContent = Math.round(targetValue) + '%';
+            }
+
+            // Format time with language (with fallback)
+            let timeText = '';
             if (chargingTime < 60) {
-                document.getElementById('chargeTime').textContent = Math.round(chargingTime) + ' ' + t.minutes;
+                timeText = Math.round(chargingTime) + ' min';
+                if (typeof translations !== 'undefined' && translations[currentLang]) {
+                    timeText = Math.round(chargingTime) + ' ' + translations[currentLang].minutes;
+                }
             } else {
                 const hours = Math.floor(chargingTime / 60);
                 const mins = Math.round(chargingTime % 60);
-                document.getElementById('chargeTime').textContent = hours + t.hours + ' ' + mins + t.minutes;
+                timeText = hours + 'h ' + mins + 'min';
+                if (typeof translations !== 'undefined' && translations[currentLang]) {
+                    timeText = hours + translations[currentLang].hours + ' ' + mins + translations[currentLang].minutes;
+                }
             }
+            document.getElementById('chargeTime').textContent = timeText;
 
             // Format cost - NO DECIMALS
             document.getElementById('estCost').textContent = 'Rp ' + totalCost.toLocaleString('id-ID');
@@ -1088,21 +1349,43 @@
             calculate();
         }
 
+        function setTargetRange(val) {
+            targetRangeInput.value = val;
+            calculate();
+        }
+
         function setPercentage(val) {
             percentageInput.value = val;
             calculate();
         }
 
-        // Event listeners
+        function setTargetPercentage(val) {
+            targetPercentageInput.value = val;
+            calculate();
+        }
+
+        // Event listeners for current status
         rangeInput.addEventListener('input', calculate);
         rangeSlider.addEventListener('input', function() {
             rangeInput.value = this.value;
             calculate();
         });
 
+        targetRangeInput.addEventListener('input', calculate);
+        targetRangeSlider.addEventListener('input', function() {
+            targetRangeInput.value = this.value;
+            calculate();
+        });
+
         percentageInput.addEventListener('input', calculate);
         percentageSlider.addEventListener('input', function() {
             percentageInput.value = this.value;
+            calculate();
+        });
+
+        targetPercentageInput.addEventListener('input', calculate);
+        targetPercentageSlider.addEventListener('input', function() {
+            targetPercentageInput.value = this.value;
             calculate();
         });
 
