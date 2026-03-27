@@ -1006,15 +1006,15 @@
     </div>
 
     <script>
-        // Car configurations
+        // Car configurations with manufacturer charging limits
         const cars = {
-            aionV_Luxury: { name: 'Aion V Luxury', battery: 75.3, maxRange: 602, presets: [50, 100, 200, 300] },
-            aionV_Exclusive: { name: 'Aion V Exclusive', battery: 64.5, maxRange: 505, presets: [50, 100, 150, 250] },
-            aionY_Exclusive: { name: 'Aion Y Plus Exclusive', battery: 50.66, maxRange: 410, presets: [50, 100, 150, 200] },
-            aionY_Premium: { name: 'Aion Y Plus Premium', battery: 63.2, maxRange: 490, presets: [50, 100, 200, 250] },
-            aionUT_Standard: { name: 'Aion UT Standard', battery: 44.12, maxRange: 400, presets: [50, 100, 150, 200] },
-            aionUT_Premium: { name: 'Aion UT Premium', battery: 60, maxRange: 500, presets: [50, 100, 150, 250] },
-            aionHyptec_HT: { name: 'Aion Hyptec HT Premium', battery: 83, maxRange: 620, presets: [50, 100, 200, 300] }
+            aionV_Luxury: { name: 'Aion V Luxury', battery: 75.3, maxRange: 602, maxDcPower: 180, presets: [50, 100, 200, 300] },
+            aionV_Exclusive: { name: 'Aion V Exclusive', battery: 64.5, maxRange: 505, maxDcPower: 150, presets: [50, 100, 150, 250] },
+            aionY_Exclusive: { name: 'Aion Y Plus Exclusive', battery: 50.66, maxRange: 410, maxDcPower: 80, presets: [50, 100, 150, 200] },
+            aionY_Premium: { name: 'Aion Y Plus Premium', battery: 63.2, maxRange: 490, maxDcPower: 80, presets: [50, 100, 200, 250] },
+            aionUT_Standard: { name: 'Aion UT Standard', battery: 44.12, maxRange: 400, maxDcPower: 64, presets: [50, 100, 150, 200] },
+            aionUT_Premium: { name: 'Aion UT Premium', battery: 60, maxRange: 500, maxDcPower: 87, presets: [50, 100, 150, 250] },
+            aionHyptec_HT: { name: 'Aion Hyptec HT Premium', battery: 83, maxRange: 620, maxDcPower: 280, presets: [50, 100, 200, 300] }
         };
 
         // Charging efficiency factors based on research
@@ -1024,6 +1024,10 @@
             ac: 0.90,  // 10% loss for AC charging (Home 7.4kW, Public 22kW)
             dc: 0.93   // 7% loss for DC fast charging (60kW and above)
         };
+
+        // Manufacturer charging limits
+        const AC_CHARGING_LIMIT = 7; // kW - All Aion cars limited to 7kW max on AC
+        // DC limits are per-car in the cars object (maxDcPower)
 
         // DOM elements
         const rangeInput = document.getElementById('rangeInput');
@@ -1181,23 +1185,74 @@
             document.querySelectorAll('.charger-option').forEach(opt => opt.classList.remove('active'));
             event.currentTarget.classList.add('active');
 
-            // Update efficiency info box
+            // Update efficiency info box with limit warning if applicable
             updateEfficiencyInfo();
+
+            // Show limit warning
+            showChargingLimitWarning();
+
             calculate();
+        }
+
+        function showChargingLimitWarning() {
+            const car = cars[currentCar];
+            let warningText = '';
+            let warningId = '';
+
+            if (currentChargerType === 'ac' && currentChargerPower > AC_CHARGING_LIMIT) {
+                // AC charging limited to 7kW
+                warningId = currentLang === 'en' ? 
+                    `⚠️ Limited to ${AC_CHARGING_LIMIT}kW (car max) despite ${currentChargerPower}kW station` :
+                    `⚠️ Dibatasi ${AC_CHARGING_LIMIT}kW (maks mobil) meski stasiun ${currentChargerPower}kW`;
+            } else if (currentChargerType === 'dc' && currentChargerPower > car.maxDcPower) {
+                // DC charging limited by car capability
+                warningId = currentLang === 'en' ?
+                    `⚠️ Limited to ${car.maxDcPower}kW (car max) despite ${currentChargerPower}kW station` :
+                    `⚠️ Dibatasi ${car.maxDcPower}kW (maks mobil) meski stasiun ${currentChargerPower}kW`;
+            }
+
+            // Update or create warning element
+            let warningEl = document.getElementById('chargerLimitWarning');
+            if (!warningEl) {
+                warningEl = document.createElement('div');
+                warningEl.id = 'chargerLimitWarning';
+                warningEl.style.cssText = 'background: rgba(255,193,7,0.2); border-left: 3px solid #ffc107; padding: 10px; margin-top: 10px; border-radius: 0 8px 8px 0; font-size: 0.8rem; color: #ffc107;';
+                document.querySelector('.charger-section').appendChild(warningEl);
+            }
+
+            warningEl.textContent = warningId;
+            warningEl.style.display = warningId ? 'block' : 'none';
         }
 
         function updateEfficiencyInfo() {
             const efficiencyBox = document.getElementById('efficiencyInfo');
+            const car = cars[currentCar];
             const isAC = currentChargerType === 'ac';
             const efficiency = isAC ? '90' : '93';
             const loss = isAC ? '10' : '7';
 
+            // Calculate effective power
+            let effectivePower = currentChargerPower;
+            let limitNote = '';
+
+            if (isAC && currentChargerPower > AC_CHARGING_LIMIT) {
+                effectivePower = AC_CHARGING_LIMIT;
+                limitNote = currentLang === 'en' ? 
+                    ` (limited to ${AC_CHARGING_LIMIT}kW)` : 
+                    ` (dibatasi ${AC_CHARGING_LIMIT}kW)`;
+            } else if (!isAC && currentChargerPower > car.maxDcPower) {
+                effectivePower = car.maxDcPower;
+                limitNote = currentLang === 'en' ? 
+                    ` (limited to ${car.maxDcPower}kW)` : 
+                    ` (dibatasi ${car.maxDcPower}kW)`;
+            }
+
             if (currentLang === 'en') {
                 efficiencyBox.innerHTML = `<strong>⚡ Charging Efficiency Applied:</strong><br>
-                ${isAC ? 'AC Charging (Home/Public)' : 'DC Fast Charging'}: ~${efficiency}% efficiency (${loss}% loss)`;
+                ${isAC ? 'AC Charging' : 'DC Fast Charging'} @ ${effectivePower}kW${limitNote}: ~${efficiency}% efficiency (${loss}% loss)`;
             } else {
                 efficiencyBox.innerHTML = `<strong>⚡ Efisiensi Cas Diterapkan:</strong><br>
-                ${isAC ? 'Cas AC (Rumah/Publik)' : 'Cas Cepat DC'}: ~${efficiency}% efisiensi (${loss}% rugi)`;
+                ${isAC ? 'Cas AC' : 'Cas DC'} @ ${effectivePower}kW${limitNote}: ~${efficiency}% efisiensi (${loss}% rugi)`;
             }
         }
 
@@ -1291,8 +1346,19 @@
             const efficiencyFactor = CHARGING_EFFICIENCY[currentChargerType];
             const kwhFromGrid = kwhToBattery / efficiencyFactor;
 
-            // Calculate charging time based on GRID energy (what you pay for)
-            let chargingTime = (kwhFromGrid / currentChargerPower) * 60; // minutes
+            // Apply manufacturer charging limits
+            let effectiveChargerPower = currentChargerPower;
+
+            if (currentChargerType === 'ac') {
+                // All Aion cars limited to 7kW max on AC, even on 22kW stations
+                effectiveChargerPower = Math.min(currentChargerPower, AC_CHARGING_LIMIT);
+            } else {
+                // DC charging limited by car's max DC input capability
+                effectiveChargerPower = Math.min(currentChargerPower, car.maxDcPower);
+            }
+
+            // Calculate charging time based on effective power and GRID energy
+            let chargingTime = (kwhFromGrid / effectiveChargerPower) * 60; // minutes
 
             // Additional time factor for DC charging tapering at high SOC
             if (currentChargerType === 'dc' && percentToAdd > 50) {
