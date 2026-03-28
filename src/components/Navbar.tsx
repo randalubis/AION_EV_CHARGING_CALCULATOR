@@ -54,7 +54,7 @@ export function Navbar() {
                 <Zap className="w-6 h-6 text-forest-dark" />
               </div>
               <span className="text-white font-sans font-bold text-xl tracking-tight">
-                setrum<span className="text-[#FFC300]">.id</span>
+                evhub<span className="text-[#FFC300]">.id</span>
               </span>
             </Link>
 
