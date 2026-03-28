@@ -1,273 +1,74 @@
-# AION EV Charging Calculator | Kalkulator Cas AION
-
-<div align="center">
-
-⚡ **Smart EV Charging Calculator for GAC Aion Owners** ⚡  
-*Kalkulator Pintar untuk Pemilik GAC Aion*
-
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
-[![Community](https://img.shields.io/badge/Community-Aioners.id-red)](https://aioners.id)
-
-**[🇬🇧 English](#english) | [🇮🇩 Bahasa Indonesia](#bahasa-indonesia)**
-
-</div>
-
----
-
-<a name="english"></a>
-## 🇬🇧 English
-
-### 🚗 About This Project
-
-A **mobile-friendly web calculator** designed specifically for **GAC Aion electric vehicle owners** in Indonesia. Calculate your charging needs with **real-world efficiency losses** factored in, based on research from EPA, ADAC, and industry studies.
-
-**Live Demo**: [https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
-
-### ✨ Features
-
-| Feature | Description |
-|---------|-------------|
-| 🚙 **7 Car Models** | Supports all GAC Aion variants (V, Y Plus, UT, Hyptec series) |
-| 🔢 **Dual Input** | Calculate by remaining range (km) OR battery percentage (%) |
-| ⚡ **Real-World Efficiency** | Accounts for charging losses (AC: ~10%, DC: ~7%) |
-| 💡 **Dual Energy Display** | Shows both grid energy (paid) and battery energy (stored) |
-| ⚡ **7 Charger Types** | From Home AC (7.4kW) to Ultra Fast DC (480kW) |
-| 💰 **Indonesian Rates** | PLN R1/R2/R3 and Public charger rates in Rupiah |
-| 📍 **Maps Integration** | One-click to find nearest SPKLU charging stations |
-| 🔋 **Battery Tips** | Health guidelines for new EV owners |
-| 🌐 **Bilingual** | Toggle between English and Bahasa Indonesia |
-| 📱 **Mobile First** | Optimized for smartphones, works offline |
-
-### 🔋 Charging Efficiency (Research-Based)
-
-This calculator applies **real-world efficiency factors** based on research from EPA, ADAC, and industry studies (2023-2024):
-
-| Charger Type | Efficiency | Energy Loss | Research Sources |
-|-------------|-----------|-------------|------------------|
-| **AC Charging** (Home/Public) | ~90% | ~10% | EPA testing, ADAC studies |
-| **DC Fast Charging** | ~93% | ~7% | Industry data, peer-reviewed studies |
-
-**Note**: Extreme temperatures (hot/cold), battery age, and equipment quality can affect actual efficiency.
-
-### 🛠️ Supported Models
-
-| Model | Battery | Range |
-|-------|---------|-------|
-| Aion V Luxury | 75.3 kWh | 602 km |
-| Aion V Exclusive | 64.5 kWh | 505 km |
-| Aion Y Plus Exclusive | 50.66 kWh | 410 km |
-| Aion Y Plus Premium | 63.2 kWh | 490 km |
-| Aion UT Standard | 44.12 kWh | 400 km |
-| Aion UT Premium | 60 kWh | 500 km |
-| Aion Hyptec HT Premium | 83 kWh | 620 km |
-
-### 📱 How to Use
-
-1. **Select your Aion model** from the car selector
-2. **Choose input method**: By Range (km) or By Battery (%)
-3. **Enter current status**: Remaining range or battery percentage
-4. **Select charger type**: Home, Public AC, or DC Fast Charging
-5. **Select electricity rate**: PLN R1/R2/R3 or Public charger rate
-6. **View results**: 
-   - **Energy Required from Grid** - What you actually pay for (includes charging losses)
-   - **Battery Energy to Add** - What actually gets stored in your battery
-   - Charging time and estimated cost
-7. **Find stations**: Tap "Find Nearest Charging Station" for Google Maps
-
-### ⚡ Charger Types Available
-
-- Home Charger AC 7.4 kW
-- Public AC 22 kW
-- Fast DC 60 kW
-- Rapid DC 100 kW
-- Rapid DC 120 kW
-- Ultra DC 180 kW
-- Ultra Fast DC 480 kW
-
-### 💰 Electricity Rates (Indonesia)
-
-| Type | Rate (Rp/kWh) |
-|------|---------------|
-| PLN R1 | Rp 1,444 |
-| PLN R2 | Rp 2,076 |
-| PLN R3 | Rp 2,654 |
-| Public Charger | Rp 3,000 |
-| Custom | User input |
-
-### 🔋 Battery Health Tips Included
-
-- Avoid frequent DC fast charging for daily use
-- Keep battery between 20-80% for normal operation
-- Don't charge when battery is hot
-- Unplug when charging completes
-- Store at 50-60% for long-term parking
-- Precondition while plugged in extreme temperatures
-
-### ⚠️ Important Disclaimer
-
-This calculator provides **estimates** based on manufacturer specifications and **typical** charging efficiency data from EPA, ADAC, and industry research. **Actual results may vary** due to:
-
-- Battery temperature and ambient conditions (hot/cold weather increases losses)
-- Battery age and health degradation over time
-- Charging cable quality and length
-- Actual charger efficiency varying by brand/model
-- Charging above 80% is less efficient due to cell balancing
-- AC charging: ~10% loss | DC charging: ~7% loss (typical values)
-
-**Use this calculator as a reference guide only. Always monitor your actual charging sessions for accurate data.**
-
-### 🤝 Community
-
-Made with ❤️ for **[Aioners.id](https://aioners.id)** - Indonesia's GAC Aion Community
-
-Share this tool with fellow Aion owners!
-
----
-
-<a name="bahasa-indonesia"></a>
-## 🇮🇩 Bahasa Indonesia
-
-### 🚗 Tentang Proyek Ini
-
-**Kalkulator web ramah ponsel** yang dirancang khusus untuk **pemilik kendaraan listrik GAC Aion** di Indonesia. Hitung kebutuhan cas Anda dengan **rugi efisiensi dunia nyata** yang dihitung, berdasarkan riset EPA, ADAC, dan studi industri.
-
-**Demo Langsung**: [https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR](https://randalubis.github.io/AION_EV_CHARGING_CALCULATOR)
-
-### ✨ Fitur Unggulan
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| 🚙 **7 Model Mobil** | Mendukung semua varian GAC Aion (seri V, Y Plus, UT, Hyptec) |
-| 🔢 **Input Ganda** | Hitung berdasarkan sisa jarak (km) ATAU persentase baterai (%) |
-| ⚡ **Efisiensi Dunia Nyata** | Memperhitungkan rugi cas (AC: ~10%, DC: ~7%) |
-| 💡 **Tampilan Energi Ganda** | Menunjukkan energi grid (dibayar) dan energi baterai (tersimpan) |
-| ⚡ **7 Tipe Charger** | Dari Cas Rumah AC (7,4kW) sampai DC Ultra Cepat (480kW) |
-| 💰 **Tarif Indonesia** | Tarif PLN R1/R2/R3 dan charger publik dalam Rupiah |
-| 📍 **Integrasi Maps** | Satu klik mencari stasiun SPKLU terdekat |
-| 🔋 **Tips Baterai** | Panduan kesehatan baterai untuk pemilik EV baru |
-| 🌐 **Dua Bahasa** | Beralih antara Inggris dan Bahasa Indonesia |
-| 📱 **Mobile First** | Dioptimalkan untuk ponsel, berfungsi offline |
-
-### 🔋 Efisiensi Cas (Berdasarkan Riset)
-
-Kalkulator ini menerapkan **faktor efisiensi dunia nyata** berdasarkan riset EPA, ADAC, dan studi industri (2023-2024):
-
-| Tipe Charger | Efisiensi | Rugi Energi | Sumber Riset |
-|-------------|-----------|-------------|--------------|
-| **Cas AC** (Rumah/Publik) | ~90% | ~10% | Uji EPA, studi ADAC |
-| **Cas Cepat DC** | ~93% | ~7% | Data industri, studi peer-reviewed |
-
-**Catatan**: Suhu ekstrem (panas/dingin), usia baterai, dan kualitas peralatan dapat mempengaruhi efisiensi aktual.
-
-### 🛠️ Model yang Didukung
-
-| Model | Baterai | Jarak |
-|-------|---------|-------|
-| Aion V Luxury | 75,3 kWh | 602 km |
-| Aion V Exclusive | 64,5 kWh | 505 km |
-| Aion Y Plus Exclusive | 50,66 kWh | 410 km |
-| Aion Y Plus Premium | 63,2 kWh | 490 km |
-| Aion UT Standard | 44,12 kWh | 400 km |
-| Aion UT Premium | 60 kWh | 500 km |
-| Aion Hyptec HT Premium | 83 kWh | 620 km |
-
-### 📱 Cara Penggunaan
-
-1. **Pilih model Aion** Anda dari pemilih mobil
-2. **Pilih metode input**: Berdasarkan Jarak (km) atau Baterai (%)
-3. **Masukkan status saat ini**: Sisa jarak atau persentase baterai
-4. **Pilih tipe charger**: Rumah, Publik AC, atau DC Cas Cepat
-5. **Pilih tarif listrik**: PLN R1/R2/R3 atau tarif charger publik
-6. **Lihat hasil**:
-   - **Energi Dibutuhkan dari Grid** - Yang Anda bayar (termasuk rugi cas)
-   - **Energi Baterai Ditambah** - Yang benar-benar tersimpan di baterai
-   - Waktu cas dan estimasi biaya
-7. **Cari stasiun**: Ketuk "Cari Stasiun Cas Terdekat" untuk Google Maps
-
-### ⚡ Tipe Charger Tersedia
-
-- Cas Rumah AC 7,4 kW
-- Publik AC 22 kW
-- Cepat DC 60 kW
-- Super DC 100 kW
-- Super DC 120 kW
-- Ultra DC 180 kW
-- Ultra Cepat DC 480 kW
-
-### 💰 Tarif Listrik (Indonesia)
-
-| Tipe | Tarif (Rp/kWh) |
-|------|----------------|
-| PLN R1 | Rp 1.444 |
-| PLN R2 | Rp 2.076 |
-| PLN R3 | Rp 2.654 |
-| Charger Publik | Rp 3.000 |
-| Kustom | Input pengguna |
-
-### 🔋 Tips Kesehatan Baterai
-
-- Hindari cas cepat DC untuk penggunaan harian
-- Pertahankan baterai 20-80% untuk operasi normal
-- Jangan cas saat baterai panas
-- Cabut setelah cas selesai
-- Simpan di 50-60% untuk parkir jangka panjang
-- Kondisikan saat tercolok di suhu ekstrem
-
-### ⚠️ Penyangkalan Penting
-
-Kalkulator ini memberikan **estimasi** berdasarkan spesifikasi pabrik dan data efisiensi cas **tipikal** dari riset EPA, ADAC, dan industri. **Hasil aktual dapat bervariasi** karena:
-
-- Suhu baterai dan kondisi sekitar (cuaca panas/dingin meningkatkan rugi)
-- Usia baterai dan penurunan kesehatan seiring waktu
-- Kualitas dan panjang kabel cas
-- Efisiensi charger aktual bervariasi menurut merek/model
-- Cas di atas 80% kurang efisien karena penyeimbangan sel
-- Cas AC: hilang ~10% | Cas DC: hilang ~7% (angka tipikal)
-
-**Gunakan kalkulator ini sebagai panduan referensi saja. Selalu pantau sesi cas aktual Anda untuk data akurat.**
-
-### 🤝 Komunitas
-
-Dibuat dengan ❤️ untuk **[Aioners.id](https://aioners.id)** - Komunitas GAC Aion Indonesia
-
-Bagikan alat ini ke sesama pemilik Aion!
-
----
-
-## 🚀 Technical Details | Detail Teknis
-
-### Built With | Dibuat Dengan
-- HTML5
-- CSS3 (with mobile-first responsive design)
-- Vanilla JavaScript (no frameworks needed)
-- GitHub Pages (free hosting)
-
-### Browser Support | Dukungan Browser
-- ✅ Chrome / Safari / Firefox / Edge
-- ✅ iOS Safari (iPhone & iPad)
-- ✅ Android Chrome
-- ✅ Works offline after first load
-
-### File Structure | Struktur File
-```
-aion-calculator/
-├── index.html          # Main calculator file
-└── README.md           # This file
+# AirLens - Portfolio Template
+
+A premium single-page portfolio template with a dark forest theme, featuring cinematic scroll animations, parallax effects, and a photography/creative-focused design.
+
+## Features
+
+- **Hero Section** - Full-screen parallax layered hero with large background text, cutout model image, and overlay text
+- **Intro Grid** - Split-line mask reveal title with masonry image grid featuring per-image directional clip-path reveals, Ken Burns zoom, and varied-depth parallax
+- **Services** - Two-column layout with animated heading and staggered service cards in a 2x2 grid
+- **Why Choose Me** - Feature cards with clip-path reveal animations, animated stat counters, and a wide landscape image with center-expand reveal
+- **Featured Projects** - Alternating layout project cards with clip-path reveals, parallax images, viewfinder overlays, and staggered text animations
+- **Testimonials** - Auto-playing Swiper carousel with hover color-invert effect and gradient fade overlays
+- **FAQ** - Radix UI accordion with staggered reveal animations and CTA button
+- **Footer** - Massive SVG logo text, three-column layout with contact info, navigation, and social links
+
+## Tech Stack
+
+- **React 19** + **TypeScript**
+- **Vite** - Build tool
+- **Tailwind CSS 3** - Utility-first styling
+- **GSAP** + **ScrollTrigger** - Scroll-driven animations and parallax
+- **Lenis** - Smooth scroll
+- **Swiper** - Testimonials carousel
+- **Radix UI** - Accessible accordion component
+- **Lucide React** - Icon library
+
+## Quick Start
+
+```bash
+npm install
+npm run dev
 ```
 
-### Research Sources | Sumber Riset
-- EPA (US Environmental Protection Agency) EV efficiency data
-- ADAC (German Automobile Club) charging studies
-- Peer-reviewed industry journals (2023-2024)
-- Real-world EV owner testing data
+## Configuration
 
----
+All content is managed through `src/config.ts`. Each section has its own typed configuration object with empty placeholder values. Fill in the config objects to populate the site.
 
-<div align="center">
+Each section has a null check - if the config is empty (no title and no array items), the section will not render.
 
-**[⬆ Back to Top | Kembali ke Atas](#aion-ev-charging-calculator--kalkulator-cas-aion)**
+### Config Objects
 
-Made with ⚡ for Aioners.id Community  
-*Dibuat dengan ⚡ untuk Komunitas Aioners.id*
+- `siteConfig` - Site title, description, language
+- `heroConfig` - Background text, hero image, overlay text, brand name, navigation links
+- `introGridConfig` - Title lines, description, portfolio images, accent text
+- `featuredProjectsConfig` - Section titles, projects with images/descriptions
+- `servicesConfig` - Section titles, service items with icons
+- `whyChooseMeConfig` - Feature cards, stats, wide landscape image
+- `testimonialsConfig` - Testimonial cards with quotes and author info
+- `faqConfig` - FAQ items, CTA button
+- `footerConfig` - Logo, contact info, navigation, social links, copyright
 
-</div>
+## Required Images
+
+Place images in the `public/` directory:
+
+- **Hero**: A cutout/transparent PNG for the hero model image (recommended: ~500px wide)
+- **Portfolio**: 5 images for the masonry grid (various aspect ratios)
+- **Featured Projects**: 1 image per project (4:3 aspect ratio recommended)
+- **Why Choose Me**: 2 portrait images (3:4 aspect ratio), 1 wide landscape (21:9 or 3:1 aspect ratio)
+- **Testimonials**: 1 avatar image per testimonial (square, small)
+
+## Design
+
+- **Color Theme**: Deep forest charcoal (#0d1310) with off-white (#f4f4f4) alternating sections
+- **Typography**: Manrope (headings), Playfair Display (italic accents), DM Sans (body)
+- **Animations**: GSAP ScrollTrigger with clip-path reveals, parallax, scale effects, and staggered entrances
+- **Layout**: Alternating dark/light sections, max-width 7xl container
+
+## Notes
+
+- All animations use GSAP with ScrollTrigger for scroll-driven effects
+- Lenis provides smooth scroll behavior connected to GSAP ticker
+- The Swiper carousel auto-plays with configurable breakpoints
+- Service and footer icons use a string-to-component map (iconName field maps to Lucide icon components: Camera, Diamond, Users, Sparkles, Instagram, Twitter, Linkedin, Mail)
