@@ -9,7 +9,7 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   language: "id",
-  siteTitle: "setrum.id - Platform EV Charging Indonesia",
+  siteTitle: "evhub.id - Platform EV Charging Indonesia",
   siteDescription: "Platform terpercaya untuk pemilik kendaraan listrik di Indonesia. Kalkulator charging, peta SPKLU, trip planner, dan komunitas EV dalam satu tempat.",
 };
 
@@ -28,7 +28,7 @@ export const heroConfig: HeroConfig = {
   heroImage: "/hero-ev.png",
   heroImageAlt: "Mobil listrik modern sedang charging",
   overlayText: "Masa depan mobilitas Indonesia",
-  brandName: "setrum.id",
+  brandName: "evhub.id",
   navLinks: [
     { label: "Kalkulator", href: "#kalkulator" },
     { label: "Peta SPKLU", href: "#peta" },
@@ -55,7 +55,7 @@ export interface IntroGridConfig {
 export const introGridConfig: IntroGridConfig = {
   titleLine1: "Ekosistem Charging",
   titleLine2: "untuk Indonesia",
-  description: "setrum.id hadir sebagai solusi lengkap bagi pemilik kendaraan listrik di Indonesia. Dari kalkulator charging yang akurat, peta SPKLU real-time, hingga trip planner untuk perjalanan lintas kota — semua dalam satu platform yang dirancang khusus untuk kondisi Indonesia.",
+  description: "evhub.id hadir sebagai solusi lengkap bagi pemilik kendaraan listrik di Indonesia. Dari kalkulator charging yang akurat, peta SPKLU real-time, hingga trip planner untuk perjalanan lintas kota — semua dalam satu platform yang dirancang khusus untuk kondisi Indonesia.",
   portfolioImages: [
     { src: "/grid-1.jpg", alt: "Stasiun charging modern di malam hari" },
     { src: "/grid-2.jpg", alt: "Close-up port charging EV" },
@@ -148,7 +148,7 @@ export const servicesConfig: ServicesConfig = {
   subtitle: "Apa yang Kami Tawarkan",
   titleLine1: "Dari Pemilik EV",
   titleLine2Italic: "Untuk Pemilik EV",
-  description: "setrum.id dibangun oleh tim yang memahami tantangan nyata pemilik kendaraan listrik di Indonesia. Setiap fitur dirancang untuk menjawab pertanyaan: 'Apakah saya bisa sampai?' dan 'Bagaimana cara charging lebih pintar?'",
+  description: "evhub.id dibangun oleh tim yang memahami tantangan nyata pemilik kendaraan listrik di Indonesia. Setiap fitur dirancang untuk menjawab pertanyaan: 'Apakah saya bisa sampai?' dan 'Bagaimana cara charging lebih pintar?'",
   services: [
     {
       iconName: "Zap",
@@ -201,7 +201,7 @@ export interface WhyChooseMeConfig {
 }
 
 export const whyChooseMeConfig: WhyChooseMeConfig = {
-  subtitle: "Mengapa setrum.id",
+  subtitle: "Mengapa evhub.id",
   titleRegular: "Platform",
   titleItalic: "Terpercaya",
   statsLabel: "Dalam Angka",
@@ -257,7 +257,7 @@ export const testimonialsConfig: TestimonialsConfig = {
       name: "Budi Santoso",
       role: "Pemilik Wuling Air EV",
       image: "/testi-1.jpg",
-      quote: "setrum.id sangat membantu saya memahami berapa lama waktu charging dan berapa biayanya. Sebelumnya saya selalu bingung dengan perhitungan manual."
+      quote: "evhub.id sangat membantu saya memahami berapa lama waktu charging dan berapa biayanya. Sebelumnya saya selalu bingung dengan perhitungan manual."
     },
     {
       id: 2,
@@ -271,7 +271,7 @@ export const testimonialsConfig: TestimonialsConfig = {
       name: "Ahmad Wijaya",
       role: "Fleet Manager",
       image: "/testi-3.jpg",
-      quote: "Sebagai fleet manager, setrum.id membantu saya mengoptimalkan biaya charging untuk 15 mobil listrik perusahaan kami."
+      quote: "Sebagai fleet manager, evhub.id membantu saya mengoptimalkan biaya charging untuk 15 mobil listrik perusahaan kami."
     },
   ],
 };
@@ -299,11 +299,11 @@ export const faqConfig: FAQConfig = {
   titleItalic: "Ditanyakan",
   ctaText: "Masih punya pertanyaan?",
   ctaButtonText: "Hubungi Kami",
-  ctaHref: "mailto:hello@setrum.id",
+  ctaHref: "mailto:hello@evhub.id",
   faqs: [
     {
       id: "faq-1",
-      question: "Apakah setrum.id gratis digunakan?",
+      question: "Apakah evhub.id gratis digunakan?",
       answer: "Ya, kalkulator charging dan informasi dasar SPKLU dapat diakses secara gratis. Fitur premium seperti trip planner detail dan notifikasi WhatsApp akan tersedia di masa depan."
     },
     {
@@ -323,7 +323,7 @@ export const faqConfig: FAQConfig = {
     },
     {
       id: "faq-5",
-      question: "Apakah setrum.id tersedia dalam bahasa Inggris?",
+      question: "Apakah evhub.id tersedia dalam bahasa Inggris?",
       answer: "Saat ini platform kami dalam bahasa Indonesia. Dukungan bahasa Inggris akan segera hadir untuk memudahkan pengguna internasional di Indonesia."
     },
     {
@@ -361,9 +361,9 @@ export interface FooterConfig {
 }
 
 export const footerConfig: FooterConfig = {
-  logoText: "SETRUM",
+  logoText: "EVHUB",
   contactLabel: "Hubungi Kami",
-  email: "hello@setrum.id",
+  email: "hello@evhub.id",
   locationText: "Jakarta, Indonesia",
   navigationLabel: "Navigasi",
   navLinks: [
@@ -375,13 +375,13 @@ export const footerConfig: FooterConfig = {
   ],
   socialLabel: "Ikuti Kami",
   socialLinks: [
-    { iconName: "Instagram", href: "https://instagram.com/setrum.id", label: "Instagram" },
-    { iconName: "Twitter", href: "https://twitter.com/setrumid", label: "Twitter" },
-    { iconName: "Linkedin", href: "https://linkedin.com/company/setrum", label: "LinkedIn" },
-    { iconName: "Mail", href: "mailto:hello@setrum.id", label: "Email" },
+    { iconName: "Instagram", href: "https://instagram.com/evhub.id", label: "Instagram" },
+    { iconName: "Twitter", href: "https://twitter.com/evhubid", label: "Twitter" },
+    { iconName: "Linkedin", href: "https://linkedin.com/company/evhub", label: "LinkedIn" },
+    { iconName: "Mail", href: "mailto:hello@evhub.id", label: "Email" },
   ],
   tagline: "Masa depan mobilitas Indonesia\nDimulai dari sini",
-  copyright: "© 2026 setrum.id. All rights reserved.",
+  copyright: "© 2026 evhub.id. All rights reserved.",
   bottomLinks: [
     { label: "Kebijakan Privasi", href: "#privacy" },
     { label: "Syarat Penggunaan", href: "#terms" },
