@@ -1,38 +1,39 @@
 // Electricity Rates in Indonesia (IDR per kWh)
 // Source: PLN Tarif Dasar Listrik 2025
+// Synced with charging calculator data
 
 import type { ElectricityRate } from '../types';
 
 export const ELECTRICITY_RATES: ElectricityRate[] = [
   {
     category: 'pln_r1',
-    name: 'PLN R1 (≤2.200 VA)',
+    name: 'PLN R1',
     ratePerKwh: 1444,
-    description: 'Rumah tangga daya ≤ 2.200 VA (termasuk 1.300 VA)',
+    description: 'Rumah tangga daya ≤ 3.500 VA',
   },
   {
     category: 'pln_r2',
-    name: 'PLN R2 (3.500-5.500 VA)',
-    ratePerKwh: 1695,
-    description: 'Rumah tangga daya 3.500 VA sampai 5.500 VA',
+    name: 'PLN R2',
+    ratePerKwh: 2076,
+    description: 'Rumah tangga daya 3.500–6.600 VA',
   },
   {
     category: 'pln_r3',
-    name: 'PLN R3 (>6.600 VA)',
-    ratePerKwh: 1444,
+    name: 'PLN R3',
+    ratePerKwh: 2654,
     description: 'Rumah tangga daya > 6.600 VA',
   },
   {
     category: 'public_ac',
     name: 'SPKLU AC (Public)',
     ratePerKwh: 3000,
-    description: 'Stasiun pengisian umum AC - rata-rata',
+    description: 'Perkiraan tarif SPKLU publik AC',
   },
   {
     category: 'public_dc',
     name: 'SPKLU DC (Public)',
     ratePerKwh: 4500,
-    description: 'Stasiun pengisian umum DC Fast Charging - rata-rata',
+    description: 'Perkiraan tarif SPKLU publik DC',
   },
 ];
 

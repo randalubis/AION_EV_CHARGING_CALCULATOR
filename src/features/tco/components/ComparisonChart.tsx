@@ -138,14 +138,7 @@ export function ComparisonChart({ result }: ComparisonChartProps) {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip 
-                  formatter={(value: number) => `Rp ${formatCompactNumber(value)}`}
-                  contentStyle={{ 
-                    backgroundColor: '#1a1a1a', 
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px'
-                  }}
-                />
+                <Tooltip content={<CustomTooltip />} />
                 <Legend 
                   verticalAlign="bottom" 
                   height={36}

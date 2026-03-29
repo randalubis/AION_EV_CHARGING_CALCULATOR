@@ -10,6 +10,7 @@ import { ComparisonChart } from '../features/tco/components/ComparisonChart';
 import { CostBreakdown } from '../features/tco/components/CostBreakdown';
 import { SavingsSummary } from '../features/tco/components/SavingsSummary';
 import { EmptyState } from '../features/tco/components/EmptyState';
+import { CalculationMethodology } from '../features/tco/components/CalculationMethodology';
 
 export default function TCOPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -186,6 +187,11 @@ export default function TCOPage() {
             </div>
           )}
           
+          {/* Calculation Methodology */}
+          <section className="animate-in">
+            <CalculationMethodology />
+          </section>
+          
           {/* Results Section */}
           {result && (
             <div ref={resultsRef} className="animate-in space-y-8 pt-8 border-t border-white/10">
@@ -207,16 +213,6 @@ export default function TCOPage() {
               {/* Detailed Breakdown */}
               <CostBreakdown result={result} />
               
-              {/* Disclaimer */}
-              <div className="bg-forest-mid/30 rounded-xl p-6 border-l-4 border-[#FFC300]">
-                <h4 className="text-[#FFC300] font-semibold mb-2">Catatan Penting</h4>
-                <ul className="text-white/60 text-sm space-y-1">
-                  <li>• Perhitungan ini adalah estimasi berdasarkan data rata-rata pasar.</li>
-                  <li>• Harga kendaraan, bahan bakar, dan listrik dapat berubah sewaktu-waktu.</li>
-                  <li>• Biaya perawatan aktual dapat bervariasi tergantung kondisi penggunaan.</li>
-                  <li>• Depresiasi nilai kendaraan dipengaruhi oleh kondisi pasar bekas.</li>
-                </ul>
-              </div>
             </div>
           )}
         </div>
