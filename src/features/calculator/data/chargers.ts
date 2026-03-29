@@ -1,4 +1,4 @@
-import { Charger } from '../types';
+import type { Charger } from '../types';
 
 export const CHARGERS: Charger[] = [
   { label: "Home Charger (7.4 kW AC)", kw: 7.4, type: "ac" },

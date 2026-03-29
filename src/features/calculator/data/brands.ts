@@ -1,4 +1,4 @@
-import { Brand } from '../types';
+import type { Brand } from '../types';
 
 export const BRANDS: Brand[] = [
   { id: "bmw", name: "BMW", short: "BMW" },

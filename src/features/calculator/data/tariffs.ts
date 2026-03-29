@@ -1,4 +1,4 @@
-import { Tariff } from '../types';
+import type { Tariff } from '../types';
 
 export const TARIFFS: Tariff[] = [
   { label: "PLN R1", val: 1444, desc: "Rumah daya ≤ 3.500 VA" },
