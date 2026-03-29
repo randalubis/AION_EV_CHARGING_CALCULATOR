@@ -173,7 +173,7 @@ export const servicesConfig: ServicesConfig = {
   ],
 };
 
-// Why Choose Me Section - Repurposed as Why setrum.id
+// Why Choose Me Section - Repurposed as Why evhub.id
 export interface StatItem {
   value: number;
   suffix: string;

@@ -299,7 +299,7 @@ export function LandingPage() {
               </span>
             </h2>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              setrum.id menyediakan tools lengkap untuk membantu kamu 
+              evhub.id menyediakan tools lengkap untuk membantu kamu 
               mengoptimalkan pengalaman memiliki kendaraan listrik di Indonesia.
             </p>
           </div>
@@ -385,14 +385,14 @@ export function LandingPage() {
             {/* Left: Content */}
             <div>
               <p className="text-[#FFC300] text-sm font-body uppercase tracking-widest mb-4">
-                Mengapa setrum.id
+                Mengapa evhub.id
               </p>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold text-white mb-6">
                 Platform
                 <span className="font-serif italic font-normal text-white/80"> Terpercaya</span>
               </h2>
               <p className="text-white/60 text-lg mb-8 leading-relaxed">
-                setrum.id dibangun oleh tim yang memahami tantangan nyata pemilik 
+                evhub.id dibangun oleh tim yang memahami tantangan nyata pemilik 
                 kendaraan listrik di Indonesia. Setiap fitur dirancang untuk menjawab 
                 pertanyaan: "Apakah saya bisa sampai?" dan "Bagaimana cara charging lebih pintar?"
               </p>
@@ -515,7 +515,7 @@ export function LandingPage() {
                   <Zap className="w-6 h-6 text-forest-dark" />
                 </div>
                 <span className="text-white font-sans font-bold text-xl">
-                  setrum<span className="text-[#FFC300]">.id</span>
+                  evhub<span className="text-[#FFC300]">.id</span>
                 </span>
               </Link>
               <p className="text-white/50 max-w-sm mb-6">

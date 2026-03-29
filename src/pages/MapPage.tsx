@@ -30,7 +30,7 @@ export function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'Peta SPKLU | setrum.id';
+    document.title = 'Peta SPKLU | evhub.id';
 
     const ctx = gsap.context(() => {
       const animateElements = containerRef.current?.querySelectorAll('.animate-in');

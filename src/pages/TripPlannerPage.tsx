@@ -30,7 +30,7 @@ export function TripPlannerPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'Trip Planner | setrum.id';
+    document.title = 'Trip Planner | evhub.id';
 
     const ctx = gsap.context(() => {
       const animateElements = containerRef.current?.querySelectorAll('.animate-in');

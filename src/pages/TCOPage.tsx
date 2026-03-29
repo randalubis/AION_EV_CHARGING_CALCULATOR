@@ -30,7 +30,7 @@ export function TCOPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'TCO Calculator | setrum.id';
+    document.title = 'TCO Calculator | evhub.id';
 
     const ctx = gsap.context(() => {
       const animateElements = containerRef.current?.querySelectorAll('.animate-in');

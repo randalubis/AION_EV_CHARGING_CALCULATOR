@@ -21,7 +21,7 @@ export function CalculatorPage() {
 
   useEffect(() => {
     // Update page title
-    document.title = 'Kalkulator Charging EV | setrum.id';
+    document.title = 'Kalkulator Charging EV | evhub.id';
 
     const ctx = gsap.context(() => {
       const headerElements = headerRef.current?.querySelectorAll('.header-animate');

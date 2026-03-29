@@ -30,7 +30,7 @@ export function CommunityPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'Komunitas EV | setrum.id';
+    document.title = 'Komunitas EV | evhub.id';
 
     const ctx = gsap.context(() => {
       const animateElements = containerRef.current?.querySelectorAll('.animate-in');

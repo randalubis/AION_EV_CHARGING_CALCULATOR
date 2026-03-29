@@ -321,7 +321,7 @@ export function EVCalculator() {
 
   const handleShare = async () => {
     if (!car || !brand) return;
-    const shareText = `⚡ EV Charging Estimate — setrum.id
+    const shareText = `⚡ EV Charging Estimate — evhub.id
 🚗 ${brand.name} ${car.series} ${car.variant}
 🔋 ${curPct.toFixed(0)}% → ${tgtPct.toFixed(0)}% (${needBat.toFixed(1)} kWh needed)
 ⏱ ${fmtTime(timeH)} via ${charger.label}
@@ -330,7 +330,7 @@ export function EVCalculator() {
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'EV Charging Estimate', text: shareText, url: 'https://setrum.id' });
+        await navigator.share({ title: 'EV Charging Estimate', text: shareText, url: 'https://evhub.id' });
       } catch {}
     } else {
       try {
