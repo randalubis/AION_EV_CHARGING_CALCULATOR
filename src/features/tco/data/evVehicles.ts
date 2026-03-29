@@ -76,7 +76,9 @@ function mapCarToEVVehicle(car: CarData): EVVehicle {
            car.brand === 'vinfast' ? 'VinFast' :
            car.brand === 'volvo' ? 'Volvo' :
            car.brand === 'wuling' ? 'Wuling' : car.brand,
-    series: car.series,
+    series: car.brand === 'gac' 
+      ? car.series.replace(/^Aion\s*/i, '')  // Remove "Aion" prefix for AION brand
+      : car.series,
     variant: car.variant,
     badge: car.badge,
     battery: car.battery,
