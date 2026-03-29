@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
-import { ArrowLeft, Calculator, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Calculator, RotateCcw, ChevronRight } from 'lucide-react';
 import { useTCOCalculator } from '../features/tco/hooks/useTCOCalculator';
 import { VehicleSelector } from '../features/tco/components/VehicleSelector';
 import { UsageInput } from '../features/tco/components/UsageInput';
@@ -16,11 +16,15 @@ export default function TCOPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   
+  // Controls when to show results (explicit user action required)
+  const [showResults, setShowResults] = useState(false);
+  
   const {
     inputs,
     result,
     evVehicle,
     iceVehicle,
+    canCalculate,
     setEVVehicle,
     setICEVehicle,
     setAnnualKm,
@@ -50,15 +54,32 @@ export default function TCOPage() {
     return () => ctx.revert();
   }, []);
   
-  // Track if user has explicitly calculated (not first load)
-  const [hasUserCalculated, setHasUserCalculated] = useState(false);
-  
-  // Scroll to results only when user explicitly triggers calculation
+  // Scroll to results when explicitly shown
   useEffect(() => {
-    if (result && resultsRef.current && hasUserCalculated) {
+    if (showResults && resultsRef.current) {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [result, hasUserCalculated]);
+  }, [showResults]);
+  
+  // Handle calculate button click
+  const handleCalculate = () => {
+    if (canCalculate) {
+      setShowResults(true);
+    }
+  };
+  
+  // Handle reset
+  const handleReset = () => {
+    resetToDefaults();
+    setShowResults(false);
+  };
+  
+  // Handle load example
+  const handleLoadExample = () => {
+    setEVVehicle('byd_atto3_std');
+    setICEVehicle('toyota_corolla_altis');
+    // Don't auto-show results, let user click Calculate
+  };
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
@@ -109,30 +130,20 @@ export default function TCOPage() {
               </div>
             </div>
             
-            {/* Show empty state only when no vehicle selected at all */}
-            {!evVehicle && !iceVehicle ? (
-              <EmptyState 
-                onSelectExample={() => {
-                  // Set example comparison: BYD Atto 3 vs Toyota Corolla
-                  setEVVehicle('byd_atto3_std');
-                  setICEVehicle('toyota_corolla_altis');
-                  setHasUserCalculated(true);
-                }}
-              />
-            ) : (
-              <VehicleSelector
-                selectedEVId={inputs.evVehicleId}
-                selectedICEId={inputs.iceVehicleId}
-                onSelectEV={(id) => {
-                  setEVVehicle(id);
-                  if (id && iceVehicle) setHasUserCalculated(true);
-                }}
-                onSelectICE={(id) => {
-                  setICEVehicle(id);
-                  if (id && evVehicle) setHasUserCalculated(true);
-                }}
-              />
+            {/* Quick start helper - only shows when no vehicles selected */}
+            {!evVehicle && !iceVehicle && (
+              <div className="mb-6">
+                <EmptyState onSelectExample={handleLoadExample} />
+              </div>
             )}
+            
+            {/* Vehicle Selector - always visible once at least one vehicle is selected, or as primary UI */}
+            <VehicleSelector
+              selectedEVId={inputs.evVehicleId}
+              selectedICEId={inputs.iceVehicleId}
+              onSelectEV={setEVVehicle}
+              onSelectICE={setICEVehicle}
+            />
           </section>
           
           {/* Step 2: Usage Parameters */}
@@ -185,14 +196,36 @@ export default function TCOPage() {
             </section>
           )}
           
-          {/* Reset Button */}
+          {/* Calculate Button */}
           {evVehicle && iceVehicle && (
+            <section className="animate-in">
+              <div className="bg-gradient-to-r from-[#FFC300]/10 to-transparent border border-[#FFC300]/30 rounded-2xl p-6">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-white font-semibold text-lg">Siap untuk menghitung?</h3>
+                    <p className="text-white/50 text-sm">
+                      {evVehicle.brand} {evVehicle.series} vs {iceVehicle.brand} {iceVehicle.model}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleCalculate}
+                    disabled={!canCalculate}
+                    className="flex items-center gap-2 px-8 py-4 bg-[#FFC300] text-forest-dark font-semibold rounded-xl hover:bg-[#FFC300]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    <Calculator className="w-5 h-5" />
+                    Hitung Perbandingan
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
+          
+          {/* Reset Button */}
+          {(evVehicle || iceVehicle) && (
             <div className="animate-in flex justify-center">
               <button
-                onClick={() => {
-                  resetToDefaults();
-                  setHasUserCalculated(false);
-                }}
+                onClick={handleReset}
                 className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-xl text-white/70 hover:text-[#FFC300] hover:border-[#FFC300] transition-all"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -206,8 +239,8 @@ export default function TCOPage() {
             <CalculationMethodology />
           </section>
           
-          {/* Results Section */}
-          {result && (
+          {/* Results Section - Only shown after Calculate button clicked */}
+          {showResults && result && (
             <div ref={resultsRef} className="animate-in space-y-8 pt-8 border-t border-white/10">
               <div className="text-center mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
