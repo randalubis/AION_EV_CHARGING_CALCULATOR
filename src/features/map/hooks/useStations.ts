@@ -1,7 +1,7 @@
 // Hook for managing charging station data
 
 import { useState, useMemo, useCallback } from 'react';
-import type { ChargingStation, MapFilters } from '../types';
+import type { MapFilters } from '../types';
 import { SAMPLE_STATIONS, calculateDistance } from '../data/sampleStations';
 
 interface UseStationsOptions {
@@ -57,13 +57,13 @@ export function useStations(options: UseStationsOptions = {}) {
 
       // Status filter
       if (filters.status.length > 0) {
-        if (!filters.status.includes(station.status)) return false;
+        if (!filters.status.includes(station.status as 'active' | 'maintenance')) return false;
       }
 
       // Amenities filter
       if (filters.amenities.length > 0) {
         const hasAmenities = filters.amenities.every(amenity => 
-          station.amenities.some(a => a.type === amenity)
+          station.amenities.includes(amenity)
         );
         if (!hasAmenities) return false;
       }

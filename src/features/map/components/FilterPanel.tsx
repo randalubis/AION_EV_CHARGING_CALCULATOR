@@ -1,4 +1,4 @@
-import { Filter, X, Zap, Plug } from 'lucide-react';
+import { Filter, X } from 'lucide-react';
 import type { MapFilters, ConnectorType } from '../types';
 import { getAllOperators } from '../data/sampleStations';
 

@@ -1,4 +1,4 @@
-import { X, MapPin, Clock, Navigation, Zap, DollarSign, Phone } from 'lucide-react';
+import { X, MapPin, Clock, Navigation, Zap, DollarSign } from 'lucide-react';
 import type { ChargingStation } from '../types';
 
 interface StationDetailProps {
@@ -110,12 +110,12 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
           <div>
             <p className="text-white/50 text-xs uppercase tracking-wider mb-3">Fasilitas</p>
             <div className="flex flex-wrap gap-2">
-              {station.amenities.map(amenity => (
+              {station.amenities.map((amenity, index) => (
                 <span
-                  key={amenity.type}
+                  key={index}
                   className="px-3 py-1 bg-forest-mid text-white/70 text-xs rounded-full"
                 >
-                  {getAmenityLabel(amenity.type)}
+                  {getAmenityLabel(amenity)}
                 </span>
               ))}
             </div>

@@ -11,7 +11,7 @@ export interface ChargingStation {
   province: string;
   status: 'active' | 'inactive' | 'maintenance' | 'unknown';
   connectors: Connector[];
-  amenities: Amenity[];
+  amenities: AmenityType[];
   operatingHours: string;
   pricing?: {
     ratePerKwh: number;
@@ -19,7 +19,11 @@ export interface ChargingStation {
     notes?: string;
   };
   lastUpdated: string;
+  // Computed field for distance from user
+  distance?: number;
 }
+
+export type AmenityType = 'restroom' | 'cafe' | 'restaurant' | 'wifi' | 'parking' | 'mosque' | 'convenience_store' | 'atm';
 
 export interface Connector {
   id: string;
@@ -39,7 +43,7 @@ export type ConnectorType =
   | 'tesla_destination'; // Tesla Destination
 
 export interface Amenity {
-  type: 'restroom' | 'cafe' | 'restaurant' | 'wifi' | 'parking' | 'mosque' | 'convenience_store' | 'atm';
+  type: AmenityType;
   name?: string;
 }
 
@@ -48,7 +52,7 @@ export interface MapFilters {
   minPowerKw: number;
   operators: string[];
   status: ('active' | 'maintenance')[];
-  amenities: Amenity['type'][];
+  amenities: AmenityType[];
 }
 
 export interface MapViewport {

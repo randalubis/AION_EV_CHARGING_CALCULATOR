@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { MapPin, Navigation, Locate, Plus, Minus } from 'lucide-react';
+import { Locate, Plus, Minus } from 'lucide-react';
 import type { ChargingStation, MapViewport } from '../types';
 
 interface MapViewProps {

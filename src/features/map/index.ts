@@ -14,6 +14,7 @@ export type {
   Connector,
   ConnectorType,
   Amenity,
+  AmenityType,
   MapFilters,
   MapViewport,
   SearchResult,
