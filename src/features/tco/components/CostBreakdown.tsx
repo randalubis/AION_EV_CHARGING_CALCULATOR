@@ -1,6 +1,5 @@
-import { TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import type { TCOResult } from '../types';
-import { formatRupiah, formatCompactNumber } from '../utils/calculations';
+import { formatCompactNumber } from '../utils/calculations';
 
 interface CostBreakdownProps {
   result: TCOResult;

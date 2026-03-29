@@ -17,6 +17,7 @@ interface CalculateTCOParams {
   electricityRateCategory: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public_ac' | 'public_dc';
   homeChargingPercentage: number;
   insuranceType: 'comprehensive' | 'tlo';
+  includeTax: boolean;
   region: 'jakarta' | 'tangsel' | 'bandung' | 'surabaya';
 }
 

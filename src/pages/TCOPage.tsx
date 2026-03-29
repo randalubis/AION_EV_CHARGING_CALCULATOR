@@ -30,7 +30,6 @@ export default function TCOPage() {
     setIncludeTax,
     setRegion,
     resetToDefaults,
-    canCalculate,
   } = useTCOCalculator();
 
   useEffect(() => {

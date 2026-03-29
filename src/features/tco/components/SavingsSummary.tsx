@@ -1,6 +1,6 @@
-import { TrendingDown, TrendingUp, Wallet, Leaf, Award } from 'lucide-react';
+import { TrendingDown, TrendingUp, Leaf, Award } from 'lucide-react';
 import type { TCOResult } from '../types';
-import { formatRupiah, formatCompactNumber } from '../utils/calculations';
+import { formatCompactNumber } from '../utils/calculations';
 
 interface SavingsSummaryProps {
   result: TCOResult;

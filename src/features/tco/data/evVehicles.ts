@@ -467,17 +467,18 @@ export function getEVVehiclesByPriceRange(
   return EV_VEHICLES.filter(v => v.price >= min && v.price <= max);
 }
 
+import { ICE_VEHICLES } from './iceVehicles';
+import type { ICEVehicle } from '../types';
+
 // Find comparable ICE vehicle by price range
 export function findComparableICE(
   evPrice: number,
   tolerance: number = 0.15  // 15% price difference
-): typeof import('./iceVehicles').ICE_VEHICLES[0] | undefined {
-  const { ICE_VEHICLES } = require('./iceVehicles');
+): ICEVehicle | undefined {
   const minPrice = evPrice * (1 - tolerance);
   const maxPrice = evPrice * (1 + tolerance);
   
   return ICE_VEHICLES.find(
-    (ice: typeof import('./iceVehicles').ICE_VEHICLES[0]) => 
-      ice.price >= minPrice && ice.price <= maxPrice
+    (ice) => ice.price >= minPrice && ice.price <= maxPrice
   );
 }
