@@ -18,6 +18,8 @@ export default function TCOPage() {
   
   // Controls when to show results (explicit user action required)
   const [showResults, setShowResults] = useState(false);
+  // Track if user has ever selected vehicles (to hide EmptyState after first interaction)
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   
   const {
     inputs,
@@ -72,12 +74,14 @@ export default function TCOPage() {
   const handleReset = () => {
     resetToDefaults();
     setShowResults(false);
+    setHasUserInteracted(false);
   };
   
   // Handle load example
   const handleLoadExample = () => {
     setEVVehicle('byd_atto3_std');
     setICEVehicle('toyota_corolla_altis');
+    setHasUserInteracted(true);
     // Don't auto-show results, let user click Calculate
   };
 
@@ -130,19 +134,25 @@ export default function TCOPage() {
               </div>
             </div>
             
-            {/* Quick start helper - only shows when no vehicles selected */}
-            {!evVehicle && !iceVehicle && (
+            {/* Quick start helper - only shows on initial load before any interaction */}
+            {!evVehicle && !iceVehicle && !hasUserInteracted && (
               <div className="mb-6">
                 <EmptyState onSelectExample={handleLoadExample} />
               </div>
             )}
             
-            {/* Vehicle Selector - always visible once at least one vehicle is selected, or as primary UI */}
+            {/* Vehicle Selector - always visible */}
             <VehicleSelector
               selectedEVId={inputs.evVehicleId}
               selectedICEId={inputs.iceVehicleId}
-              onSelectEV={setEVVehicle}
-              onSelectICE={setICEVehicle}
+              onSelectEV={(id) => {
+                setEVVehicle(id);
+                if (id) setHasUserInteracted(true);
+              }}
+              onSelectICE={(id) => {
+                setICEVehicle(id);
+                if (id) setHasUserInteracted(true);
+              }}
             />
           </section>
           
