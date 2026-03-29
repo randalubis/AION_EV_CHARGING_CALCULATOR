@@ -1,15 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useLenis } from './hooks/useLenis';
 import { Navbar } from './components/Navbar';
-import { LandingPage } from './pages/LandingPage';
-import { CalculatorPage } from './pages/CalculatorPage';
-import { MapPage } from './pages/MapPage';
-import { TripPlannerPage } from './pages/TripPlannerPage';
-import { TCOPage } from './pages/TCOPage';
-import { CommunityPage } from './pages/CommunityPage';
 import { siteConfig } from './config';
 import './App.css';
+
+// Lazy load pages for better performance
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
+const CalculatorPage = lazy(() => import('./pages/CalculatorPage').then(m => ({ default: m.CalculatorPage })));
+const MapPage = lazy(() => import('./pages/MapPage').then(m => ({ default: m.MapPage })));
+const TripPlannerPage = lazy(() => import('./pages/TripPlannerPage').then(m => ({ default: m.TripPlannerPage })));
+const TCOPage = lazy(() => import('./pages/TCOPage').then(m => ({ default: m.TCOPage })));
+const CommunityPage = lazy(() => import('./pages/CommunityPage').then(m => ({ default: m.CommunityPage })));
+
+// Loading fallback
+function PageLoader() {
+  return (
+    <div className="min-h-screen bg-forest-dark flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+        <p className="text-white/50 text-sm">Memuat...</p>
+      </div>
+    </div>
+  );
+}
 
 function AppContent() {
   // Initialize Lenis smooth scroll
@@ -32,14 +46,16 @@ function AppContent() {
     <div className="relative w-full min-h-screen bg-forest-dark">
       <Navbar />
       <main className="relative w-full">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/kalkulator" element={<CalculatorPage />} />
-          <Route path="/peta-spklu" element={<MapPage />} />
-          <Route path="/trip-planner" element={<TripPlannerPage />} />
-          <Route path="/tco-calculator" element={<TCOPage />} />
-          <Route path="/komunitas" element={<CommunityPage />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/kalkulator" element={<CalculatorPage />} />
+            <Route path="/peta-spklu" element={<MapPage />} />
+            <Route path="/trip-planner" element={<TripPlannerPage />} />
+            <Route path="/tco-calculator" element={<TCOPage />} />
+            <Route path="/komunitas" element={<CommunityPage />} />
+          </Routes>
+        </Suspense>
       </main>
     </div>
   );
