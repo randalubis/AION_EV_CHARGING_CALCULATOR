@@ -72,11 +72,26 @@ export function useStations(options: UseStationsOptions = {}) {
     });
   }, [filters, searchQuery]);
 
-  // Get selected station details
+  // Get selected station details with distance
   const selectedStation = useMemo(() => {
     if (!selectedStationId) return null;
-    return SAMPLE_STATIONS.find(s => s.id === selectedStationId) || null;
-  }, [selectedStationId]);
+    const station = SAMPLE_STATIONS.find(s => s.id === selectedStationId);
+    if (!station) return null;
+    
+    // Add distance if user location is available
+    if (userLocation) {
+      return {
+        ...station,
+        distance: calculateDistance(
+          userLocation[0],
+          userLocation[1],
+          station.latitude,
+          station.longitude
+        ),
+      };
+    }
+    return station;
+  }, [selectedStationId, userLocation]);
 
   // Calculate distances if user location is available
   const stationsWithDistance = useMemo(() => {
