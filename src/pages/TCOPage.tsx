@@ -9,6 +9,7 @@ import { CostParameters } from '../features/tco/components/CostParameters';
 import { ComparisonChart } from '../features/tco/components/ComparisonChart';
 import { CostBreakdown } from '../features/tco/components/CostBreakdown';
 import { SavingsSummary } from '../features/tco/components/SavingsSummary';
+import { EmptyState } from '../features/tco/components/EmptyState';
 
 export default function TCOPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,12 +106,22 @@ export default function TCOPage() {
               </div>
             </div>
             
-            <VehicleSelector
-              selectedEVId={inputs.evVehicleId}
-              selectedICEId={inputs.iceVehicleId}
-              onSelectEV={setEVVehicle}
-              onSelectICE={setICEVehicle}
-            />
+            {!evVehicle && !iceVehicle ? (
+              <EmptyState 
+                onSelectExample={() => {
+                  // Set example comparison: BYD Atto 3 vs Toyota Corolla
+                  setEVVehicle('byd_atto_3_std');
+                  setICEVehicle('toyota_corolla_altis');
+                }}
+              />
+            ) : (
+              <VehicleSelector
+                selectedEVId={inputs.evVehicleId}
+                selectedICEId={inputs.iceVehicleId}
+                onSelectEV={setEVVehicle}
+                onSelectICE={setICEVehicle}
+              />
+            )}
           </section>
           
           {/* Step 2: Usage Parameters */}
