@@ -225,6 +225,10 @@ export function calculateTCO(params: CalculateTCOParams): TCOResult {
       percentage: Math.round(savingsPercentage * 100) / 100,
       breakEvenYear,
     },
+    inputs: {
+      annualKm: params.annualKm,
+      ownershipYears: params.ownershipYears,
+    },
   };
 }
 

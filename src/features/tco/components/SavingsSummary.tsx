@@ -10,12 +10,13 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
   const { ev, ice, savings } = result;
   const isEvbetter = savings.absolute > 0;
   
-  // Calculate environmental impact (approximate)
-  // ICE: ~120g CO2/km, EV: ~40g CO2/km (including power generation)
-  const annualKm = 15000; // Default assumption for display
-  const totalKm = annualKm * 5;
-  const iceCo2 = totalKm * 0.12; // kg CO2
-  const evCo2 = totalKm * 0.04;  // kg CO2
+  // Calculate environmental impact based on actual user inputs
+  // ICE: ~120g CO2/km, EV: ~40g CO2/km (including power generation in Indonesia)
+  const annualKm = result.inputs.annualKm;
+  const ownershipYears = result.inputs.ownershipYears;
+  const totalKm = annualKm * ownershipYears;
+  const iceCo2 = totalKm * 0.12; // kg CO2 (ICE ~120g/km)
+  const evCo2 = totalKm * 0.04;  // kg CO2 (EV ~40g/km from PLN grid)
   const co2Saved = iceCo2 - evCo2;
   const treesEquivalent = Math.round(co2Saved / 20); // 1 tree absorbs ~20kg CO2/year
   
@@ -111,7 +112,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
           </div>
           <div>
             <h3 className="text-white font-semibold">Dampak Lingkungan</h3>
-            <p className="text-white/50 text-sm">Selama 5 tahun penggunaan</p>
+            <p className="text-white/50 text-sm">Selama {ownershipYears} tahun penggunaan ({annualKm.toLocaleString('id-ID')} km/tahun)</p>
           </div>
         </div>
         
@@ -133,7 +134,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
         </div>
         
         <p className="text-white/40 text-xs mt-4 text-center">
-          *Estimasi berdasarkan data emisi rata-rata EV vs mobil bensin di Indonesia
+          *Estimasi berdasarkan data emisi: ICE ~120g CO₂/km, EV ~40g CO₂/km (termasuk emisi pembangkit listrik Indonesia)
         </p>
       </div>
       

@@ -132,6 +132,11 @@ export interface TCOResult {
     percentage: number;
     breakEvenYear: number | null;
   };
+  // Input parameters for reference
+  inputs: {
+    annualKm: number;
+    ownershipYears: number;
+  };
 }
 
 // Regional Tax Rates (PKB)
