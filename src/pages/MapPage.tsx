@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
-import { ArrowLeft, Search, MapPin, List, X, AlertTriangle, Info, Zap, Navigation } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, List, X, AlertTriangle, Info, Zap, Navigation, Compass } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';
 import type { MapViewport } from '../features/map/types';
@@ -72,224 +72,258 @@ export default function MapPage() {
   });
 
   return (
-    <div ref={containerRef} className="relative w-full h-screen bg-forest-dark overflow-hidden">
-      {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-20">
-        {/* Early Build Banner */}
-        <div className="bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border-b border-amber-500/30">
-          <div className="max-w-7xl mx-auto px-4 py-2">
-            <div className="flex items-center justify-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              <span className="text-amber-200 text-sm font-medium">
-                Early Build — Fitur ini masih dalam tahap pengembangan awal
-              </span>
-            </div>
+    <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
+      {/* Early Build Banner - Fixed at top */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border-b border-amber-500/30">
+        <div className="max-w-7xl mx-auto px-4 py-2">
+          <div className="flex items-center justify-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-400" />
+            <span className="text-amber-200 text-sm font-medium">
+              Early Build — Fitur ini masih dalam tahap pengembangan awal
+            </span>
           </div>
         </div>
-        
-        <div className="bg-gradient-to-b from-forest-dark via-forest-dark/95 to-transparent">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              {/* Left: Back & Title */}
-              <div className="flex items-center gap-4">
-                <Link
-                  to="/"
-                  className="flex items-center gap-2 text-white/70 hover:text-[#FFC300] transition-colors"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                  <span className="hidden sm:inline text-sm">Kembali</span>
-                </Link>
-                <div className="h-6 w-px bg-white/20" />
-                <div>
-                  <h1 className="text-white font-semibold text-lg">Peta SPKLU</h1>
-                  <p className="text-white/50 text-xs hidden sm:block">
-                    {stats.total} stasiun • {stats.available} tersedia
-                  </p>
+      </div>
+
+      {/* Navigation Header */}
+      <header className="fixed top-[36px] left-0 right-0 z-40 bg-forest-dark/95 backdrop-blur-sm border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Left: Back & Title */}
+            <div className="flex items-center gap-4">
+              <Link
+                to="/"
+                className="flex items-center gap-2 text-white/70 hover:text-[#FFC300] transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span className="hidden sm:inline text-sm">Kembali</span>
+              </Link>
+              <div className="h-6 w-px bg-white/20" />
+              <div>
+                <h1 className="text-white font-semibold text-lg">Peta SPKLU</h1>
+                <p className="text-white/50 text-xs hidden sm:block">
+                  {stats.total} stasiun • {stats.available} tersedia
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Stats & Toggle */}
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-4 bg-forest-mid/50 rounded-lg px-4 py-2 border border-white/10">
+                <div className="text-center">
+                  <div className="text-[#FFC300] font-semibold text-sm">{stats.total}</div>
+                  <div className="text-white/40 text-xs">Stasiun</div>
+                </div>
+                <div className="w-px h-8 bg-white/10" />
+                <div className="text-center">
+                  <div className="text-[#27AE60] font-semibold text-sm">{stats.available}</div>
+                  <div className="text-white/40 text-xs">Tersedia</div>
+                </div>
+                <div className="w-px h-8 bg-white/10" />
+                <div className="text-center">
+                  <div className="text-[#3498DB] font-semibold text-sm">{stats.fastCharging}</div>
+                  <div className="text-white/40 text-xs">Fast Charging</div>
                 </div>
               </div>
 
-              {/* Right: Stats & Toggle */}
-              <div className="flex items-center gap-3">
-                <div className="hidden md:flex items-center gap-4 bg-forest-dark/80 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10">
-                  <div className="text-center">
-                    <div className="text-[#FFC300] font-semibold text-sm">{stats.total}</div>
-                    <div className="text-white/40 text-xs">Stasiun</div>
-                  </div>
-                  <div className="w-px h-8 bg-white/10" />
-                  <div className="text-center">
-                    <div className="text-[#27AE60] font-semibold text-sm">{stats.available}</div>
-                    <div className="text-white/40 text-xs">Tersedia</div>
-                  </div>
-                  <div className="w-px h-8 bg-white/10" />
-                  <div className="text-center">
-                    <div className="text-[#3498DB] font-semibold text-sm">{stats.fastCharging}</div>
-                    <div className="text-white/40 text-xs">Fast Charging</div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setShowList(!showList)}
-                  className="md:hidden w-10 h-10 bg-forest-dark/80 backdrop-blur-sm rounded-lg border border-white/10 flex items-center justify-center text-white hover:border-[#FFC300] transition-colors"
-                >
-                  {showList ? <X className="w-5 h-5" /> : <List className="w-5 h-5" />}
-                </button>
-              </div>
+              <button
+                onClick={() => setShowList(!showList)}
+                className="md:hidden w-10 h-10 bg-forest-mid/50 rounded-lg border border-white/10 flex items-center justify-center text-white hover:border-[#FFC300] transition-colors"
+              >
+                {showList ? <X className="w-5 h-5" /> : <List className="w-5 h-5" />}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex h-full pt-16">
-        {/* Sidebar - Station List */}
-        <aside
-          className={`absolute md:relative z-10 w-full md:w-96 h-full bg-forest-dark/95 backdrop-blur-sm border-r border-white/10 transform transition-transform duration-300 ${
-            showList ? 'translate-x-0' : '-translate-x-full md:translate-x-0 md:hidden'
-          }`}
-        >
-          <div className="flex flex-col h-full">
-            {/* Search */}
-            <div className="p-4 border-b border-white/10">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                <input
-                  type="text"
-                  placeholder="Cari stasiun, kota, atau operator..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-forest-mid border border-white/20 rounded-lg pl-10 pr-4 py-2.5 text-white text-sm placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                  >
-                    <X className="w-4 h-4 text-white/30 hover:text-white" />
-                  </button>
-                )}
+      {/* Main Content - Scrollable */}
+      <main className="pt-[92px] pb-8">
+        {/* Hero / Description Section */}
+        <section className="max-w-7xl mx-auto px-4 py-6 animate-in">
+          <div className="bg-gradient-to-br from-forest-mid/50 to-forest-dark border border-white/10 rounded-2xl p-6 md:p-8">
+            <div className="flex flex-col md:flex-row gap-6 md:items-center">
+              {/* Left: Title & Description */}
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-[#FFC300]/20 rounded-xl flex items-center justify-center">
+                    <Compass className="w-6 h-6 text-[#FFC300]" />
+                  </div>
+                  <div>
+                    <h2 className="text-white font-bold text-xl md:text-2xl">Temukan Stasiun Charging</h2>
+                    <p className="text-white/50 text-sm">Di seluruh Indonesia</p>
+                  </div>
+                </div>
+                <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl">
+                  Peta interaktif ini membantu Anda menemukan lokasi Stasiun Pengisian Kendaraan Listrik Umum (SPKLU). 
+                  Lihat ketersediaan charger real-time, tipe connector, kecepatan charging, dan harga dalam satu tampilan.
+                </p>
+              </div>
+
+              {/* Right: Quick Stats */}
+              <div className="flex md:flex-col gap-4 md:gap-2 md:text-right">
+                <div className="flex items-center gap-2 md:justify-end">
+                  <Zap className="w-4 h-4 text-[#27AE60]" />
+                  <span className="text-white/60 text-sm">Fast Charging 50kW+</span>
+                </div>
+                <div className="flex items-center gap-2 md:justify-end">
+                  <Navigation className="w-4 h-4 text-blue-400" />
+                  <span className="text-white/60 text-sm">Navigasi Terintegrasi</span>
+                </div>
+                <div className="flex items-center gap-2 md:justify-end">
+                  <MapPin className="w-4 h-4 text-[#FFC300]" />
+                  <span className="text-white/60 text-sm">Cari Terdekat</span>
+                </div>
               </div>
             </div>
 
-            {/* Info & Help Section */}
-            <div className="px-4 py-3 border-b border-white/10">
-              <div className="bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-xl p-4">
+            {/* How to Use - Collapsible on mobile */}
+            <div className="mt-6 pt-6 border-t border-white/10">
+              <div className="bg-[#FFC300]/5 border border-[#FFC300]/20 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <Info className="w-5 h-5 text-[#FFC300] flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="text-white font-medium text-sm mb-1">Cara Menggunakan Peta</h3>
-                    <ul className="text-white/60 text-xs space-y-1.5">
-                      <li className="flex items-start gap-2">
-                        <Zap className="w-3 h-3 mt-0.5 text-[#27AE60]" />
-                        <span>Klik ikon <strong>petir</strong> di peta untuk melihat detail stasiun</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Navigation className="w-3 h-3 mt-0.5 text-blue-400" />
-                        <span>Gunakan tombol <strong>Lokasi Saya</strong> untuk menemukan stasiun terdekat</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <MapPin className="w-3 h-3 mt-0.5 text-[#FFC300]" />
-                        <span>Stasiun <strong>hijau</strong> = tersedia, <strong>merah</strong> = penuh</span>
-                      </li>
-                    </ul>
-                    <p className="text-white/40 text-xs mt-2 italic">
-                      Data saat ini bersifat sample untuk demo. Data lengkap akan ditambahkan secara bertahap.
+                    <h3 className="text-white font-medium text-sm mb-2">Cara Menggunakan Peta</h3>
+                    <div className="grid md:grid-cols-3 gap-4 text-white/60 text-xs">
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-[#27AE60]/20 text-[#27AE60] rounded flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                        <span>Klik ikon <strong className="text-white">petir berwarna</strong> di peta untuk melihat detail stasiun</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                        <span>Gunakan tombol <strong className="text-white">Lokasi Saya</strong> untuk menemukan stasiun terdekat</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-5 h-5 bg-[#FFC300]/20 text-[#FFC300] rounded flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                        <span>Filter berdasarkan <strong className="text-white">tipe connector</strong> yang kompatibel dengan mobil Anda</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-4 text-xs">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-[#27AE60] border border-white" />
+                        <span className="text-white/70">Tersedia</span>
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-[#E74C3C] border border-white" />
+                        <span className="text-white/70">Penuh</span>
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-[#FFC300] border border-white" />
+                        <span className="text-white/70">Terpilih</span>
+                      </span>
+                    </div>
+                    <p className="text-white/40 text-xs mt-3 italic">
+                      *Data saat ini bersifat sample untuk demo. Data lengkap akan ditambahkan secara bertahap.
                     </p>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* Filters */}
-            <div className="px-4 py-3 border-b border-white/10">
-              <FilterPanel
-                filters={filters}
-                onUpdateFilters={updateFilters}
-                onClearFilters={clearFilters}
-              />
-            </div>
-
-            {/* Station List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {filteredStations.length === 0 ? (
-                <div className="text-center py-8">
-                  <MapPin className="w-12 h-12 text-white/20 mx-auto mb-3" />
-                  <p className="text-white/50 text-sm">Tidak ada stasiun ditemukan</p>
-                  <p className="text-white/30 text-xs mt-1">Coba ubah filter atau pencarian</p>
+        {/* Map Interface Section */}
+        <section className="max-w-7xl mx-auto px-4 animate-in">
+          <div className="bg-forest-mid/30 border border-white/10 rounded-2xl overflow-hidden">
+            <div className="flex flex-col md:flex-row h-[calc(100vh-280px)] md:h-[600px]">
+              {/* Sidebar - Station List */}
+              <aside
+                className={`${showList ? 'block' : 'hidden md:block'} w-full md:w-80 lg:w-96 bg-forest-dark/95 border-b md:border-b-0 md:border-r border-white/10 flex flex-col`}
+              >
+                {/* Search */}
+                <div className="p-4 border-b border-white/10">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                    <input
+                      type="text"
+                      placeholder="Cari stasiun, kota, atau operator..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-forest-mid border border-white/20 rounded-lg pl-10 pr-4 py-2.5 text-white text-sm placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <X className="w-4 h-4 text-white/30 hover:text-white" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                filteredStations.map(station => (
-                  <StationCard
-                    key={station.id}
-                    station={station}
-                    isSelected={selectedStation?.id === station.id}
-                    onClick={() => {
-                      selectStation(station.id);
-                      setViewport({
-                        center: [station.latitude, station.longitude],
-                        zoom: 15,
-                      });
-                    }}
-                    distance={station.distance}
+
+                {/* Filters */}
+                <div className="px-4 py-3 border-b border-white/10 max-h-48 overflow-y-auto">
+                  <FilterPanel
+                    filters={filters}
+                    onUpdateFilters={updateFilters}
+                    onClearFilters={clearFilters}
                   />
-                ))
-              )}
-            </div>
-          </div>
-        </aside>
-
-        {/* Map Area */}
-        <main className="flex-1 relative">
-          <MapView
-            stations={filteredStations}
-            selectedStationId={selectedStation?.id || null}
-            onStationSelect={selectStation}
-            viewport={viewport}
-            onViewportChange={setViewport}
-            userLocation={userLocation}
-          />
-
-          {/* Info Card - Desktop */}
-          <div className="hidden md:block absolute bottom-6 left-6 z-10 max-w-xs">
-            <div className="bg-forest-dark/95 backdrop-blur-sm border border-white/10 rounded-xl p-4 shadow-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-                  <MapPin className="w-4 h-4 text-[#FFC300]" />
                 </div>
-                <h3 className="text-white font-semibold text-sm">Peta Stasiun Charging</h3>
-              </div>
-              <p className="text-white/60 text-xs leading-relaxed">
-                Temukan lokasi Stasiun Pengisian Kendaraan Listrik Umum (SPKLU) di seluruh Indonesia. 
-                Lihat ketersediaan charger, tipe connector, dan harga dalam satu peta interaktif.
-              </p>
-              <div className="mt-3 flex items-center gap-2 text-xs">
-                <span className="px-2 py-1 bg-[#27AE60]/20 text-[#27AE60] rounded">Tersedia</span>
-                <span className="px-2 py-1 bg-[#E74C3C]/20 text-[#E74C3C] rounded">Penuh</span>
-                <span className="px-2 py-1 bg-[#FFC300]/20 text-[#FFC300] rounded">Terpilih</span>
+
+                {/* Station List */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                  {filteredStations.length === 0 ? (
+                    <div className="text-center py-8">
+                      <MapPin className="w-12 h-12 text-white/20 mx-auto mb-3" />
+                      <p className="text-white/50 text-sm">Tidak ada stasiun ditemukan</p>
+                      <p className="text-white/30 text-xs mt-1">Coba ubah filter atau pencarian</p>
+                    </div>
+                  ) : (
+                    filteredStations.map(station => (
+                      <StationCard
+                        key={station.id}
+                        station={station}
+                        isSelected={selectedStation?.id === station.id}
+                        onClick={() => {
+                          selectStation(station.id);
+                          setViewport({
+                            center: [station.latitude, station.longitude],
+                            zoom: 15,
+                          });
+                        }}
+                        distance={station.distance}
+                      />
+                    ))
+                  )}
+                </div>
+              </aside>
+
+              {/* Map Area */}
+              <div className="flex-1 relative bg-forest-mid/50">
+                <MapView
+                  stations={filteredStations}
+                  selectedStationId={selectedStation?.id || null}
+                  onStationSelect={selectStation}
+                  viewport={viewport}
+                  onViewportChange={setViewport}
+                  userLocation={userLocation}
+                />
+
+                {/* Mobile Toggle Button */}
+                <button
+                  onClick={() => setShowList(!showList)}
+                  className="md:hidden absolute bottom-4 left-4 z-10 bg-[#FFC300] text-forest-dark px-4 py-2 rounded-full font-medium text-sm shadow-lg flex items-center gap-2"
+                >
+                  <List className="w-4 h-4" />
+                  {showList ? 'Tutup Daftar' : 'Lihat Daftar'}
+                </button>
+
+                {/* Station Detail Panel */}
+                {selectedStation && (
+                  <div className="absolute top-4 right-4 w-72 md:w-80 z-10 animate-in">
+                    <StationDetail
+                      station={selectedStation}
+                      onClose={() => selectStation(null)}
+                      distance={selectedStation.distance}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
-
-          {/* Mobile Toggle Button */}
-          <button
-            onClick={() => setShowList(!showList)}
-            className="md:hidden absolute bottom-6 left-6 z-10 bg-[#FFC300] text-forest-dark px-4 py-2 rounded-full font-medium text-sm shadow-lg flex items-center gap-2"
-          >
-            <List className="w-4 h-4" />
-            {showList ? 'Tutup Daftar' : 'Lihat Daftar'}
-          </button>
-
-          {/* Station Detail Panel */}
-          {selectedStation && (
-            <div className="absolute top-4 right-4 w-80 z-10 animate-in">
-              <StationDetail
-                station={selectedStation}
-                onClose={() => selectStation(null)}
-                distance={selectedStation.distance}
-              />
-            </div>
-          )}
-        </main>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
