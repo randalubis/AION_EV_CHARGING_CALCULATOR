@@ -409,41 +409,68 @@ export function EVCalculator() {
               </div>
 
               {/* Car Selector */}
-              <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
-                <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-3 block">
-                  Pilih Model ({brandCars.length} varian)
-                </label>
-                <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-                  {brandCars.map(c => (
-                    <button
-                      key={c.id}
-                      onClick={() => handleCarChange(c.id)}
-                      className={`flex items-center justify-between p-3 rounded-lg border transition-all text-left ${
-                        carId === c.id
-                          ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
-                          : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${carId === c.id ? 'bg-forest-dark' : 'bg-white/30'}`} />
-                        <div>
-                          <div className="font-body font-semibold text-sm">{c.variant}</div>
-                          <div className={`text-xs ${carId === c.id ? 'text-forest-dark/70' : 'text-white/50'}`}>
-                            {c.battery} kWh · {c.maxRange} km
-                          </div>
-                        </div>
-                      </div>
-                      <span className={`text-xs font-semibold px-2 py-1 rounded ${
-                        carId === c.id 
-                          ? 'bg-forest-dark/20' 
-                          : 'bg-[#FFC300]/20 text-[#FFC300]'
-                      }`}>
-                        {c.maxDcKw > 0 ? `DC ${c.maxDcKw}kW` : 'AC only'}
-                      </span>
-                    </button>
-                  ))}
+<div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+  <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-3 block">
+    Pilih Model ({brandCars.length} varian)
+  </label>
+  <div className="grid grid-cols-1 gap-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+    {/* Group cars by series */}
+    {(() => {
+      const groupedBySeriesMap = new Map<string, typeof CARS>();
+      brandCars.forEach(car => {
+        if (!groupedBySeriesMap.has(car.series)) {
+          groupedBySeriesMap.set(car.series, []);
+        }
+        groupedBySeriesMap.get(car.series)?.push(car);
+      });
+      
+      const seriesArray = Array.from(groupedBySeriesMap.entries());
+      
+      return seriesArray.map(([series, seriesCars]) => (
+        <div key={series} className="space-y-2">
+          {/* Series Header */}
+          <div className="px-3 py-2 rounded-lg bg-forest-dark/50 border border-white/10">
+            <div className="text-white/70 text-xs font-semibold uppercase tracking-wider">
+              {series}
+            </div>
+          </div>
+          
+          {/* Series Variants */}
+          <div className="space-y-1.5 ml-2">
+            {seriesCars.map(c => (
+              <button
+                key={c.id}
+                onClick={() => handleCarChange(c.id)}
+                className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all text-left ${
+                  carId === c.id
+                    ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
+                    : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${carId === c.id ? 'bg-forest-dark' : 'bg-white/30'}`} />
+                  <div className="min-w-0">
+                    <div className="font-body font-semibold text-sm">{c.variant}</div>
+                    <div className={`text-xs truncate ${carId === c.id ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                      {c.battery} kWh · {c.maxRange} km
+                    </div>
+                  </div>
                 </div>
-              </div>
+                <span className={`text-xs font-semibold px-2 py-1 rounded flex-shrink-0 whitespace-nowrap ml-2 ${
+                  carId === c.id 
+                    ? 'bg-forest-dark/20' 
+                    : 'bg-[#FFC300]/20 text-[#FFC300]'
+                }`}>
+                  {c.maxDcKw > 0 ? `DC ${c.maxDcKw}kW` : 'AC only'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ));
+    })()}
+  </div>
+</div>
 
               {/* Car Hero Card */}
               {car && brand && (
