@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ArrowLeft, Calculator, RotateCcw } from 'lucide-react';
@@ -50,12 +50,15 @@ export default function TCOPage() {
     return () => ctx.revert();
   }, []);
   
-  // Scroll to results when available
+  // Track if user has explicitly calculated (not first load)
+  const [hasUserCalculated, setHasUserCalculated] = useState(false);
+  
+  // Scroll to results only when user explicitly triggers calculation
   useEffect(() => {
-    if (result && resultsRef.current) {
+    if (result && resultsRef.current && hasUserCalculated) {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [result]);
+  }, [result, hasUserCalculated]);
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
@@ -106,20 +109,28 @@ export default function TCOPage() {
               </div>
             </div>
             
+            {/* Show empty state only when no vehicle selected at all */}
             {!evVehicle && !iceVehicle ? (
               <EmptyState 
                 onSelectExample={() => {
                   // Set example comparison: BYD Atto 3 vs Toyota Corolla
-                  setEVVehicle('byd_atto_3_std');
+                  setEVVehicle('byd_atto3_std');
                   setICEVehicle('toyota_corolla_altis');
+                  setHasUserCalculated(true);
                 }}
               />
             ) : (
               <VehicleSelector
                 selectedEVId={inputs.evVehicleId}
                 selectedICEId={inputs.iceVehicleId}
-                onSelectEV={setEVVehicle}
-                onSelectICE={setICEVehicle}
+                onSelectEV={(id) => {
+                  setEVVehicle(id);
+                  if (id && iceVehicle) setHasUserCalculated(true);
+                }}
+                onSelectICE={(id) => {
+                  setICEVehicle(id);
+                  if (id && evVehicle) setHasUserCalculated(true);
+                }}
               />
             )}
           </section>
@@ -178,7 +189,10 @@ export default function TCOPage() {
           {evVehicle && iceVehicle && (
             <div className="animate-in flex justify-center">
               <button
-                onClick={resetToDefaults}
+                onClick={() => {
+                  resetToDefaults();
+                  setHasUserCalculated(false);
+                }}
                 className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-xl text-white/70 hover:text-[#FFC300] hover:border-[#FFC300] transition-all"
               >
                 <RotateCcw className="w-4 h-4" />

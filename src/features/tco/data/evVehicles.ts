@@ -1,457 +1,108 @@
 // EV Vehicle Database with TCO-specific data
-// Extends existing EV data with price and consumption information
+// Synced with charging calculator data (src/features/calculator/data/carData.ts)
+// This ensures consistency across both calculators
 
 import type { EVVehicle } from '../types';
+import { CARS, calculateConsumption, type CarData } from '../../../features/calculator/data/carData';
 
-export const EV_VEHICLES: EVVehicle[] = [
-  // Wuling - Most affordable
-  {
-    id: 'wuling_air_ev_std',
-    brand: 'Wuling',
-    series: 'Air EV',
-    variant: 'Standard',
-    badge: 'AEV',
-    battery: 17.3,
-    maxRange: 200,
-    consumptionKwhPer100km: 8.65,
-    price: 238000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 3,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 120000,
-    insuranceGroup: 'low',
-  },
-  {
-    id: 'wuling_air_ev_lr',
-    brand: 'Wuling',
-    series: 'Air EV',
-    variant: 'Long Range',
-    badge: 'AEV',
-    battery: 26.7,
-    maxRange: 300,
-    consumptionKwhPer100km: 8.9,
-    price: 278000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 3,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 120000,
-    insuranceGroup: 'low',
-  },
-  {
-    id: 'wuling_binguo_plus',
-    brand: 'Wuling',
-    series: 'Binguo Plus',
-    variant: 'Long Range',
-    badge: 'BNG',
-    battery: 37.9,
-    maxRange: 410,
-    consumptionKwhPer100km: 9.24,
-    price: 398000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 3,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 150000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'wuling_cloud_ev',
-    brand: 'Wuling',
-    series: 'Cloud EV',
-    variant: 'Standard',
-    badge: 'CLD',
-    battery: 50.6,
-    maxRange: 460,
-    consumptionKwhPer100km: 11,
-    price: 498000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 3,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 150000,
-    insuranceGroup: 'medium',
-  },
-  
-  // BYD - Popular choices
-  {
-    id: 'byd_atto_3_std',
-    brand: 'BYD',
-    series: 'Atto 3',
-    variant: 'Standard',
-    badge: 'A3',
-    battery: 49.92,
-    maxRange: 410,
-    consumptionKwhPer100km: 12.17,
-    price: 438000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 6,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'byd_atto_3_ext',
-    brand: 'BYD',
-    series: 'Atto 3',
-    variant: 'Extended',
-    badge: 'A3',
-    battery: 60.48,
-    maxRange: 480,
-    consumptionKwhPer100km: 12.6,
-    price: 498000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 6,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'byd_dolphin',
-    brand: 'BYD',
-    series: 'Dolphin',
-    variant: 'Dynamic',
-    badge: 'DP',
-    battery: 44.9,
-    maxRange: 410,
-    consumptionKwhPer100km: 10.95,
-    price: 388000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 6,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'byd_seal',
-    brand: 'BYD',
-    series: 'Seal',
-    variant: 'Premium',
-    badge: 'SL',
-    battery: 61.44,
-    maxRange: 510,
-    consumptionKwhPer100km: 12.05,
-    price: 628000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 6,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'high',
-  },
-  {
-    id: 'byd_m6',
-    brand: 'BYD',
-    series: 'M6',
-    variant: 'Standard',
-    badge: 'M6',
-    battery: 55.4,
-    maxRange: 420,
-    consumptionKwhPer100km: 13.19,
-    price: 448000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 6,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'medium',
-  },
-  
-  // GAC Aion
-  {
-    id: 'gac_aion_y_plus',
-    brand: 'GAC Aion',
-    series: 'Aion Y Plus',
-    variant: 'Premium',
-    badge: 'Y+',
-    battery: 63.2,
-    maxRange: 490,
-    consumptionKwhPer100km: 12.9,
-    price: 418000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'gac_aion_v_plus',
-    brand: 'GAC Aion',
-    series: 'Aion V Plus',
-    variant: 'Luxury',
-    badge: 'V',
-    battery: 75.3,
-    maxRange: 602,
-    consumptionKwhPer100km: 12.5,
-    price: 488000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'high',
-  },
-  
-  // Hyundai - Premium
-  {
-    id: 'hyundai_ioniq_5_std',
-    brand: 'Hyundai',
-    series: 'Ioniq 5',
-    variant: 'Standard',
-    badge: 'I5',
-    battery: 58,
-    maxRange: 384,
-    consumptionKwhPer100km: 15.1,
-    price: 718000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'high',
-  },
-  {
-    id: 'hyundai_ioniq_5_lr',
-    brand: 'Hyundai',
-    series: 'Ioniq 5',
-    variant: 'Long Range',
-    badge: 'I5',
-    battery: 72.6,
-    maxRange: 481,
-    consumptionKwhPer100km: 15.1,
-    price: 848000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'high',
-  },
-  {
-    id: 'hyundai_kona_ev',
-    brand: 'Hyundai',
-    series: 'Kona Electric',
-    variant: 'Prime',
-    badge: 'KN',
-    battery: 39.2,
-    maxRange: 345,
-    consumptionKwhPer100km: 11.37,
-    price: 498000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'high',
-  },
-  
-  // KIA
-  {
-    id: 'kia_ev6',
-    brand: 'KIA',
-    series: 'EV6',
-    variant: 'GT-Line',
-    badge: 'EV6',
-    battery: 77.4,
-    maxRange: 506,
-    consumptionKwhPer100km: 15.3,
-    price: 948000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'luxury',
-  },
-  
-  // BMW - Luxury
-  {
-    id: 'bmw_ix1',
-    brand: 'BMW',
-    series: 'iX1',
-    variant: 'eDrive20',
-    badge: 'iX1',
-    battery: 64.7,
-    maxRange: 440,
-    consumptionKwhPer100km: 14.7,
-    price: 1280000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'luxury',
-  },
-  {
-    id: 'bmw_ix',
-    brand: 'BMW',
-    series: 'iX',
-    variant: 'xDrive40',
-    badge: 'iX',
-    battery: 76.6,
-    maxRange: 455,
-    consumptionKwhPer100km: 16.8,
-    price: 2180000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'luxury',
-  },
-  
-  // Mercedes - Luxury
-  {
-    id: 'mercedes_eqa',
-    brand: 'Mercedes-Benz',
-    series: 'EQA',
-    variant: '250',
-    badge: 'EQA',
-    battery: 66.5,
-    maxRange: 426,
-    consumptionKwhPer100km: 15.6,
-    price: 1380000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 4,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'luxury',
-  },
-  
-  // Toyota
-  {
-    id: 'toyota_bz4x',
-    brand: 'Toyota',
-    series: 'bZ4X',
-    variant: 'FWD',
-    badge: '4X',
-    battery: 71.4,
-    maxRange: 516,
-    consumptionKwhPer100km: 13.84,
-    price: 1150000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'luxury',
-  },
-  
-  // VinFast
-  {
-    id: 'vinfast_vf3',
-    brand: 'VinFast',
-    series: 'VF 3',
-    variant: 'Standard',
-    badge: 'VF3',
-    battery: 18.6,
-    maxRange: 215,
-    consumptionKwhPer100km: 8.65,
-    price: 198000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'low',
-  },
-  {
-    id: 'vinfast_vf5',
-    brand: 'VinFast',
-    series: 'VF 5',
-    variant: 'Standard',
-    badge: 'VF5',
-    battery: 29.6,
-    maxRange: 268,
-    consumptionKwhPer100km: 11.04,
-    price: 238000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'low',
-  },
-  {
-    id: 'vinfast_vf_e34',
-    brand: 'VinFast',
-    series: 'VF e34',
-    variant: 'Standard',
-    badge: 'E34',
-    battery: 41.9,
-    maxRange: 318,
-    consumptionKwhPer100km: 13.17,
-    price: 298000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'vinfast_vf6',
-    brand: 'VinFast',
-    series: 'VF 6',
-    variant: 'Plus',
-    badge: 'VF6',
-    battery: 59.6,
-    maxRange: 381,
-    consumptionKwhPer100km: 15.64,
-    price: 388000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'medium',
-  },
-  {
-    id: 'vinfast_vf7',
-    brand: 'VinFast',
-    series: 'VF 7',
-    variant: 'Plus AWD',
-    badge: 'VF7',
-    battery: 70.8,
-    maxRange: 471,
-    consumptionKwhPer100km: 15.03,
-    price: 498000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 10,
-    batteryWarrantyKm: 200000,
-    insuranceGroup: 'high',
-  },
-  
-  // MG
-  {
-    id: 'mg4_ev',
-    brand: 'MG',
-    series: 'MG4 EV',
-    variant: 'Excite',
-    badge: 'M4',
-    battery: 51,
-    maxRange: 425,
-    consumptionKwhPer100km: 12,
-    price: 398000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 5,
-    batteryWarrantyYears: 7,
-    batteryWarrantyKm: 140000,
-    insuranceGroup: 'medium',
-  },
-  
-  // Nissan
-  {
-    id: 'nissan_leaf',
-    brand: 'Nissan',
-    series: 'Leaf',
-    variant: 'Standard',
-    badge: 'LF',
-    battery: 40,
-    maxRange: 311,
-    consumptionKwhPer100km: 12.86,
-    price: 698000000,
-    otrLocation: 'jakarta',
-    warrantyYears: 3,
-    batteryWarrantyYears: 8,
-    batteryWarrantyKm: 160000,
-    insuranceGroup: 'high',
-  },
-  
-  // Tesla (if available officially)
-  // Note: Tesla not officially distributed yet, but included for reference
-];
+// Warranty data by brand (researched from official sources)
+const BRAND_WARRANTY: Record<string, {
+  vehicleYears: number;
+  batteryYears: number;
+  batteryKm: number;
+}> = {
+  // Wuling: 3 years vehicle, 8 years battery
+  wuling: { vehicleYears: 3, batteryYears: 8, batteryKm: 150000 },
+  // BYD: 6 years vehicle, 8 years battery
+  byd: { vehicleYears: 6, batteryYears: 8, batteryKm: 160000 },
+  // GAC Aion: 5 years vehicle, 8 years battery
+  gac: { vehicleYears: 5, batteryYears: 8, batteryKm: 200000 },
+  // Hyundai: 5 years vehicle, 10 years battery
+  hyundai: { vehicleYears: 5, batteryYears: 10, batteryKm: 200000 },
+  // KIA: 5 years vehicle, 10 years battery
+  kia: { vehicleYears: 5, batteryYears: 10, batteryKm: 200000 },
+  // Toyota: 5 years vehicle, 10 years battery
+  toyota: { vehicleYears: 5, batteryYears: 10, batteryKm: 200000 },
+  // BMW: 5 years vehicle, 8 years battery
+  bmw: { vehicleYears: 5, batteryYears: 8, batteryKm: 160000 },
+  // Mercedes: 4 years vehicle, 8 years battery
+  mercedes: { vehicleYears: 4, batteryYears: 8, batteryKm: 160000 },
+  // Lexus: 4 years vehicle, 8 years battery
+  lexus: { vehicleYears: 4, batteryYears: 8, batteryKm: 160000 },
+  // Volvo: 5 years vehicle, 8 years battery
+  volvo: { vehicleYears: 5, batteryYears: 8, batteryKm: 160000 },
+  // VinFast: 5 years vehicle, 10 years battery
+  vinfast: { vehicleYears: 5, batteryYears: 10, batteryKm: 200000 },
+  // MG: 5 years vehicle, 7 years battery
+  mg: { vehicleYears: 5, batteryYears: 7, batteryKm: 140000 },
+  // Nissan: 3 years vehicle, 8 years battery
+  nissan: { vehicleYears: 3, batteryYears: 8, batteryKm: 160000 },
+  // Chery: 5 years vehicle, 8 years battery
+  chery: { vehicleYears: 5, batteryYears: 8, batteryKm: 160000 },
+  // Denza: 5 years vehicle, 8 years battery
+  denza: { vehicleYears: 5, batteryYears: 8, batteryKm: 160000 },
+  // Geely: 5 years vehicle, 8 years battery
+  geely: { vehicleYears: 5, batteryYears: 8, batteryKm: 160000 },
+  // Neta: 5 years vehicle, 8 years battery
+  neta: { vehicleYears: 5, batteryYears: 8, batteryKm: 150000 },
+  // MINI: 4 years vehicle, 8 years battery
+  mini: { vehicleYears: 4, batteryYears: 8, batteryKm: 160000 },
+};
 
+// Default warranty for unknown brands
+const DEFAULT_WARRANTY = { vehicleYears: 3, batteryYears: 8, batteryKm: 150000 };
+
+// Map CarData to EVVehicle with TCO-specific fields
+function mapCarToEVVehicle(car: CarData): EVVehicle {
+  const warranty = BRAND_WARRANTY[car.brand] ?? DEFAULT_WARRANTY;
+  
+  return {
+    id: car.id,
+    brand: car.brand === 'gac' ? 'GAC Aion' :
+           car.brand === 'byd' ? 'BYD' :
+           car.brand === 'bmw' ? 'BMW' :
+           car.brand === 'chery' ? 'Chery' :
+           car.brand === 'denza' ? 'Denza' :
+           car.brand === 'geely' ? 'Geely' :
+           car.brand === 'hyundai' ? 'Hyundai' :
+           car.brand === 'kia' ? 'KIA' :
+           car.brand === 'lexus' ? 'Lexus' :
+           car.brand === 'mercedes' ? 'Mercedes-Benz' :
+           car.brand === 'mg' ? 'MG' :
+           car.brand === 'mini' ? 'MINI' :
+           car.brand === 'neta' ? 'Neta' :
+           car.brand === 'nissan' ? 'Nissan' :
+           car.brand === 'toyota' ? 'Toyota' :
+           car.brand === 'vinfast' ? 'VinFast' :
+           car.brand === 'volvo' ? 'Volvo' :
+           car.brand === 'wuling' ? 'Wuling' : car.brand,
+    series: car.series,
+    variant: car.variant,
+    badge: car.badge,
+    battery: car.battery,
+    maxRange: car.maxRange,
+    consumptionKwhPer100km: car.consumptionKwhPer100km ?? calculateConsumption(car.battery, car.maxRange),
+    price: car.price ?? 0,
+    otrLocation: 'jakarta',
+    warrantyYears: warranty.vehicleYears,
+    batteryWarrantyYears: warranty.batteryYears,
+    batteryWarrantyKm: warranty.batteryKm,
+    insuranceGroup: car.insuranceGroup ?? 'medium',
+  };
+}
+
+// Generate EV_VEHICLES from shared carData
+export const EV_VEHICLES: EVVehicle[] = CARS.map(mapCarToEVVehicle);
+
+// Helper functions
 export function getEVVehicleById(id: string): EVVehicle | undefined {
   return EV_VEHICLES.find(v => v.id === id);
 }
 
 export function getEVVehiclesByBrand(brand: string): EVVehicle[] {
-  return EV_VEHICLES.filter(v => v.brand.toLowerCase() === brand.toLowerCase());
+  return EV_VEHICLES.filter(v => 
+    v.brand.toLowerCase() === brand.toLowerCase()
+  );
 }
 
 export function getAllEVBrands(): string[] {
@@ -467,6 +118,7 @@ export function getEVVehiclesByPriceRange(
   return EV_VEHICLES.filter(v => v.price >= min && v.price <= max);
 }
 
+// Import ICE vehicles for comparison
 import { ICE_VEHICLES } from './iceVehicles';
 import type { ICEVehicle } from '../types';
 
