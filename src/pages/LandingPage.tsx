@@ -83,7 +83,7 @@ const capabilities = [
   },
 ];
 
-export function LandingPage() {
+export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const capsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);

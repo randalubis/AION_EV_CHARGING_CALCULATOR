@@ -26,7 +26,7 @@ const features = [
   },
 ];
 
-export function MapPage() {
+export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

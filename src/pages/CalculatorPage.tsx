@@ -16,7 +16,7 @@ const features = [
   'Tips kesehatan baterai',
 ];
 
-export function CalculatorPage() {
+export default function CalculatorPage() {
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -26,7 +26,7 @@ const communityFeatures = [
   },
 ];
 
-export function CommunityPage() {
+export default function CommunityPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

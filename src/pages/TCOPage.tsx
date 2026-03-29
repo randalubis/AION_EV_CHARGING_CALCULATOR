@@ -26,7 +26,7 @@ const costFactors = [
   },
 ];
 
-export function TCOPage() {
+export default function TCOPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

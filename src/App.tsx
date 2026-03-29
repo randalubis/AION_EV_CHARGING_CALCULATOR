@@ -6,12 +6,12 @@ import { siteConfig } from './config';
 import './App.css';
 
 // Lazy load pages for better performance
-const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
-const CalculatorPage = lazy(() => import('./pages/CalculatorPage').then(m => ({ default: m.CalculatorPage })));
-const MapPage = lazy(() => import('./pages/MapPage').then(m => ({ default: m.MapPage })));
-const TripPlannerPage = lazy(() => import('./pages/TripPlannerPage').then(m => ({ default: m.TripPlannerPage })));
-const TCOPage = lazy(() => import('./pages/TCOPage').then(m => ({ default: m.TCOPage })));
-const CommunityPage = lazy(() => import('./pages/CommunityPage').then(m => ({ default: m.CommunityPage })));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const CalculatorPage = lazy(() => import('./pages/CalculatorPage'));
+const MapPage = lazy(() => import('./pages/MapPage'));
+const TripPlannerPage = lazy(() => import('./pages/TripPlannerPage'));
+const TCOPage = lazy(() => import('./pages/TCOPage'));
+const CommunityPage = lazy(() => import('./pages/CommunityPage'));
 
 // Loading fallback
 function PageLoader() {

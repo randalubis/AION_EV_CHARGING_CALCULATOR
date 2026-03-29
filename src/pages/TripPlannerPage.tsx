@@ -26,7 +26,7 @@ const features = [
   },
 ];
 
-export function TripPlannerPage() {
+export default function TripPlannerPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
