@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
-import { ArrowLeft, Search, MapPin, List, X } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, List, X, AlertTriangle, Info, Zap, Navigation } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';
 import type { MapViewport } from '../features/map/types';
@@ -74,53 +74,66 @@ export default function MapPage() {
   return (
     <div ref={containerRef} className="relative w-full h-screen bg-forest-dark overflow-hidden">
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-forest-dark to-transparent">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Left: Back & Title */}
-            <div className="flex items-center gap-4">
-              <Link
-                to="/"
-                className="flex items-center gap-2 text-white/70 hover:text-[#FFC300] transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                <span className="hidden sm:inline text-sm">Kembali</span>
-              </Link>
-              <div className="h-6 w-px bg-white/20" />
-              <div>
-                <h1 className="text-white font-semibold text-lg">Peta SPKLU</h1>
-                <p className="text-white/50 text-xs hidden sm:block">
-                  {stats.total} stasiun • {stats.available} tersedia
-                </p>
-              </div>
+      <header className="absolute top-0 left-0 right-0 z-20">
+        {/* Early Build Banner */}
+        <div className="bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border-b border-amber-500/30">
+          <div className="max-w-7xl mx-auto px-4 py-2">
+            <div className="flex items-center justify-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <span className="text-amber-200 text-sm font-medium">
+                Early Build — Fitur ini masih dalam tahap pengembangan awal
+              </span>
             </div>
-
-            {/* Right: Stats & Toggle */}
-            <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-4 bg-forest-dark/80 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10">
-                <div className="text-center">
-                  <div className="text-[#FFC300] font-semibold text-sm">{stats.total}</div>
-                  <div className="text-white/40 text-xs">Stasiun</div>
-                </div>
-                <div className="w-px h-8 bg-white/10" />
-                <div className="text-center">
-                  <div className="text-[#27AE60] font-semibold text-sm">{stats.available}</div>
-                  <div className="text-white/40 text-xs">Tersedia</div>
-                </div>
-                <div className="w-px h-8 bg-white/10" />
-                <div className="text-center">
-                  <div className="text-[#3498DB] font-semibold text-sm">{stats.fastCharging}</div>
-                  <div className="text-white/40 text-xs">Fast Charging</div>
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-b from-forest-dark via-forest-dark/95 to-transparent">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              {/* Left: Back & Title */}
+              <div className="flex items-center gap-4">
+                <Link
+                  to="/"
+                  className="flex items-center gap-2 text-white/70 hover:text-[#FFC300] transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  <span className="hidden sm:inline text-sm">Kembali</span>
+                </Link>
+                <div className="h-6 w-px bg-white/20" />
+                <div>
+                  <h1 className="text-white font-semibold text-lg">Peta SPKLU</h1>
+                  <p className="text-white/50 text-xs hidden sm:block">
+                    {stats.total} stasiun • {stats.available} tersedia
+                  </p>
                 </div>
               </div>
 
-              <button
-                onClick={() => setShowList(!showList)}
-                className="md:hidden w-10 h-10 bg-forest-dark/80 backdrop-blur-sm rounded-lg border border-white/10 flex items-center justify-center text-white hover:border-[#FFC300] transition-colors"
-              >
-                {showList ? <X className="w-5 h-5" /> : <List className="w-5 h-5" />}
-              </button>
-            </div>
+              {/* Right: Stats & Toggle */}
+              <div className="flex items-center gap-3">
+                <div className="hidden md:flex items-center gap-4 bg-forest-dark/80 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10">
+                  <div className="text-center">
+                    <div className="text-[#FFC300] font-semibold text-sm">{stats.total}</div>
+                    <div className="text-white/40 text-xs">Stasiun</div>
+                  </div>
+                  <div className="w-px h-8 bg-white/10" />
+                  <div className="text-center">
+                    <div className="text-[#27AE60] font-semibold text-sm">{stats.available}</div>
+                    <div className="text-white/40 text-xs">Tersedia</div>
+                  </div>
+                  <div className="w-px h-8 bg-white/10" />
+                  <div className="text-center">
+                    <div className="text-[#3498DB] font-semibold text-sm">{stats.fastCharging}</div>
+                    <div className="text-white/40 text-xs">Fast Charging</div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setShowList(!showList)}
+                  className="md:hidden w-10 h-10 bg-forest-dark/80 backdrop-blur-sm rounded-lg border border-white/10 flex items-center justify-center text-white hover:border-[#FFC300] transition-colors"
+                >
+                  {showList ? <X className="w-5 h-5" /> : <List className="w-5 h-5" />}
+                </button>
+              </div>
           </div>
         </div>
       </header>
@@ -153,6 +166,35 @@ export default function MapPage() {
                     <X className="w-4 h-4 text-white/30 hover:text-white" />
                   </button>
                 )}
+              </div>
+            </div>
+
+            {/* Info & Help Section */}
+            <div className="px-4 py-3 border-b border-white/10">
+              <div className="bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-[#FFC300] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-white font-medium text-sm mb-1">Cara Menggunakan Peta</h3>
+                    <ul className="text-white/60 text-xs space-y-1.5">
+                      <li className="flex items-start gap-2">
+                        <Zap className="w-3 h-3 mt-0.5 text-[#27AE60]" />
+                        <span>Klik ikon <strong>petir</strong> di peta untuk melihat detail stasiun</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Navigation className="w-3 h-3 mt-0.5 text-blue-400" />
+                        <span>Gunakan tombol <strong>Lokasi Saya</strong> untuk menemukan stasiun terdekat</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <MapPin className="w-3 h-3 mt-0.5 text-[#FFC300]" />
+                        <span>Stasiun <strong>hijau</strong> = tersedia, <strong>merah</strong> = penuh</span>
+                      </li>
+                    </ul>
+                    <p className="text-white/40 text-xs mt-2 italic">
+                      Data saat ini bersifat sample untuk demo. Data lengkap akan ditambahkan secara bertahap.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -205,10 +247,31 @@ export default function MapPage() {
             userLocation={userLocation}
           />
 
+          {/* Info Card - Desktop */}
+          <div className="hidden md:block absolute bottom-6 left-6 z-10 max-w-xs">
+            <div className="bg-forest-dark/95 backdrop-blur-sm border border-white/10 rounded-xl p-4 shadow-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-[#FFC300]" />
+                </div>
+                <h3 className="text-white font-semibold text-sm">Peta Stasiun Charging</h3>
+              </div>
+              <p className="text-white/60 text-xs leading-relaxed">
+                Temukan lokasi Stasiun Pengisian Kendaraan Listrik Umum (SPKLU) di seluruh Indonesia. 
+                Lihat ketersediaan charger, tipe connector, dan harga dalam satu peta interaktif.
+              </p>
+              <div className="mt-3 flex items-center gap-2 text-xs">
+                <span className="px-2 py-1 bg-[#27AE60]/20 text-[#27AE60] rounded">Tersedia</span>
+                <span className="px-2 py-1 bg-[#E74C3C]/20 text-[#E74C3C] rounded">Penuh</span>
+                <span className="px-2 py-1 bg-[#FFC300]/20 text-[#FFC300] rounded">Terpilih</span>
+              </div>
+            </div>
+          </div>
+
           {/* Mobile Toggle Button */}
           <button
             onClick={() => setShowList(!showList)}
-            className="absolute bottom-6 left-6 md:hidden z-10 bg-[#FFC300] text-forest-dark px-4 py-2 rounded-full font-medium text-sm shadow-lg flex items-center gap-2"
+            className="md:hidden absolute bottom-6 left-6 z-10 bg-[#FFC300] text-forest-dark px-4 py-2 rounded-full font-medium text-sm shadow-lg flex items-center gap-2"
           >
             <List className="w-4 h-4" />
             {showList ? 'Tutup Daftar' : 'Lihat Daftar'}
