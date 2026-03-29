@@ -24,16 +24,10 @@ export const ELECTRICITY_RATES: ElectricityRate[] = [
     description: 'Rumah tangga daya > 6.600 VA',
   },
   {
-    category: 'public_ac',
-    name: 'SPKLU AC (Public)',
+    category: 'public',
+    name: 'SPKLU (Public)',
     ratePerKwh: 3000,
-    description: 'Perkiraan tarif SPKLU publik AC',
-  },
-  {
-    category: 'public_dc',
-    name: 'SPKLU DC (Public)',
-    ratePerKwh: 4500,
-    description: 'Perkiraan tarif SPKLU publik DC',
+    description: 'Perkiraan tarif SPKLU publik (AC & DC)',
   },
 ];
 

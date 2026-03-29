@@ -39,7 +39,7 @@ export interface FuelPrice {
 }
 
 export interface ElectricityRate {
-  category: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public_ac' | 'public_dc';
+  category: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public';
   name: string;
   ratePerKwh: number;           // IDR
   description: string;
@@ -83,10 +83,10 @@ export interface TCOInputs {
   
   // Usage Parameters
   annualKm: number;             // km per year
-  ownershipYears: number;       // 3, 4, or 5 years
+  ownershipYears: number;       // 1-20 years
   
   // Energy Parameters
-  electricityRateCategory: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public_ac' | 'public_dc';
+  electricityRateCategory: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public';
   homeChargingPercentage: number; // 0-100
   publicChargingPercentage: number; // 0-100 (derived)
   

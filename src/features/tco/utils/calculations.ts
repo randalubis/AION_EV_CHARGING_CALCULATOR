@@ -14,7 +14,7 @@ interface CalculateTCOParams {
   ice: ICEVehicle;
   annualKm: number;
   ownershipYears: number;
-  electricityRateCategory: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public_ac' | 'public_dc';
+  electricityRateCategory: 'pln_r1' | 'pln_r2' | 'pln_r3' | 'public';
   homeChargingPercentage: number;
   insuranceType: 'comprehensive' | 'tlo';
   includeTax: boolean;
@@ -34,7 +34,7 @@ function calculateEVEnergyCost(
   // If using mixed charging, adjust rate
   // Home charging is cheaper, public is more expensive
   if (homeChargingPercentage < 100) {
-    const publicRate = getElectricityRate('public_dc');
+    const publicRate = getElectricityRate('public');
     const homeRate = electricityRate;
     const publicPercentage = 100 - homeChargingPercentage;
     

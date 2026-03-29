@@ -24,7 +24,7 @@ export function UsageInput({
   onHomeChargingChange,
 }: UsageInputProps) {
   const kmOptions = [5000, 10000, 15000, 20000, 25000, 30000, 50000];
-  const yearOptions = [3, 4, 5];
+  const yearOptions = [1, 2, 3, 4, 5];
   
   const publicChargingPercentage = 100 - homeChargingPercentage;
   
@@ -91,21 +91,40 @@ export function UsageInput({
           </div>
         </div>
         
-        <div className="flex gap-3">
+        <div className="grid grid-cols-5 gap-2 mb-4">
           {yearOptions.map(years => (
             <button
               key={years}
               onClick={() => onOwnershipYearsChange(years)}
-              className={`flex-1 py-4 rounded-xl text-center font-semibold transition-all ${
+              className={`py-3 rounded-xl text-center font-semibold transition-all ${
                 ownershipYears === years
                   ? 'bg-[#FFC300] text-forest-dark'
                   : 'bg-forest-dark border border-white/10 text-white/70 hover:border-white/30'
               }`}
             >
-              <div className="text-2xl">{years}</div>
-              <div className="text-xs opacity-70">Tahun</div>
+              <div className="text-xl">{years}</div>
+              <div className="text-xs opacity-70">Thn</div>
             </button>
           ))}
+        </div>
+        
+        {/* Custom Years Input */}
+        <div className="relative">
+          <input
+            type="number"
+            value={ownershipYears > 5 ? ownershipYears : ''}
+            onChange={(e) => {
+              const val = parseInt(e.target.value) || 0;
+              if (val >= 1 && val <= 20) onOwnershipYearsChange(val);
+            }}
+            placeholder="Lainnya (6-20 thn)"
+            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-[#FFC300] focus:outline-none placeholder:text-white/30"
+            min={6}
+            max={20}
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-sm">
+            tahun
+          </span>
         </div>
         
         <p className="text-white/40 text-xs mt-4">

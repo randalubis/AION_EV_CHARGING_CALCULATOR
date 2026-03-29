@@ -111,7 +111,7 @@ export function useTCOCalculator(): UseTCOCalculatorReturn {
   }, []);
   
   const setOwnershipYears = useCallback((years: number) => {
-    setInputs(prev => ({ ...prev, ownershipYears: Math.max(1, Math.min(10, years)) }));
+    setInputs(prev => ({ ...prev, ownershipYears: Math.max(1, Math.min(20, years)) }));
   }, []);
   
   const setElectricityRateCategory = useCallback((category: TCOInputs['electricityRateCategory']) => {

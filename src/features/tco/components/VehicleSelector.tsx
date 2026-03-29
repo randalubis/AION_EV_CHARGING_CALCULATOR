@@ -96,13 +96,13 @@ export function VehicleSelector({
                 >
                   <div>
                     <div className="text-white font-medium text-sm">{vehicle.brand} {vehicle.series}</div>
-                    <div className="text-white/50 text-xs">{vehicle.variant} • {vehicle.battery} kWh</div>
+                    <div className="text-white/50 text-xs">{vehicle.variant} • {vehicle.consumptionKwhPer100km.toFixed(1)} kWh/100km</div>
                   </div>
                   <div className="text-right">
                     <div className="text-[#27AE60] font-semibold text-sm">
                       Rp {formatCompactNumber(vehicle.price)}
                     </div>
-                    <div className="text-white/40 text-xs">{vehicle.maxRange} km</div>
+                    <div className="text-white/40 text-xs">{vehicle.battery} kWh • {vehicle.maxRange} km</div>
                   </div>
                 </button>
               ))}
@@ -161,13 +161,13 @@ export function VehicleSelector({
                 >
                   <div>
                     <div className="text-white font-medium text-sm">{vehicle.brand} {vehicle.model}</div>
-                    <div className="text-white/50 text-xs">{vehicle.variant} • {vehicle.engineCc}cc</div>
+                    <div className="text-white/50 text-xs">{vehicle.variant} • {vehicle.fuelConsumptionKmPerLiter.toFixed(1)} km/l</div>
                   </div>
                   <div className="text-right">
                     <div className="text-[#E67E22] font-semibold text-sm">
                       Rp {formatCompactNumber(vehicle.price)}
                     </div>
-                    <div className="text-white/40 text-xs">{vehicle.fuelConsumptionKmPerLiter} km/l</div>
+                    <div className="text-white/40 text-xs">{vehicle.engineCc} cc</div>
                   </div>
                 </button>
               ))}
@@ -228,7 +228,7 @@ function SelectedVehicleCard({ vehicle, type, onClear }: SelectedVehicleCardProp
             </div>
             <div>
               <span className="text-white/40">Konsumsi</span>
-              <p className="text-white font-medium">{evVehicle.consumptionKwhPer100km} kWh/100km</p>
+              <p className="text-white font-medium">{evVehicle.consumptionKwhPer100km.toFixed(1)} kWh/100km</p>
             </div>
           </>
         ) : iceVehicle ? (
@@ -243,7 +243,7 @@ function SelectedVehicleCard({ vehicle, type, onClear }: SelectedVehicleCardProp
             </div>
             <div>
               <span className="text-white/40">Konsumsi</span>
-              <p className="text-white font-medium">{iceVehicle.fuelConsumptionKmPerLiter} km/l</p>
+              <p className="text-white font-medium">{iceVehicle.fuelConsumptionKmPerLiter.toFixed(1)} km/l</p>
             </div>
           </>
         ) : null}

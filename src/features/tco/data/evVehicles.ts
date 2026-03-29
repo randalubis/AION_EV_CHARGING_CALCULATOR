@@ -58,7 +58,7 @@ function mapCarToEVVehicle(car: CarData): EVVehicle {
   
   return {
     id: car.id,
-    brand: car.brand === 'gac' ? 'GAC Aion' :
+    brand: car.brand === 'gac' ? 'AION' :
            car.brand === 'byd' ? 'BYD' :
            car.brand === 'bmw' ? 'BMW' :
            car.brand === 'chery' ? 'Chery' :
@@ -81,7 +81,7 @@ function mapCarToEVVehicle(car: CarData): EVVehicle {
     badge: car.badge,
     battery: car.battery,
     maxRange: car.maxRange,
-    consumptionKwhPer100km: car.consumptionKwhPer100km ?? calculateConsumption(car.battery, car.maxRange),
+    consumptionKwhPer100km: Number((car.consumptionKwhPer100km ?? calculateConsumption(car.battery, car.maxRange)).toFixed(1)),
     price: car.price ?? 0,
     otrLocation: 'jakarta',
     warrantyYears: warranty.vehicleYears,
