@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { 
   ArrowLeft, Search, MapPin, List, X, AlertTriangle, Info, 
-  Zap, Navigation, Compass, Filter, ChevronDown 
+  Compass, Filter, ChevronDown 
 } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';

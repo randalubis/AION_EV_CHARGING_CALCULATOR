@@ -1,4 +1,4 @@
-import { Zap, Clock, Navigation, Battery } from 'lucide-react';
+import { Zap, Navigation } from 'lucide-react';
 import type { ChargingStation } from '../types';
 
 interface StationCardProps {
