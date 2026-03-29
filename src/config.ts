@@ -1,5 +1,5 @@
 // Site Configuration
-// setrum.id - Platform EV Charging Indonesia
+// evhub.id - Platform EV Charging Indonesia
 
 export interface SiteConfig {
   language: string;
@@ -216,7 +216,7 @@ export const whyChooseMeConfig: WhyChooseMeConfig = {
       image: "/why-1.jpg",
       imageAlt: "Pemilik EV yang puas",
       title: "Dibuat untuk Indonesia",
-      description: "Tidak ada lagi kalkulator yang dirancang untuk pasar luar negeri. setrum.id menggunakan tarif PLN nyata dan data SPKLU lokal."
+      description: "Tidak ada lagi kalkulator yang dirancang untuk pasar luar negeri. evhub.id menggunakan tarif PLN nyata dan data SPKLU lokal."
     },
     {
       image: "/why-2.jpg",
@@ -228,7 +228,7 @@ export const whyChooseMeConfig: WhyChooseMeConfig = {
   wideImage: "/why-wide.jpg",
   wideImageAlt: "Jaringan charging station di Indonesia",
   wideTitle: "Masa Depan Mobilitas",
-  wideDescription: "Bergabunglah dengan ribuan pemilik EV di Indonesia yang telah menggunakan setrum.id untuk perjalanan mereka."
+  wideDescription: "Bergabunglah dengan ribuan pemilik EV di Indonesia yang telah menggunakan evhub.id untuk perjalanan mereka."
 };
 
 // Testimonials Section
