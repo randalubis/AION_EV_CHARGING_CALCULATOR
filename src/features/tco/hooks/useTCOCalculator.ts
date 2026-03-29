@@ -73,6 +73,7 @@ export function useTCOCalculator(): UseTCOCalculatorReturn {
         electricityRateCategory: inputs.electricityRateCategory,
         homeChargingPercentage: inputs.homeChargingPercentage,
         insuranceType: inputs.insuranceType,
+        includeTax: inputs.includeTax,
         region: inputs.region,
       });
     } catch (error) {
