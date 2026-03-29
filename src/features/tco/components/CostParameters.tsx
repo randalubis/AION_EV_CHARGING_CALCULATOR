@@ -80,7 +80,7 @@ export function CostParameters({
               <div className="flex-1">
                 <div className="font-medium text-white">TLO (Total Loss Only)</div>
                 <p className="text-white/50 text-sm mt-1">
-                  Hanya menanggung kerusakan >75% dan pencurian. Premi lebih rendah.
+                  Hanya menanggung kerusakan &gt;75% dan pencurian. Premi lebih rendah.
                 </p>
                 <div className="flex gap-2 mt-2">
                   <span className="text-xs bg-white/10 text-white/70 px-2 py-1 rounded">0.3-0.5%</span>
