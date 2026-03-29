@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from 'react-leaflet';
 import { Locate, Plus, Minus } from 'lucide-react';
 import type { ChargingStation, MapViewport } from '../types';
@@ -107,42 +107,7 @@ function createStationIcon(isSelected: boolean, hasAvailable: boolean): L.DivIco
   });
 }
 
-function createUserIcon(): L.DivIcon {
-  return L.divIcon({
-    className: 'user-marker',
-    html: `
-      <div style="
-        width: 16px;
-        height: 16px;
-        background: #3B82F6;
-        border: 3px solid white;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        position: relative;
-      ">
-        <div style="
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 40px;
-          height: 40px;
-          background: rgba(59, 130, 246, 0.3);
-          border-radius: 50%;
-          animation: pulse-blue 2s infinite;
-        "></div>
-      </div>
-      <style>
-        @keyframes pulse-blue {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-        }
-      </style>
-    `,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-  });
-}
+
 
 // Indonesia center coordinates
 const DEFAULT_CENTER: [number, number] = [-2.5489, 118.0149];
@@ -157,7 +122,6 @@ export function MapView({
   userLocation,
 }: MapViewProps) {
   const mapRef = useRef<L.Map | null>(null);
-  const [mapReady, setMapReady] = useState(false);
 
   const handleZoomIn = () => {
     mapRef.current?.zoomIn();
@@ -190,9 +154,10 @@ export function MapView({
         zoom={viewport?.zoom || DEFAULT_ZOOM}
         style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }}
         zoomControl={false}
-        whenCreated={(map) => {
-          mapRef.current = map;
-          setMapReady(true);
+        ref={(map) => {
+          if (map) {
+            mapRef.current = map;
+          }
         }}
       >
         {/* OpenStreetMap Tile Layer */}
