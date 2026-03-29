@@ -1,4 +1,3 @@
-import { Filter, X } from 'lucide-react';
 import type { MapFilters, ConnectorType } from '../types';
 import { getAllOperators } from '../data/sampleStations';
 
@@ -8,18 +7,18 @@ interface FilterPanelProps {
   onClearFilters: () => void;
 }
 
-const CONNECTOR_TYPES: { type: ConnectorType; label: string; icon: string }[] = [
-  { type: 'ccs2', label: 'CCS2 (DC Fast)', icon: '🔌' },
-  { type: 'type2', label: 'Type 2 (AC)', icon: '🔌' },
-  { type: 'chademo', label: 'CHAdeMO', icon: '🔌' },
-  { type: 'gb/t', label: 'GB/T', icon: '🔌' },
+const CONNECTOR_TYPES: { type: ConnectorType; label: string }[] = [
+  { type: 'ccs2', label: 'CCS2' },
+  { type: 'type2', label: 'Type 2' },
+  { type: 'chademo', label: 'CHAdeMO' },
+  { type: 'gb/t', label: 'GB/T' },
 ];
 
 const POWER_RANGES = [
   { value: 0, label: 'Semua' },
   { value: 22, label: '22+ kW' },
-  { value: 50, label: '50+ kW (Fast)' },
-  { value: 150, label: '150+ kW (Ultra)' },
+  { value: 50, label: '50+ kW' },
+  { value: 150, label: '150+ kW' },
 ];
 
 export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: FilterPanelProps) {
@@ -27,8 +26,7 @@ export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: Filter
   const hasActiveFilters = 
     filters.connectorTypes.length > 0 ||
     filters.minPowerKw > 0 ||
-    filters.operators.length > 0 ||
-    filters.amenities.length > 0;
+    filters.operators.length > 0;
 
   const toggleConnectorType = (type: ConnectorType) => {
     const newTypes = filters.connectorTypes.includes(type)
@@ -45,38 +43,19 @@ export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: Filter
   };
 
   return (
-    <div className="bg-forest-dark rounded-xl border border-white/10 p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-[#FFC300]" />
-          <span className="text-white font-medium text-sm">Filter</span>
-        </div>
-        {hasActiveFilters && (
-          <button
-            onClick={onClearFilters}
-            className="flex items-center gap-1 text-white/50 hover:text-white text-xs"
-          >
-            <X className="w-3 h-3" />
-            Reset
-          </button>
-        )}
-      </div>
-
+    <div className="space-y-3">
       {/* Connector Types */}
-      <div className="mb-4">
-        <label className="text-white/50 text-xs uppercase tracking-wider mb-2 block">
-          Tipe Connector
-        </label>
-        <div className="flex flex-wrap gap-2">
+      <div>
+        <label className="text-white/40 text-xs mb-1.5 block">Tipe Connector</label>
+        <div className="flex flex-wrap gap-1.5">
           {CONNECTOR_TYPES.map(({ type, label }) => (
             <button
               key={type}
               onClick={() => toggleConnectorType(type)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                 filters.connectorTypes.includes(type)
                   ? 'bg-[#FFC300] text-forest-dark'
-                  : 'bg-forest-mid text-white/70 hover:text-white'
+                  : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
               }`}
             >
               {label}
@@ -86,19 +65,17 @@ export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: Filter
       </div>
 
       {/* Power Range */}
-      <div className="mb-4">
-        <label className="text-white/50 text-xs uppercase tracking-wider mb-2 block">
-          Daya Minimum
-        </label>
-        <div className="flex flex-wrap gap-2">
+      <div>
+        <label className="text-white/40 text-xs mb-1.5 block">Daya Minimum</label>
+        <div className="flex flex-wrap gap-1.5">
           {POWER_RANGES.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => onUpdateFilters({ minPowerKw: value })}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                 filters.minPowerKw === value
                   ? 'bg-[#FFC300] text-forest-dark'
-                  : 'bg-forest-mid text-white/70 hover:text-white'
+                  : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
               }`}
             >
               {label}
@@ -108,19 +85,17 @@ export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: Filter
       </div>
 
       {/* Operators */}
-      <div className="mb-4">
-        <label className="text-white/50 text-xs uppercase tracking-wider mb-2 block">
-          Operator
-        </label>
-        <div className="flex flex-wrap gap-2">
+      <div>
+        <label className="text-white/40 text-xs mb-1.5 block">Operator</label>
+        <div className="flex flex-wrap gap-1.5">
           {operators.map(operator => (
             <button
               key={operator}
               onClick={() => toggleOperator(operator)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                 filters.operators.includes(operator)
                   ? 'bg-[#FFC300] text-forest-dark'
-                  : 'bg-forest-mid text-white/70 hover:text-white'
+                  : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
               }`}
             >
               {operator}
@@ -129,29 +104,15 @@ export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: Filter
         </div>
       </div>
 
-      {/* Status */}
-      <div>
-        <label className="text-white/50 text-xs uppercase tracking-wider mb-2 block">
-          Status
-        </label>
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              const newStatus = filters.status.includes('active')
-                ? filters.status.filter(s => s !== 'active')
-                : [...filters.status, 'active'];
-              onUpdateFilters({ status: newStatus as ('active' | 'maintenance')[] });
-            }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              filters.status.includes('active')
-                ? 'bg-[#27AE60] text-white'
-                : 'bg-forest-mid text-white/70 hover:text-white'
-            }`}
-          >
-            Aktif
-          </button>
-        </div>
-      </div>
+      {/* Clear Button */}
+      {hasActiveFilters && (
+        <button
+          onClick={onClearFilters}
+          className="w-full py-2 text-xs text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-md transition-colors"
+        >
+          Reset Filter
+        </button>
+      )}
     </div>
   );
 }
