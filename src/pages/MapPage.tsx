@@ -64,21 +64,10 @@ export default function MapPage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-forest-dark">
-      {/* Fixed Header - Always on top */}
-      <header className="fixed top-0 left-0 right-0 z-50">
-        {/* Early Build Banner */}
-        <div className="bg-amber-500/10 border-b border-amber-500/30 px-4 py-2">
-          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
-            <span className="text-amber-200 text-xs sm:text-sm font-medium text-center">
-              Early Build — Fitur dalam pengembangan
-            </span>
-          </div>
-        </div>
-
-        {/* Main Nav */}
-        <div className="bg-forest-dark border-b border-white/10 px-4 py-3">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+      {/* Fixed Header - Only Main Nav */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-forest-dark border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-2 group">
@@ -116,8 +105,18 @@ export default function MapPage() {
         </div>
       </header>
 
-      {/* Content - with top padding for fixed header (banner ~40px + nav ~56px) */}
-      <div className="pt-[100px]">
+      {/* Content - with top padding for fixed header */}
+      <div className="pt-[60px]">
+        {/* Early Build Banner - scrolls with content, solid background */}
+        <div className="bg-amber-500/10 border-b border-amber-500/30 px-4 py-2.5">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+            <span className="text-amber-200 text-xs sm:text-sm font-medium text-center">
+              Early Build — Fitur dalam pengembangan
+            </span>
+          </div>
+        </div>
+
         {/* Hero Card */}
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="animate-in bg-forest-mid/40 border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6">
