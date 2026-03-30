@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { 
   ArrowLeft, Search, MapPin, List, X, AlertTriangle, Info, 
-  Compass, Filter, ChevronDown 
+  Compass, Filter, ChevronDown, Zap
 } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';
@@ -80,14 +80,21 @@ export default function MapPage() {
         <div className="bg-forest-dark border-b border-white/10 px-4 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Link to="/" className="flex items-center gap-2 text-white/70 hover:text-[#FFC300]">
-                <ArrowLeft className="w-5 h-5" />
+              {/* Logo */}
+              <Link to="/" className="flex items-center gap-2 group">
+                <div className="w-8 h-8 bg-[#FFC300] rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
+                  <Zap className="w-5 h-5 text-forest-dark" />
+                </div>
+                <span className="text-white font-bold text-lg hidden sm:block">
+                  evhub<span className="text-[#FFC300]">.id</span>
+                </span>
               </Link>
               <div className="h-5 w-px bg-white/20" />
-              <div>
+              <div className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4 text-white/50" />
                 <h1 className="text-white font-semibold text-base sm:text-lg">Peta SPKLU</h1>
-                <p className="text-white/50 text-xs hidden sm:block">{stats.total} stasiun</p>
               </div>
+              <p className="text-white/50 text-xs hidden md:block ml-2">{stats.total} stasiun</p>
             </div>
 
             {/* Desktop Stats */}
@@ -109,8 +116,8 @@ export default function MapPage() {
         </div>
       </header>
 
-      {/* Content - with top padding for fixed header */}
-      <div className="pt-[92px]">
+      {/* Content - with top padding for fixed header (banner ~40px + nav ~56px) */}
+      <div className="pt-[100px]">
         {/* Hero Card */}
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="animate-in bg-forest-mid/40 border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6">

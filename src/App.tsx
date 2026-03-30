@@ -1,5 +1,5 @@
 import { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useLenis } from './hooks/useLenis';
 import { Navbar } from './components/Navbar';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -29,6 +29,9 @@ function PageLoader() {
 function AppContent() {
   // Initialize Lenis smooth scroll
   useLenis();
+  const location = useLocation();
+  const hideNavbarRoutes = ['/peta-spklu'];
+  const showNavbar = !hideNavbarRoutes.includes(location.pathname);
 
   useEffect(() => {
     if (siteConfig.siteTitle) {
@@ -45,7 +48,7 @@ function AppContent() {
 
   return (
     <div className="relative w-full min-h-screen bg-forest-dark">
-      <Navbar />
+      {showNavbar && <Navbar />}
       <main className="relative w-full">
         <Suspense fallback={<PageLoader />}>
           <Routes>
