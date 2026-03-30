@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 // import { useLenis } from './hooks/useLenis';
 import { Navbar } from './components/Navbar';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -48,6 +49,7 @@ function AppContent() {
     <div className="relative w-full min-h-screen bg-forest-dark">
       <Navbar />
       <SpeedInsights />
+      <Analytics />
       <main className="relative w-full">
         <Suspense fallback={<PageLoader />}>
           <Routes>
