@@ -11,7 +11,7 @@ import type { MapViewport } from '../features/map/types';
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showList, setShowList] = useState(false); // Default closed on mobile
+  const [showList, setShowList] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -64,8 +64,8 @@ export default function MapPage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-forest-dark">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-50">
+      {/* Fixed Header - Always on top */}
+      <header className="fixed top-0 left-0 right-0 z-50">
         {/* Early Build Banner */}
         <div className="bg-amber-500/10 border-b border-amber-500/30 px-4 py-2">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
@@ -77,7 +77,7 @@ export default function MapPage() {
         </div>
 
         {/* Main Nav */}
-        <div className="bg-forest-dark/95 backdrop-blur-md border-b border-white/10 px-4 py-3">
+        <div className="bg-forest-dark border-b border-white/10 px-4 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Link to="/" className="flex items-center gap-2 text-white/70 hover:text-[#FFC300]">
@@ -107,70 +107,72 @@ export default function MapPage() {
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      {/* Content - with top padding for fixed header */}
+      <div className="pt-[92px]">
         {/* Hero Card */}
-        <div className="animate-in bg-forest-mid/40 border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-          <div className="flex items-start gap-3 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#FFC300]/20 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-              <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-[#FFC300]" />
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
+          <div className="animate-in bg-forest-mid/40 border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#FFC300]/20 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-[#FFC300]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-white font-bold text-lg sm:text-xl mb-1">Temukan Stasiun Charging</h2>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  Peta SPKLU (Stasiun Pengisian Kendaraan Listrik Umum) membantu Anda menemukan lokasi charger 
+                  dengan informasi real-time: ketersediaan, tipe connector, kecepatan, dan harga.
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="text-white font-bold text-lg sm:text-xl mb-1">Temukan Stasiun Charging</h2>
-              <p className="text-white/60 text-sm leading-relaxed">
-                Peta SPKLU (Stasiun Pengisian Kendaraan Listrik Umum) membantu Anda menemukan lokasi charger 
-                dengan informasi real-time: ketersediaan, tipe connector, kecepatan, dan harga.
+
+            {/* How to Use */}
+            <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-white/10">
+              <div className="flex items-center gap-2 mb-3">
+                <Info className="w-4 h-4 text-[#FFC300]" />
+                <span className="text-white font-medium text-sm">Cara Penggunaan</span>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div className="flex items-start gap-2 bg-white/5 rounded-lg p-3">
+                  <span className="w-5 h-5 bg-[#27AE60]/20 text-[#27AE60] rounded flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                  <span className="text-white/70 text-xs">Klik ikon <strong className="text-white">petir</strong> pada peta untuk lihat detail stasiun</span>
+                </div>
+                <div className="flex items-start gap-2 bg-white/5 rounded-lg p-3">
+                  <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                  <span className="text-white/70 text-xs">Detail stasiun akan muncul di <strong className="text-white">panel samping kanan</strong></span>
+                </div>
+                <div className="flex items-start gap-2 bg-white/5 rounded-lg p-3">
+                  <span className="w-5 h-5 bg-[#FFC300]/20 text-[#FFC300] rounded flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                  <span className="text-white/70 text-xs">Tekan <strong className="text-white">Navigasi</strong> untuk arahkan ke Google Maps</span>
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-full bg-[#27AE60] border border-white" />
+                  <span className="text-white/60">Tersedia</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-full bg-[#E74C3C] border border-white" />
+                  <span className="text-white/60">Penuh</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-full bg-[#FFC300] border border-white" />
+                  <span className="text-white/60">Terpilih</span>
+                </span>
+              </div>
+
+              <p className="text-white/40 text-xs mt-3 italic">
+                *Data sample untuk demo. Data lengkap akan ditambahkan.
               </p>
             </div>
-          </div>
-
-          {/* How to Use */}
-          <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-white/10">
-            <div className="flex items-center gap-2 mb-3">
-              <Info className="w-4 h-4 text-[#FFC300]" />
-              <span className="text-white font-medium text-sm">Cara Penggunaan</span>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-3">
-              <div className="flex items-start gap-2 bg-white/5 rounded-lg p-3">
-                <span className="w-5 h-5 bg-[#27AE60]/20 text-[#27AE60] rounded flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
-                <span className="text-white/70 text-xs">Klik ikon <strong className="text-white">petir</strong> pada peta untuk lihat detail stasiun</span>
-              </div>
-              <div className="flex items-start gap-2 bg-white/5 rounded-lg p-3">
-                <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
-                <span className="text-white/70 text-xs">Detail stasiun akan muncul di <strong className="text-white">panel samping kanan</strong></span>
-              </div>
-              <div className="flex items-start gap-2 bg-white/5 rounded-lg p-3">
-                <span className="w-5 h-5 bg-[#FFC300]/20 text-[#FFC300] rounded flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
-                <span className="text-white/70 text-xs">Tekan <strong className="text-white">Navigasi</strong> untuk arahkan ke Google Maps</span>
-              </div>
-            </div>
-
-            {/* Legend */}
-            <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-[#27AE60] border border-white" />
-                <span className="text-white/60">Tersedia</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-[#E74C3C] border border-white" />
-                <span className="text-white/60">Penuh</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-[#FFC300] border border-white" />
-                <span className="text-white/60">Terpilih</span>
-              </span>
-            </div>
-
-            <p className="text-white/40 text-xs mt-3 italic">
-              *Data sample untuk demo. Data lengkap akan ditambahkan.
-            </p>
           </div>
         </div>
 
         {/* Map Section */}
-        <div className="animate-in relative">
+        <div className="max-w-7xl mx-auto px-4 pb-6">
           {/* Mobile: Toggle List Button */}
           <button
             onClick={() => setShowList(!showList)}
@@ -238,8 +240,8 @@ export default function MapPage() {
                   )}
                 </div>
 
-                {/* Station List */}
-                <div className="flex-1 overflow-y-auto p-3 space-y-2">
+                {/* Station List - with proper scroll */}
+                <div className="flex-1 overflow-y-auto p-3 space-y-2" style={{ maxHeight: 'calc(500px - 120px)', WebkitOverflowScrolling: 'touch' }}>
                   {filteredStations.length === 0 ? (
                     <div className="text-center py-8">
                       <MapPin className="w-10 h-10 text-white/20 mx-auto mb-2" />
@@ -257,7 +259,7 @@ export default function MapPage() {
                             center: [station.latitude, station.longitude],
                             zoom: 15,
                           });
-                          setShowList(false); // Close list on mobile after selection
+                          setShowList(false);
                         }}
                         distance={station.distance}
                       />

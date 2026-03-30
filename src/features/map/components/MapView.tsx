@@ -1,117 +1,146 @@
-import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from 'react-leaflet';
-import { Locate, Plus, Minus } from 'lucide-react';
-import type { ChargingStation, MapViewport } from '../types';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useEffect } from 'react';
+import type { ChargingStation, MapViewport } from '../types';
 
-// Fix Leaflet default icons for Vite
-const DefaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
+// Create custom icons with proper size
+const createStationIcon = (isSelected: boolean, hasAvailable: boolean): L.DivIcon => {
+  const color = isSelected ? '#FFC300' : hasAvailable ? '#27AE60' : '#E74C3C';
+  const shadow = isSelected ? '0 0 0 4px rgba(255, 195, 0, 0.3)' : '0 2px 4px rgba(0,0,0,0.3)';
+  
+  return L.divIcon({
+    html: `
+      <div style="
+        background: ${color};
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: ${shadow};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width: 16px; height: 16px;">
+          <path d="M11 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11V21ZM13 21H19C20.1046 21 21 20.1046 21 19V12L17 12V8L21 8V5C21 3.89543 20.1046 3 19 3H13V21ZM19 14V19H15V14H19ZM9 7V11L7 11V7H9ZM15 7V11L13 11V7H15Z"/>
+        </svg>
+      </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+    className: 'custom-marker-icon',
+  });
+};
 
-L.Marker.prototype.options.icon = DefaultIcon;
+// Create user location icon
+const createUserIcon = (): L.DivIcon => {
+  return L.divIcon({
+    html: `
+      <div style="
+        background: #3B82F6;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <div style="
+          width: 8px;
+          height: 8px;
+          background: white;
+          border-radius: 50%;
+        "></div>
+      </div>
+    `,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    className: 'custom-user-icon',
+  });
+};
 
-interface MapViewProps {
-  stations: ChargingStation[];
-  selectedStationId: string | null;
-  onStationSelect: (id: string) => void;
-  viewport?: MapViewport;
+// Map viewport controller
+interface ViewportControllerProps {
+  viewport: MapViewport;
   onViewportChange?: (viewport: MapViewport) => void;
-  userLocation?: [number, number] | null;
 }
 
-// Map controller component to handle viewport changes
-function MapController({ 
-  viewport, 
-  onViewportChange,
-  selectedStationId,
-  stations 
-}: { 
-  viewport?: MapViewport;
-  onViewportChange?: (viewport: MapViewport) => void;
-  selectedStationId: string | null;
-  stations: ChargingStation[];
-}) {
+function ViewportController({ viewport, onViewportChange }: ViewportControllerProps) {
   const map = useMap();
-  
-  useEffect(() => {
-    if (viewport) {
-      map.setView(viewport.center, viewport.zoom, { animate: true });
-    }
-  }, [viewport, map]);
 
   useEffect(() => {
-    if (selectedStationId) {
-      const station = stations.find(s => s.id === selectedStationId);
-      if (station) {
-        map.setView([station.latitude, station.longitude], 16, { animate: true });
+    if (viewport.center && viewport.zoom) {
+      map.setView(viewport.center, viewport.zoom, { animate: true, duration: 0.5 });
+    }
+  }, [map, viewport]);
+
+  useEffect(() => {
+    const handleMoveEnd = () => {
+      if (onViewportChange) {
+        onViewportChange({
+          center: [map.getCenter().lat, map.getCenter().lng],
+          zoom: map.getZoom(),
+        });
       }
-    }
-  }, [selectedStationId, stations, map]);
-
-  // Notify parent of viewport changes
-  useEffect(() => {
-    const handleMove = () => {
-      const center = map.getCenter();
-      onViewportChange?.({
-        center: [center.lat, center.lng],
-        zoom: map.getZoom(),
-      });
     };
-    
-    map.on('moveend', handleMove);
-    return () => { map.off('moveend', handleMove); };
+
+    map.on('moveend', handleMoveEnd);
+    map.on('zoomend', handleMoveEnd);
+
+    return () => {
+      map.off('moveend', handleMoveEnd);
+      map.off('zoomend', handleMoveEnd);
+    };
   }, [map, onViewportChange]);
 
   return null;
 }
 
-// Create custom marker icons
-function createStationIcon(isSelected: boolean, hasAvailable: boolean): L.DivIcon {
-  const color = isSelected ? '#FFC300' : hasAvailable ? '#27AE60' : '#E74C3C';
-  const size = isSelected ? 40 : 32;
-  
-  return L.divIcon({
-    className: 'custom-marker',
-    html: `
-      <div style="
-        width: ${size}px;
-        height: ${size}px;
-        background: ${color};
-        border: 3px solid white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        ${isSelected ? 'animation: pulse 2s infinite;' : ''}
-      ">
-        <svg width="${size * 0.5}" height="${size * 0.5}" viewBox="0 0 24 24" fill="white">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-        </svg>
-      </div>
-      <style>
-        @keyframes pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(255, 195, 0, 0.7); }
-          50% { box-shadow: 0 0 0 15px rgba(255, 195, 0, 0); }
-        }
-      </style>
-    `,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2],
-  });
+// Locate button component
+interface LocateButtonProps {
+  onLocate: () => void;
 }
 
+function LocateButton({ onLocate }: LocateButtonProps) {
+  const map = useMap();
+  
+  return (
+    <button
+      onClick={() => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              map.setView([latitude, longitude], 15, { animate: true });
+              onLocate();
+            },
+            () => alert('Tidak dapat mengakses lokasi')
+          );
+        }
+      }}
+      className="absolute bottom-6 right-6 z-[1000] w-10 h-10 bg-[#FFC300] text-forest-dark rounded-lg shadow-lg hover:bg-[#e6b000] transition-colors flex items-center justify-center"
+      title="Lokasi saya"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+        <circle cx="12" cy="12" r="10"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    </button>
+  );
+}
 
-
-// Indonesia center coordinates
-const DEFAULT_CENTER: [number, number] = [-2.5489, 118.0149];
-const DEFAULT_ZOOM = 5;
+interface MapViewProps {
+  stations: ChargingStation[];
+  selectedStationId: string | null;
+  onStationSelect: (id: string) => void;
+  viewport: MapViewport;
+  onViewportChange?: (viewport: MapViewport) => void;
+  userLocation: [number, number] | null;
+}
 
 export function MapView({
   stations,
@@ -121,70 +150,93 @@ export function MapView({
   onViewportChange,
   userLocation,
 }: MapViewProps) {
-  const mapRef = useRef<L.Map | null>(null);
-
-  const handleZoomIn = () => {
-    mapRef.current?.zoomIn();
-  };
-
-  const handleZoomOut = () => {
-    mapRef.current?.zoomOut();
-  };
-
-  const handleLocate = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          mapRef.current?.setView([latitude, longitude], 14);
-        },
-        (error) => {
-          console.error('Geolocation error:', error);
-          alert('Tidak dapat mengakses lokasi Anda. Pastikan izin lokasi diaktifkan.');
-        }
-      );
-    }
-  };
+  const defaultCenter: [number, number] = [-2.5489, 118.0149];
+  const defaultZoom = 5;
 
   return (
-    <div className="relative w-full h-full">
-      {/* Leaflet Map */}
+    <>
+      <style>{`
+        .leaflet-container {
+          background: #1a1a2e;
+          font-family: inherit;
+        }
+        .custom-marker-icon {
+          background: transparent;
+          border: none;
+        }
+        .custom-user-icon {
+          background: transparent;
+          border: none;
+        }
+        .leaflet-control-zoom {
+          border: none !important;
+          border-radius: 8px !important;
+          overflow: hidden;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+          margin-top: 12px !important;
+          margin-right: 12px !important;
+        }
+        .leaflet-control-zoom a {
+          background: #1a2e1a !important;
+          color: white !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+          width: 36px !important;
+          height: 36px !important;
+          line-height: 36px !important;
+          font-size: 20px !important;
+          transition: all 0.2s;
+        }
+        .leaflet-control-zoom a:hover {
+          background: #243824 !important;
+        }
+        .leaflet-control-zoom a:first-child {
+          border-radius: 8px 8px 0 0 !important;
+        }
+        .leaflet-control-zoom a:last-child {
+          border-radius: 0 0 8px 8px !important;
+          border-top: none !important;
+        }
+        .leaflet-popup-content-wrapper {
+          background: #1a2e1a !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+          border-radius: 12px !important;
+          color: white !important;
+        }
+        .leaflet-popup-tip {
+          background: #1a2e1a !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        .leaflet-popup-content {
+          margin: 12px !important;
+        }
+      `}</style>
       <MapContainer
-        center={viewport?.center || DEFAULT_CENTER}
-        zoom={viewport?.zoom || DEFAULT_ZOOM}
-        style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }}
-        zoomControl={false}
-        ref={(map) => {
-          if (map) {
-            mapRef.current = map;
-          }
+        center={defaultCenter}
+        zoom={defaultZoom}
+        scrollWheelZoom={true}
+        dragging={true}
+        zoomControl={true}
+        doubleClickZoom={true}
+        touchZoom={true}
+        style={{ 
+          height: '100%', 
+          width: '100%',
+          borderRadius: '0 0.75rem 0.75rem 0',
+          zIndex: 1,
         }}
+        className="leaflet-container"
       >
-        {/* OpenStreetMap Tile Layer */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Dark mode tile layer option (commented out, can be toggled) */}
-        {/* <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
-        /> */}
+        <ViewportController viewport={viewport} onViewportChange={onViewportChange} />
 
-        {/* Map Controller */}
-        <MapController 
-          viewport={viewport}
-          onViewportChange={onViewportChange}
-          selectedStationId={selectedStationId}
-          stations={stations}
-        />
-
-        {/* Station Markers */}
         {stations.map((station) => {
-          const isSelected = selectedStationId === station.id;
           const hasAvailable = station.connectors.some(c => c.status === 'available');
-          
+          const isSelected = station.id === selectedStationId;
+
           return (
             <Marker
               key={station.id}
@@ -195,18 +247,12 @@ export function MapView({
               }}
             >
               <Popup>
-                <div className="min-w-[200px]">
-                  <h3 className="font-semibold text-forest-dark">{station.name}</h3>
-                  <p className="text-sm text-gray-600">{station.operator}</p>
-                  <p className="text-xs text-gray-500 mt-1">{station.address}</p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className={`text-xs px-2 py-0.5 rounded ${
-                      hasAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                    }`}>
+                <div className="min-w-[150px]">
+                  <h4 className="font-semibold text-white text-sm mb-1">{station.name}</h4>
+                  <p className="text-white/60 text-xs mb-2">{station.operator}</p>
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className={`px-2 py-0.5 rounded ${hasAvailable ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                       {hasAvailable ? 'Tersedia' : 'Penuh'}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Rp {station.pricing?.ratePerKwh.toLocaleString('id-ID')}/kWh
                     </span>
                   </div>
                 </div>
@@ -215,81 +261,19 @@ export function MapView({
           );
         })}
 
-        {/* User Location Marker */}
         {userLocation && (
-          <CircleMarker
-            center={userLocation}
-            radius={8}
-            pathOptions={{
-              fillColor: '#3B82F6',
-              color: 'white',
-              weight: 2,
-              fillOpacity: 1,
-            }}
-          />
+          <Marker
+            position={userLocation}
+            icon={createUserIcon()}
+          >
+            <Popup>
+              <span className="text-white text-sm">Lokasi Anda</span>
+            </Popup>
+          </Marker>
         )}
 
-        {/* User location accuracy circle */}
-        {userLocation && (
-          <CircleMarker
-            center={userLocation}
-            radius={50}
-            pathOptions={{
-              fillColor: '#3B82F6',
-              color: '#3B82F6',
-              weight: 0,
-              fillOpacity: 0.2,
-            }}
-          />
-        )}
+        <LocateButton onLocate={() => {}} />
       </MapContainer>
-
-      {/* Map Controls */}
-      <div className="absolute right-4 top-4 flex flex-col gap-2 z-[1000]">
-        <button
-          onClick={handleZoomIn}
-          className="w-10 h-10 bg-forest-dark border border-white/20 rounded-lg flex items-center justify-center text-white hover:border-[#FFC300] hover:text-[#FFC300] transition-colors shadow-lg"
-        >
-          <Plus className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="w-10 h-10 bg-forest-dark border border-white/20 rounded-lg flex items-center justify-center text-white hover:border-[#FFC300] hover:text-[#FFC300] transition-colors shadow-lg"
-        >
-          <Minus className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleLocate}
-          className="w-10 h-10 bg-forest-dark border border-white/20 rounded-lg flex items-center justify-center text-white hover:border-[#FFC300] hover:text-[#FFC300] transition-colors shadow-lg"
-          title="Lokasi saya"
-        >
-          <Locate className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Legend */}
-      <div className="absolute left-4 bottom-4 bg-forest-dark/90 backdrop-blur-sm rounded-lg p-3 border border-white/10 z-[1000]">
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#27AE60] border border-white" />
-            <span className="text-white/70">Tersedia</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#E74C3C] border border-white" />
-            <span className="text-white/70">Penuh</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-blue-500 border border-white" />
-            <span className="text-white/70">Anda</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Station Count */}
-      <div className="absolute top-4 left-4 bg-forest-dark/90 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10 z-[1000]">
-        <span className="text-[#FFC300] font-semibold">{stations.length}</span>
-        <span className="text-white/70 text-sm ml-1">stasiun ditemukan</span>
-      </div>
-    </div>
+    </>
   );
 }
