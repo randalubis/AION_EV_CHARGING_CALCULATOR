@@ -28,28 +28,8 @@ export function useLenis() {
 
     gsap.ticker.lagSmoothing(0);
 
-    // Handle anchor links with smooth scroll
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const anchor = target.closest('a');
-      
-      if (anchor && anchor.hash && anchor.hash.startsWith('#')) {
-        const targetElement = document.querySelector(anchor.hash) as HTMLElement | null;
-        if (targetElement) {
-          e.preventDefault();
-          lenis.scrollTo(targetElement, {
-            offset: -80,
-            duration: 1.2,
-          });
-        }
-      }
-    };
-
-    document.addEventListener('click', handleAnchorClick);
-
     return () => {
       lenis.destroy();
-      document.removeEventListener('click', handleAnchorClick);
       gsap.ticker.remove((time) => {
         lenis.raf(time * 1000);
       });

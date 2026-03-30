@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useLenis } from './hooks/useLenis';
+// import { useLenis } from './hooks/useLenis';
 import { Navbar } from './components/Navbar';
 import { ScrollToTop } from './components/ScrollToTop';
 import { siteConfig } from './config';
@@ -27,8 +27,8 @@ function PageLoader() {
 }
 
 function AppContent() {
-  // Initialize Lenis smooth scroll
-  useLenis();
+  // Initialize Lenis smooth scroll - temporarily disabled for navigation fix
+  // useLenis();
 
   useEffect(() => {
     if (siteConfig.siteTitle) {
