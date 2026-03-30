@@ -269,7 +269,7 @@ export default function MapPage() {
 
               {/* Station Detail - Right side panel */}
               {selectedStation && (
-                <div className="absolute top-3 right-3 w-64 sm:w-72 z-[1000] max-h-[calc(100%-24px)] overflow-y-auto">
+                <div className="absolute top-3 right-3 w-64 sm:w-72 z-10 max-h-[calc(100%-24px)] overflow-y-auto">
                   <StationDetail
                     station={selectedStation}
                     onClose={() => selectStation(null)}
