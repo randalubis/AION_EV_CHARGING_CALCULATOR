@@ -263,7 +263,6 @@ export default function MapPage() {
                 selectedStationId={selectedStation?.id || null}
                 onStationSelect={selectStation}
                 viewport={viewport}
-                onViewportChange={setViewport}
                 userLocation={userLocation}
               />
 

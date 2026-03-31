@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { ChargingStation, MapViewport } from '../types';
 
 // Create custom icons with proper size
@@ -63,39 +63,45 @@ const createUserIcon = (): L.DivIcon => {
   });
 };
 
-// Map viewport controller
+// Map viewport controller - only handles programatic view changes
 interface ViewportControllerProps {
   viewport: MapViewport;
-  onViewportChange?: (viewport: MapViewport) => void;
 }
 
-function ViewportController({ viewport, onViewportChange }: ViewportControllerProps) {
+function ViewportController({ viewport }: ViewportControllerProps) {
   const map = useMap();
+  const isUserInteracting = useRef(false);
 
   useEffect(() => {
-    if (viewport.center && viewport.zoom) {
-      map.setView(viewport.center, viewport.zoom, { animate: true, duration: 0.5 });
+    // Track user interaction to avoid conflicts
+    const handleDragStart = () => { isUserInteracting.current = true; };
+    const handleDragEnd = () => { setTimeout(() => { isUserInteracting.current = false; }, 100); };
+    
+    map.on('dragstart', handleDragStart);
+    map.on('dragend', handleDragEnd);
+    
+    return () => {
+      map.off('dragstart', handleDragStart);
+      map.off('dragend', handleDragEnd);
+    };
+  }, [map]);
+
+  useEffect(() => {
+    // Only update view if not user interacting
+    if (!isUserInteracting.current && viewport.center && viewport.zoom) {
+      const currentCenter = map.getCenter();
+      const currentZoom = map.getZoom();
+      const targetCenter = viewport.center;
+      
+      // Only set view if actually different
+      const centerDiff = Math.abs(currentCenter.lat - targetCenter[0]) + Math.abs(currentCenter.lng - targetCenter[1]);
+      const zoomDiff = Math.abs(currentZoom - viewport.zoom);
+      
+      if (centerDiff > 0.001 || zoomDiff > 0.5) {
+        map.setView(viewport.center, viewport.zoom, { animate: true, duration: 0.5 });
+      }
     }
   }, [map, viewport]);
-
-  useEffect(() => {
-    const handleMoveEnd = () => {
-      if (onViewportChange) {
-        onViewportChange({
-          center: [map.getCenter().lat, map.getCenter().lng],
-          zoom: map.getZoom(),
-        });
-      }
-    };
-
-    map.on('moveend', handleMoveEnd);
-    map.on('zoomend', handleMoveEnd);
-
-    return () => {
-      map.off('moveend', handleMoveEnd);
-      map.off('zoomend', handleMoveEnd);
-    };
-  }, [map, onViewportChange]);
 
   return null;
 }
@@ -122,7 +128,7 @@ function LocateButton({ onLocate }: LocateButtonProps) {
           );
         }
       }}
-      className="absolute bottom-6 right-6 z-10 w-10 h-10 bg-[#FFC300] text-forest-dark rounded-lg shadow-lg hover:bg-[#e6b000] transition-colors flex items-center justify-center"
+      className="absolute bottom-6 right-6 z-10 w-10 h-10 bg-[#FFC300] text-forest-dark rounded-lg shadow-lg hover:bg-[#e6b000] transition-colors flex items-center justify-center pointer-events-auto"
       title="Lokasi saya"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -147,7 +153,6 @@ export function MapView({
   selectedStationId,
   onStationSelect,
   viewport,
-  onViewportChange,
   userLocation,
 }: MapViewProps) {
   const defaultCenter: [number, number] = [-2.5489, 118.0149];
@@ -159,6 +164,10 @@ export function MapView({
         .leaflet-container {
           background: #1a1a2e;
           font-family: inherit;
+          touch-action: none; /* Let Leaflet handle all touch gestures */
+        }
+        .leaflet-container.leaflet-touch-drag {
+          touch-action: pan-x pan-y;
         }
         .custom-marker-icon {
           background: transparent;
@@ -209,6 +218,13 @@ export function MapView({
         .leaflet-popup-content {
           margin: 12px !important;
         }
+        /* Improve dragging performance */
+        .leaflet-pane {
+          will-change: transform;
+        }
+        .leaflet-tile {
+          will-change: transform;
+        }
       `}</style>
       <MapContainer
         center={defaultCenter}
@@ -218,20 +234,24 @@ export function MapView({
         zoomControl={true}
         doubleClickZoom={true}
         touchZoom={true}
+        boxZoom={true}
+        keyboard={true}
         style={{ 
           height: '100%', 
           width: '100%',
           borderRadius: '0 0.75rem 0.75rem 0',
-          zIndex: 1,
         }}
         className="leaflet-container"
+        preferCanvas={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          updateWhenIdle={true}
+          updateWhenZooming={false}
         />
 
-        <ViewportController viewport={viewport} onViewportChange={onViewportChange} />
+        <ViewportController viewport={viewport} />
 
         {stations.map((station) => {
           const hasAvailable = station.connectors.some(c => c.status === 'available');
