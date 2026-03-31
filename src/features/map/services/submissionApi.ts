@@ -25,6 +25,10 @@ export interface SubmissionResponse {
 export async function submitStationToSheets(
   formData: StationSubmissionFormData
 ): Promise<SubmissionResponse> {
+  // Debug logging
+  console.log('Google Sheets URL:', GOOGLE_SHEETS_WEBAPP_URL ? 'Set' : 'Not set');
+  console.log('Using mock submission:', USE_MOCK_SUBMISSION);
+  
   if (USE_MOCK_SUBMISSION) {
     // Mock submission for testing
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -48,6 +52,7 @@ export async function submitStationToSheets(
   try {
     const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
       method: 'POST',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -62,12 +67,33 @@ export async function submitStationToSheets(
     }
 
     const result = await response.json();
+    
+    if (result.success === false) {
+      throw new Error(result.error || 'Unknown error');
+    }
+    
     return { success: true, id: result.id };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Submission error:', error);
+    
+    // More specific error messages
+    if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+      return { 
+        success: false, 
+        error: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.' 
+      };
+    }
+    
+    if (error.message?.includes('CORS')) {
+      return { 
+        success: false, 
+        error: 'Error koneksi ke server (CORS). Hubungi admin.' 
+      };
+    }
+    
     return { 
       success: false, 
-      error: 'Gagal mengirim data. Silakan coba lagi.' 
+      error: 'Gagal mengirim data: ' + (error.message || 'Unknown error')
     };
   }
 }
@@ -101,28 +127,63 @@ export async function getApprovedSubmissions(): Promise<any[]> {
 }
 
 // Google Apps Script Code (paste this in your Google Apps Script editor):
+// IMPORTANT: You must redeploy the web app after updating this code!
 /*
+// CORS headers for cross-origin requests
+function getCorsHeaders() {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+}
+
+// Handle preflight OPTIONS request
+function doOptions(e) {
+  var headers = getCorsHeaders();
+  return ContentService.createTextOutput('')
+    .setHeaders(headers)
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
 function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
+  var headers = getCorsHeaders();
   
-  if (data.action === 'submit') {
-    return handleSubmit(data.data);
+  try {
+    const data = JSON.parse(e.postData.contents);
+    
+    if (data.action === 'submit') {
+      const result = handleSubmit(data.data);
+      return ContentService.createTextOutput(JSON.stringify(result))
+        .setHeaders(headers)
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: 'Invalid action'
+    })).setHeaders(headers).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.toString()
+    })).setHeaders(headers).setMimeType(ContentService.MimeType.JSON);
   }
-  
-  return ContentService.createTextOutput(JSON.stringify({
-    success: false,
-    error: 'Invalid action'
-  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doGet(e) {
+  var headers = getCorsHeaders();
   const action = e.parameter.action;
   
   if (action === 'getApproved') {
-    return handleGetApproved();
+    const result = handleGetApproved();
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setHeaders(headers)
+      .setMimeType(ContentService.MimeType.JSON);
   }
   
   return ContentService.createTextOutput(JSON.stringify([]))
+    .setHeaders(headers)
     .setMimeType(ContentService.MimeType.JSON);
 }
 

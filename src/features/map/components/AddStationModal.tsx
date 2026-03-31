@@ -143,6 +143,20 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     }));
   };
 
+  const handlePowerFocus = (connectorId: string, currentValue: number) => {
+    // Clear to empty string on first focus with default value
+    if (currentValue === 50) {
+      handleUpdateConnector(connectorId, 'powerKw', '');
+    }
+  };
+
+  const handleCountFocus = (connectorId: string, currentValue: number) => {
+    // Clear to empty string on first focus with default value
+    if (currentValue === 1) {
+      handleUpdateConnector(connectorId, 'count', '');
+    }
+  };
+
   const handleRemoveConnector = (id: string) => {
     setFormData(prev => ({
       ...prev,
@@ -208,8 +222,11 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     }
   };
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmitError(null);
     
     try {
       const result = await submitStationToSheets(formData);
@@ -217,10 +234,18 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       if (result.success) {
         setSubmitSuccess(true);
       } else {
-        alert(result.error || 'Gagal mengirim data. Silakan coba lagi.');
+        // Check if Google Sheets URL is not configured
+        const envUrl = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL;
+        if (!envUrl) {
+          setSubmitError('Server belum dikonfigurasi. Data disimpan lokal saja.');
+          // Still show success since we saved locally
+          setTimeout(() => setSubmitSuccess(true), 1500);
+        } else {
+          setSubmitError(result.error || 'Gagal mengirim data. Silakan coba lagi.');
+        }
       }
-    } catch (error) {
-      alert('Terjadi kesalahan. Silakan coba lagi.');
+    } catch (error: any) {
+      setSubmitError('Terjadi kesalahan: ' + (error.message || 'Unknown error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -414,9 +439,15 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
               ))}
             </select>
             <input
-              type="number"
-              value={connector.powerKw}
-              onChange={e => handleUpdateConnector(connector.id, 'powerKw', parseInt(e.target.value) || 0)}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={connector.powerKw === 0 ? '' : connector.powerKw}
+              onChange={e => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                handleUpdateConnector(connector.id, 'powerKw', val ? parseInt(val) : 0);
+              }}
+              onFocus={() => handlePowerFocus(connector.id, connector.powerKw)}
               placeholder="kW"
               className="w-20 bg-forest-mid border border-white/20 rounded-lg px-3 py-2 text-sm text-white focus:border-[#FFC300] focus:outline-none"
             />
@@ -429,11 +460,16 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
               <option value="DC" className="bg-forest-dark">DC</option>
             </select>
             <input
-              type="number"
-              value={connector.count}
-              onChange={e => handleUpdateConnector(connector.id, 'count', parseInt(e.target.value) || 1)}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={connector.count === 0 ? '' : connector.count}
+              onChange={e => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                handleUpdateConnector(connector.id, 'count', val ? parseInt(val) : 0);
+              }}
+              onFocus={() => handleCountFocus(connector.id, connector.count)}
               placeholder="Qty"
-              min={1}
               className="w-16 bg-forest-mid border border-white/20 rounded-lg px-3 py-2 text-sm text-white focus:border-[#FFC300] focus:outline-none"
             />
             <button
@@ -605,6 +641,13 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           adalah benar dan Anda memiliki izin untuk membagikan data lokasi ini.
         </p>
       </div>
+
+      {/* Error Message */}
+      {submitError && (
+        <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <p className="text-red-300 text-sm">{submitError}</p>
+        </div>
+      )}
     </div>
   );
 

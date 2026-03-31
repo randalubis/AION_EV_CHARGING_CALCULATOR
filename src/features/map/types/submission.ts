@@ -7,9 +7,9 @@ export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
 export interface ConnectorSubmission {
   id: string;
   type: ConnectorType;
-  powerKw: number;
+  powerKw: number | string;
   currentType: 'AC' | 'DC';
-  count: number;
+  count: number | string;
 }
 
 export interface StationSubmission {
