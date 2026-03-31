@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Menu, X, Zap, MapPin, Route, Calculator, Users, Wallet } from 'lucide-react';
 
 const navLinks = [
@@ -10,6 +10,28 @@ const navLinks = [
   { label: 'TCO Calculator', href: '/tco-calculator', icon: Wallet },
   { label: 'Komunitas', href: '/komunitas', icon: Users },
 ];
+
+// NavLink component that forces navigation
+function NavLink({ href, children, className, isActive }: { href: string; children: React.ReactNode; className?: string; isActive?: boolean }) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Force navigation with window.location for reliability
+    if (window.location.pathname !== href) {
+      window.location.href = href;
+    }
+  };
+  
+  return (
+    <a 
+      href={href}
+      onClick={handleClick}
+      className={className}
+    >
+      {children}
+    </a>
+  );
+}
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -49,21 +71,22 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
+            <NavLink href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 bg-[#FFC300] rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
                 <Zap className="w-6 h-6 text-forest-dark" />
               </div>
               <span className="text-white font-sans font-bold text-xl tracking-tight">
                 evhub<span className="text-[#FFC300]">.id</span>
               </span>
-            </Link>
+            </NavLink>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
-                <Link
+                <NavLink
                   key={link.href}
-                  to={link.href}
+                  href={link.href}
+                  isActive={isActive(link.href)}
                   className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${
                     isActive(link.href)
                       ? 'bg-[#FFC300] text-forest-dark'
@@ -71,7 +94,7 @@ export function Navbar() {
                   }`}
                 >
                   {link.label}
-                </Link>
+                </NavLink>
               ))}
             </div>
 
@@ -116,9 +139,10 @@ export function Navbar() {
             {navLinks.map((link) => {
               const Icon = link.icon;
               return (
-                <Link
+                <NavLink
                   key={link.href}
-                  to={link.href}
+                  href={link.href}
+                  isActive={isActive(link.href)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-body font-medium transition-all ${
                     isActive(link.href)
                       ? 'bg-[#FFC300] text-forest-dark'
@@ -127,7 +151,7 @@ export function Navbar() {
                 >
                   {Icon && <Icon className="w-5 h-5" />}
                   {link.label}
-                </Link>
+                </NavLink>
               );
             })}
           </div>
