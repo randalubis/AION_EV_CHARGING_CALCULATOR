@@ -69,3 +69,6 @@ export interface SearchResult {
   longitude: number;
   distance?: number; // in km
 }
+
+// Re-export submission types
+export * from './submission';

@@ -4,9 +4,10 @@ import {
   Search, MapPin, List, X, AlertTriangle, Info, 
   Compass, Filter, ChevronDown
 } from 'lucide-react';
-import { MapView, StationCard, StationDetail, FilterPanel } from '../features/map';
+import { MapView, StationCard, StationDetail, FilterPanel, AddStationButton, AddStationModal } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';
-import type { MapViewport } from '../features/map/types';
+import { submitStationToSheets } from '../features/map/services/submissionApi';
+import type { MapViewport, StationSubmissionFormData } from '../features/map/types';
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,6 +19,10 @@ export default function MapPage() {
     center: [-2.5489, 118.0149],
     zoom: 5,
   });
+  
+  // Crowdsourcing modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [clickLocation, setClickLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const {
     stations,
@@ -264,6 +269,10 @@ export default function MapPage() {
                 onStationSelect={selectStation}
                 viewport={viewport}
                 userLocation={userLocation}
+                onMapClick={(lat, lng) => {
+                  setClickLocation({ lat, lng });
+                  setShowAddModal(true);
+                }}
               />
 
               {/* Station Detail - Right side panel */}
@@ -280,6 +289,19 @@ export default function MapPage() {
           </div>
         </div>
       </div>
+
+      {/* Add Station Button */}
+      <AddStationButton onClick={() => setShowAddModal(true)} />
+
+      {/* Add Station Modal */}
+      <AddStationModal
+        isOpen={showAddModal}
+        onClose={() => {
+          setShowAddModal(false);
+          setClickLocation(null);
+        }}
+        initialLocation={clickLocation}
+      />
     </div>
   );
 }

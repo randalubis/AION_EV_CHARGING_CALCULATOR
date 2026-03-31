@@ -146,6 +146,27 @@ interface MapViewProps {
   viewport: MapViewport;
   onViewportChange?: (viewport: MapViewport) => void;
   userLocation: [number, number] | null;
+  onMapClick?: (lat: number, lng: number) => void;
+}
+
+// Map click handler component
+function MapClickHandler({ onMapClick }: { onMapClick?: (lat: number, lng: number) => void }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (!onMapClick) return;
+    
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      onMapClick(e.latlng.lat, e.latlng.lng);
+    };
+    
+    map.on('click', handleClick);
+    return () => {
+      map.off('click', handleClick);
+    };
+  }, [map, onMapClick]);
+  
+  return null;
 }
 
 export function MapView({
@@ -154,6 +175,7 @@ export function MapView({
   onStationSelect,
   viewport,
   userLocation,
+  onMapClick,
 }: MapViewProps) {
   const defaultCenter: [number, number] = [-2.5489, 118.0149];
   const defaultZoom = 5;
@@ -252,6 +274,7 @@ export function MapView({
         />
 
         <ViewportController viewport={viewport} />
+        <MapClickHandler onMapClick={onMapClick} />
 
         {stations.map((station) => {
           const hasAvailable = station.connectors.some(c => c.status === 'available');
