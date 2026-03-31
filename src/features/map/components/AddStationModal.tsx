@@ -77,15 +77,21 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
   const [geolocationLoading, setGeolocationLoading] = useState(false);
   const [geolocationError, setGeolocationError] = useState<string | null>(null);
 
-  // Cleanup object URLs when modal closes
+  // Reset form when modal opens
   useEffect(() => {
-    return () => {
-      // Revoke all object URLs to prevent memory leaks
-      formData.photos.forEach(photo => {
-        URL.revokeObjectURL(photo.previewUrl);
+    if (isOpen) {
+      setStep(1);
+      setFormData({
+        ...INITIAL_FORM_DATA,
+        latitude: initialLocation?.lat ?? null,
+        longitude: initialLocation?.lng ?? null,
+        locationSource: initialLocation ? 'map_click' : null
       });
-    };
-  }, []);
+      setSubmitSuccess(false);
+      setIsSubmitting(false);
+      setSubmitError(null);
+    }
+  }, [isOpen, initialLocation]);
 
   if (!isOpen) return null;
 

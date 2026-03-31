@@ -70,5 +70,12 @@ export interface SearchResult {
   distance?: number; // in km
 }
 
-// Re-export submission types
-export * from './submission';
+// Re-export submission types (excluding types that would conflict)
+export type { 
+  StationSubmission, 
+  ConnectorSubmission,
+  SubmissionStatus,
+  StationSubmissionFormData,
+  GoogleSheetsRow,
+  PhotoUpload
+} from './submission';
