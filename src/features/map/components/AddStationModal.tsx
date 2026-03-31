@@ -143,16 +143,16 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     }));
   };
 
-  const handlePowerFocus = (connectorId: string, currentValue: number) => {
+  const handlePowerFocus = (connectorId: string, currentValue: number | string) => {
     // Clear to empty string on first focus with default value
-    if (currentValue === 50) {
+    if (currentValue === 50 || currentValue === '50') {
       handleUpdateConnector(connectorId, 'powerKw', '');
     }
   };
 
-  const handleCountFocus = (connectorId: string, currentValue: number) => {
+  const handleCountFocus = (connectorId: string, currentValue: number | string) => {
     // Clear to empty string on first focus with default value
-    if (currentValue === 1) {
+    if (currentValue === 1 || currentValue === '1') {
       handleUpdateConnector(connectorId, 'count', '');
     }
   };
