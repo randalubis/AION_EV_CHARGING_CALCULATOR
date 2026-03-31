@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Upload, Plus, Trash2 } from 'lucide-react';
 import { submitStationToSheets } from '../services/submissionApi';
 import type { StationSubmissionFormData, ConnectorSubmission, AmenityType, ConnectorType } from '../types';
@@ -626,9 +627,9 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     </div>
   );
 
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-forest-dark border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+  const modalContent = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div className="bg-forest-dark border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col" style={{ transform: 'translateZ(0)' }}>
         {/* Header */}
         {!submitSuccess && (
           <div className="flex items-center justify-between p-4 border-b border-white/10">
@@ -716,4 +717,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
