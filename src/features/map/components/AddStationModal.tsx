@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Upload, Plus, Trash2 } from 'lucide-react';
 import { submitStationToSheets } from '../services/submissionApi';
-import type { StationSubmissionFormData, ConnectorSubmission, AmenityType, ConnectorType, PhotoUpload } from '../types';
+import type { StationSubmissionFormData, ConnectorSubmission, AmenityType, ConnectorType } from '../types';
 
 interface AddStationModalProps {
   isOpen: boolean;
