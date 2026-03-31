@@ -1,52 +1,21 @@
-import { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
-// import { useLenis } from './hooks/useLenis';
 import { Navbar } from './components/Navbar';
 import { ScrollToTop } from './components/ScrollToTop';
 import { siteConfig } from './config';
 import './App.css';
 
-// Lazy load pages for better performance
-const LandingPage = lazy(() => import('./pages/LandingPage'));
-const CalculatorPage = lazy(() => import('./pages/CalculatorPage'));
-const MapPage = lazy(() => import('./pages/MapPage'));
-const TripPlannerPage = lazy(() => import('./pages/TripPlannerPage'));
-const TCOPage = lazy(() => import('./pages/TCOPage'));
-const CommunityPage = lazy(() => import('./pages/CommunityPage'));
-
-// Loading fallback
-function PageLoader() {
-  return (
-    <div className="min-h-screen bg-forest-dark flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
-        <p className="text-white/50 text-sm">Memuat...</p>
-      </div>
-    </div>
-  );
-}
-
-function AppRoutes() {
-  const location = useLocation();
-  
-  return (
-    <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/kalkulator" element={<CalculatorPage />} />
-      <Route path="/peta-spklu" element={<MapPage />} />
-      <Route path="/trip-planner" element={<TripPlannerPage />} />
-      <Route path="/tco-calculator" element={<TCOPage />} />
-      <Route path="/komunitas" element={<CommunityPage />} />
-    </Routes>
-  );
-}
+// Eager load all pages to fix navigation issue
+import LandingPage from './pages/LandingPage';
+import CalculatorPage from './pages/CalculatorPage';
+import MapPage from './pages/MapPage';
+import TripPlannerPage from './pages/TripPlannerPage';
+import TCOPage from './pages/TCOPage';
+import CommunityPage from './pages/CommunityPage';
 
 function AppContent() {
-  // Initialize Lenis smooth scroll - temporarily disabled for navigation fix
-  // useLenis();
-
   useEffect(() => {
     if (siteConfig.siteTitle) {
       document.title = siteConfig.siteTitle;
@@ -66,9 +35,14 @@ function AppContent() {
       <SpeedInsights />
       <Analytics />
       <main className="relative w-full">
-        <Suspense fallback={<PageLoader />}>
-          <AppRoutes />
-        </Suspense>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/kalkulator" element={<CalculatorPage />} />
+          <Route path="/peta-spklu" element={<MapPage />} />
+          <Route path="/trip-planner" element={<TripPlannerPage />} />
+          <Route path="/tco-calculator" element={<TCOPage />} />
+          <Route path="/komunitas" element={<CommunityPage />} />
+        </Routes>
       </main>
     </div>
   );
