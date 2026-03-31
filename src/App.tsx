@@ -1,5 +1,5 @@
 import { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 // import { useLenis } from './hooks/useLenis';
@@ -28,6 +28,21 @@ function PageLoader() {
   );
 }
 
+function AppRoutes() {
+  const location = useLocation();
+  
+  return (
+    <Routes location={location} key={location.pathname}>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/kalkulator" element={<CalculatorPage />} />
+      <Route path="/peta-spklu" element={<MapPage />} />
+      <Route path="/trip-planner" element={<TripPlannerPage />} />
+      <Route path="/tco-calculator" element={<TCOPage />} />
+      <Route path="/komunitas" element={<CommunityPage />} />
+    </Routes>
+  );
+}
+
 function AppContent() {
   // Initialize Lenis smooth scroll - temporarily disabled for navigation fix
   // useLenis();
@@ -52,14 +67,7 @@ function AppContent() {
       <Analytics />
       <main className="relative w-full">
         <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/kalkulator" element={<CalculatorPage />} />
-            <Route path="/peta-spklu" element={<MapPage />} />
-            <Route path="/trip-planner" element={<TripPlannerPage />} />
-            <Route path="/tco-calculator" element={<TCOPage />} />
-            <Route path="/komunitas" element={<CommunityPage />} />
-          </Routes>
+          <AppRoutes />
         </Suspense>
       </main>
     </div>
