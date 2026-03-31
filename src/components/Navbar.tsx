@@ -12,7 +12,7 @@ const navLinks = [
 ];
 
 // NavLink component that forces navigation
-function NavLink({ href, children, className, isActive }: { href: string; children: React.ReactNode; className?: string; isActive?: boolean }) {
+function NavLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -86,7 +86,6 @@ export function Navbar() {
                 <NavLink
                   key={link.href}
                   href={link.href}
-                  isActive={isActive(link.href)}
                   className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${
                     isActive(link.href)
                       ? 'bg-[#FFC300] text-forest-dark'
@@ -142,7 +141,6 @@ export function Navbar() {
                 <NavLink
                   key={link.href}
                   href={link.href}
-                  isActive={isActive(link.href)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-body font-medium transition-all ${
                     isActive(link.href)
                       ? 'bg-[#FFC300] text-forest-dark'
