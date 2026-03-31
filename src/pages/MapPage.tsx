@@ -6,8 +6,7 @@ import {
 } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel, AddStationButton, AddStationModal } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';
-import { submitStationToSheets } from '../features/map/services/submissionApi';
-import type { MapViewport, StationSubmissionFormData } from '../features/map/types';
+import type { MapViewport } from '../features/map/types';
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);

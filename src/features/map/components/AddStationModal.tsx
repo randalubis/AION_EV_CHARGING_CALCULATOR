@@ -401,7 +401,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           </p>
         )}
 
-        {formData.connectors.map((connector, index) => (
+        {formData.connectors.map((connector) => (
           <div key={connector.id} className="flex items-center gap-2 mb-2">
             <select
               value={connector.type}
