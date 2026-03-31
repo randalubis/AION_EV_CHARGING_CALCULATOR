@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Upload, Plus, Trash2 } from 'lucide-react';
 import { submitStationToSheets } from '../services/submissionApi';
-import type { StationSubmissionFormData, ConnectorSubmission, AmenityType, ConnectorType } from '../types';
+import type { StationSubmissionFormData, ConnectorSubmission, AmenityType, ConnectorType, PhotoUpload } from '../types';
 
 interface AddStationModalProps {
   isOpen: boolean;
@@ -77,6 +76,16 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [geolocationLoading, setGeolocationLoading] = useState(false);
   const [geolocationError, setGeolocationError] = useState<string | null>(null);
+
+  // Cleanup object URLs when modal closes
+  useEffect(() => {
+    return () => {
+      // Revoke all object URLs to prevent memory leaks
+      formData.photos.forEach(photo => {
+        URL.revokeObjectURL(photo.previewUrl);
+      });
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -184,7 +193,10 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
+      const newFiles = Array.from(e.target.files).map(file => ({
+        file,
+        previewUrl: URL.createObjectURL(file)
+      }));
       setFormData(prev => ({
         ...prev,
         photos: [...prev.photos, ...newFiles].slice(0, 5) // Max 5 photos
@@ -193,10 +205,16 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
   };
 
   const handleRemovePhoto = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      photos: prev.photos.filter((_, i) => i !== index)
-    }));
+    setFormData(prev => {
+      const photoToRemove = prev.photos[index];
+      if (photoToRemove) {
+        URL.revokeObjectURL(photoToRemove.previewUrl);
+      }
+      return {
+        ...prev,
+        photos: prev.photos.filter((_, i) => i !== index)
+      };
+    });
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -528,7 +546,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           {formData.photos.map((photo, index) => (
             <div key={index} className="relative w-20 h-20 rounded-lg overflow-hidden">
               <img
-                src={URL.createObjectURL(photo)}
+                src={photo.previewUrl}
                 alt={`Foto ${index + 1}`}
                 className="w-full h-full object-cover"
               />
@@ -670,7 +688,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     </div>
   );
 
-  const modalContent = (
+  return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <div className="bg-forest-dark border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col" style={{ transform: 'translateZ(0)' }}>
         {/* Header */}
@@ -760,6 +778,4 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       </div>
     </div>
   );
-
-  return createPortal(modalContent, document.body);
 }

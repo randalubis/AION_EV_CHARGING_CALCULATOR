@@ -156,7 +156,7 @@ function MapClickHandler({ onMapClick }: { onMapClick?: (lat: number, lng: numbe
   useEffect(() => {
     if (!onMapClick) return;
     
-    const handleClick = (e: L.LeafletMouseEvent) => {
+    const handleClick = (e: any) => {
       onMapClick(e.latlng.lat, e.latlng.lng);
     };
     

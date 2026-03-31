@@ -62,6 +62,12 @@ export interface StationSubmission {
   adminNotes?: string;
 }
 
+// Photo with preview URL
+export interface PhotoUpload {
+  file: File;
+  previewUrl: string;
+}
+
 // Form data (before submission)
 export interface StationSubmissionFormData {
   submittedBy: {
@@ -80,7 +86,7 @@ export interface StationSubmissionFormData {
   locationSource: 'gps' | 'map_click' | 'manual' | null;
   connectors: ConnectorSubmission[];
   amenities: AmenityType[];
-  photos: File[];
+  photos: PhotoUpload[];
   pricing: string;
   operatingHours: string;
   notes: string;
