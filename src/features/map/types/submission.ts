@@ -1,8 +1,8 @@
 // Crowdsourced Station Submission Types
 
-// Use the same ConnectorType as the main types
-export type ConnectorType = 'type2' | 'ccs2' | 'chademo' | 'gb/t' | 'tesla_supercharger' | 'tesla_destination';
-export type AmenityType = 'restroom' | 'cafe' | 'restaurant' | 'wifi' | 'parking' | 'mosque' | 'convenience_store' | 'atm';
+// Import base types
+import type { ConnectorType, AmenityType } from './base';
+
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
 
 export interface ConnectorSubmission {

@@ -1,5 +1,8 @@
 // Charging Station Map Types
 
+// Re-export base types
+export type { ConnectorType, AmenityType } from './base';
+
 export interface ChargingStation {
   id: string;
   name: string;
@@ -11,7 +14,7 @@ export interface ChargingStation {
   province: string;
   status: 'active' | 'inactive' | 'maintenance' | 'unknown';
   connectors: Connector[];
-  amenities: AmenityType[];
+  amenities: import('./base').AmenityType[];
   operatingHours: string;
   pricing?: {
     ratePerKwh: number;
@@ -23,36 +26,26 @@ export interface ChargingStation {
   distance?: number;
 }
 
-export type AmenityType = 'restroom' | 'cafe' | 'restaurant' | 'wifi' | 'parking' | 'mosque' | 'convenience_store' | 'atm';
-
 export interface Connector {
   id: string;
-  type: ConnectorType;
+  type: import('./base').ConnectorType;
   powerKw: number;
   currentType: 'AC' | 'DC';
   status: 'available' | 'occupied' | 'offline' | 'maintenance';
   pricePerKwh?: number;
 }
 
-export type ConnectorType = 
-  | 'type2'           // IEC 62196-2 (Mennekes) - AC
-  | 'ccs2'            // CCS Combo 2 - DC
-  | 'chademo'         // CHAdeMO - DC
-  | 'gb/t'            // GB/T standard (Chinese EVs)
-  | 'tesla_supercharger' // Tesla Supercharger
-  | 'tesla_destination'; // Tesla Destination
-
 export interface Amenity {
-  type: AmenityType;
+  type: import('./base').AmenityType;
   name?: string;
 }
 
 export interface MapFilters {
-  connectorTypes: ConnectorType[];
+  connectorTypes: import('./base').ConnectorType[];
   minPowerKw: number;
   operators: string[];
   status: ('active' | 'maintenance')[];
-  amenities: AmenityType[];
+  amenities: import('./base').AmenityType[];
 }
 
 export interface MapViewport {
@@ -70,12 +63,5 @@ export interface SearchResult {
   distance?: number; // in km
 }
 
-// Re-export submission types (excluding types that would conflict)
-export type { 
-  StationSubmission, 
-  ConnectorSubmission,
-  SubmissionStatus,
-  StationSubmissionFormData,
-  GoogleSheetsRow,
-  PhotoUpload
-} from './submission';
+// Re-export all submission types
+export * from './submission';
