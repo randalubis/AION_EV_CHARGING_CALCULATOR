@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Upload, Plus, Trash2 } from 'lucide-react';
 import { submitStationToSheets } from '../services/submissionApi';
 import type { StationSubmissionFormData, ConnectorSubmission } from '../types';
@@ -75,24 +75,9 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [geolocationLoading, setGeolocationLoading] = useState(false);
   const [geolocationError, setGeolocationError] = useState<string | null>(null);
-
-  // Reset form when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setStep(1);
-      setFormData({
-        ...INITIAL_FORM_DATA,
-        latitude: initialLocation?.lat ?? null,
-        longitude: initialLocation?.lng ?? null,
-        locationSource: initialLocation ? 'map_click' : null
-      });
-      setSubmitSuccess(false);
-      setIsSubmitting(false);
-      setSubmitError(null);
-    }
-  }, [isOpen, initialLocation]);
 
   if (!isOpen) return null;
 
@@ -102,6 +87,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       setStep(1);
       setFormData(INITIAL_FORM_DATA);
       setSubmitSuccess(false);
+      setSubmitError(null);
     }
   };
 
@@ -159,20 +145,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     }));
   };
 
-  const handlePowerFocus = (connectorId: string, currentValue: number | string) => {
-    // Clear to empty string on first focus with default value
-    if (currentValue === 50 || currentValue === '50') {
-      handleUpdateConnector(connectorId, 'powerKw', '');
-    }
-  };
-
-  const handleCountFocus = (connectorId: string, currentValue: number | string) => {
-    // Clear to empty string on first focus with default value
-    if (currentValue === 1 || currentValue === '1') {
-      handleUpdateConnector(connectorId, 'count', '');
-    }
-  };
-
   const handleRemoveConnector = (id: string) => {
     setFormData(prev => ({
       ...prev,
@@ -206,21 +178,19 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       }));
       setFormData(prev => ({
         ...prev,
-        photos: [...prev.photos, ...newFiles].slice(0, 5) // Max 5 photos
+        photos: [...prev.photos, ...newFiles].slice(0, 5)
       }));
     }
   };
 
   const handleRemovePhoto = (index: number) => {
     setFormData(prev => {
-      const photoToRemove = prev.photos[index];
-      if (photoToRemove) {
-        URL.revokeObjectURL(photoToRemove.previewUrl);
+      const newPhotos = [...prev.photos];
+      const removed = newPhotos.splice(index, 1)[0];
+      if (removed) {
+        URL.revokeObjectURL(removed.previewUrl);
       }
-      return {
-        ...prev,
-        photos: prev.photos.filter((_, i) => i !== index)
-      };
+      return { ...prev, photos: newPhotos };
     });
   };
 
@@ -247,8 +217,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     }
   };
 
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setSubmitError(null);
@@ -259,11 +227,9 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       if (result.success) {
         setSubmitSuccess(true);
       } else {
-        // Check if Google Sheets URL is not configured
         const envUrl = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL;
         if (!envUrl) {
           setSubmitError('Server belum dikonfigurasi. Data disimpan lokal saja.');
-          // Still show success since we saved locally
           setTimeout(() => setSubmitSuccess(true), 1500);
         } else {
           setSubmitError(result.error || 'Gagal mengirim data. Silakan coba lagi.');
@@ -276,6 +242,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     }
   };
 
+  // Step 1: Location
   const renderStep1 = () => (
     <div className="space-y-6">
       <div className="text-center">
@@ -287,7 +254,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
       </div>
 
       <div className="space-y-4">
-        {/* GPS Option */}
         <button
           onClick={handleGetCurrentLocation}
           disabled={geolocationLoading}
@@ -313,7 +279,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           </div>
         )}
 
-        {/* Map Click Option */}
         <div className="p-4 bg-forest-mid border border-white/10 rounded-xl">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -326,15 +291,11 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           </div>
         </div>
 
-        {/* Current Location Display */}
         {formData.latitude && formData.longitude && (
           <div className="p-4 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-xl">
             <p className="text-[#FFC300] font-medium mb-1">Lokasi Terpilih</p>
             <p className="text-white/70 text-sm">
               Lat: {formData.latitude.toFixed(6)}, Lng: {formData.longitude.toFixed(6)}
-            </p>
-            <p className="text-white/50 text-xs mt-1 capitalize">
-              Sumber: {formData.locationSource === 'gps' ? 'GPS' : 'Klik Peta'}
             </p>
           </div>
         )}
@@ -342,11 +303,11 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     </div>
   );
 
+  // Step 2: Details
   const renderStep2 = () => (
     <div className="space-y-5 max-h-[60vh] overflow-y-auto pr-2">
       <h3 className="text-xl font-bold text-white">Detail Stasiun</h3>
 
-      {/* Station Name */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Nama Stasiun *</label>
         <input
@@ -358,7 +319,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         />
       </div>
 
-      {/* Operator */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Operator *</label>
         <select
@@ -382,7 +342,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         )}
       </div>
 
-      {/* Address */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Alamat Lengkap *</label>
         <textarea
@@ -394,7 +353,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         />
       </div>
 
-      {/* City & Province */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-2">Kota *</label>
@@ -421,7 +379,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         </div>
       </div>
 
-      {/* Operating Hours */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Jam Operasional</label>
         <input
@@ -433,7 +390,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         />
       </div>
 
-      {/* Connectors */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-white/70 text-sm">Konektor *</label>
@@ -466,13 +422,8 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
             <input
               type="text"
               inputMode="numeric"
-              pattern="[0-9]*"
-              value={connector.powerKw === 0 ? '' : connector.powerKw}
-              onChange={e => {
-                const val = e.target.value.replace(/[^0-9]/g, '');
-                handleUpdateConnector(connector.id, 'powerKw', val ? parseInt(val) : 0);
-              }}
-              onFocus={() => handlePowerFocus(connector.id, connector.powerKw)}
+              value={connector.powerKw}
+              onChange={e => handleUpdateConnector(connector.id, 'powerKw', parseInt(e.target.value) || 0)}
               placeholder="kW"
               className="w-20 bg-forest-mid border border-white/20 rounded-lg px-3 py-2 text-sm text-white focus:border-[#FFC300] focus:outline-none"
             />
@@ -487,13 +438,8 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
             <input
               type="text"
               inputMode="numeric"
-              pattern="[0-9]*"
-              value={connector.count === 0 ? '' : connector.count}
-              onChange={e => {
-                const val = e.target.value.replace(/[^0-9]/g, '');
-                handleUpdateConnector(connector.id, 'count', val ? parseInt(val) : 0);
-              }}
-              onFocus={() => handleCountFocus(connector.id, connector.count)}
+              value={connector.count}
+              onChange={e => handleUpdateConnector(connector.id, 'count', parseInt(e.target.value) || 1)}
               placeholder="Qty"
               className="w-16 bg-forest-mid border border-white/20 rounded-lg px-3 py-2 text-sm text-white focus:border-[#FFC300] focus:outline-none"
             />
@@ -507,7 +453,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         ))}
       </div>
 
-      {/* Amenities */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Fasilitas</label>
         <div className="flex flex-wrap gap-2">
@@ -528,7 +473,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         </div>
       </div>
 
-      {/* Pricing */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Harga (opsional)</label>
         <div className="flex items-center gap-2">
@@ -544,7 +488,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         </div>
       </div>
 
-      {/* Photos */}
       <div>
         <label className="block text-white/70 text-sm mb-2">
           Foto Stasiun ({formData.photos.length}/5)
@@ -581,7 +524,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         </div>
       </div>
 
-      {/* Notes */}
       <div>
         <label className="block text-white/70 text-sm mb-2">Catatan Tambahan</label>
         <textarea
@@ -595,6 +537,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     </div>
   );
 
+  // Step 3: Contact
   const renderStep3 = () => (
     <div className="space-y-5">
       <h3 className="text-xl font-bold text-white">Informasi Anda</h3>
@@ -644,7 +587,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         />
       </div>
 
-      {/* Review Summary */}
       <div className="p-4 bg-forest-mid/50 rounded-xl space-y-2">
         <p className="text-white font-medium">Ringkasan Pengajuan</p>
         <div className="text-sm space-y-1">
@@ -667,7 +609,6 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
         </p>
       </div>
 
-      {/* Error Message */}
       {submitError && (
         <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
           <p className="text-red-300 text-sm">{submitError}</p>
@@ -676,6 +617,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     </div>
   );
 
+  // Success screen
   const renderSuccess = () => (
     <div className="text-center py-8">
       <div className="w-20 h-20 bg-[#27AE60]/20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -697,7 +639,7 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-forest-dark border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col" style={{ transform: 'translateZ(0)' }}>
+      <div className="bg-forest-dark border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         {!submitSuccess && (
           <div className="flex items-center justify-between p-4 border-b border-white/10">
