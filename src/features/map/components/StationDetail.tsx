@@ -46,19 +46,23 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
           </div>
         </div>
 
-        {/* Hours & Price */}
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1.5 text-white/60">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{station.operatingHours}</span>
+        {/* Hours & Price — only render rows that have data */}
+        {(station.operatingHours || (station.pricing && station.pricing.ratePerKwh > 0)) && (
+          <div className="flex items-center gap-4 text-xs flex-wrap">
+            {station.operatingHours && (
+              <div className="flex items-center gap-1.5 text-white/60">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{station.operatingHours}</span>
+              </div>
+            )}
+            {station.pricing && station.pricing.ratePerKwh > 0 && (
+              <div className="flex items-center gap-1.5 text-white/60">
+                <DollarSign className="w-3.5 h-3.5" />
+                <span>Rp {station.pricing.ratePerKwh.toLocaleString('id-ID')}/kWh</span>
+              </div>
+            )}
           </div>
-          {station.pricing && (
-            <div className="flex items-center gap-1.5 text-white/60">
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>Rp {station.pricing.ratePerKwh.toLocaleString('id-ID')}/kWh</span>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* Connectors */}
         <div>
@@ -134,20 +138,22 @@ function getConnectorLabel(type: string): string {
 
 function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    'available': 'text-[#27AE60]',
-    'occupied': 'text-amber-400',
-    'offline': 'text-[#E74C3C]',
-    'maintenance': 'text-gray-400',
+    available: 'text-[#27AE60]',
+    occupied: 'text-amber-400',
+    offline: 'text-[#E74C3C]',
+    maintenance: 'text-gray-400',
+    unknown: 'text-white/40',
   };
   return colors[status] || 'text-white/50';
 }
 
 function getStatusLabel(status: string): string {
   const labels: Record<string, string> = {
-    'available': 'Tersedia',
-    'occupied': 'Terisi',
-    'offline': 'Offline',
-    'maintenance': 'Perawatan',
+    available: 'Tersedia',
+    occupied: 'Terisi',
+    offline: 'Offline',
+    maintenance: 'Perawatan',
+    unknown: '—',
   };
   return labels[status] || status;
 }

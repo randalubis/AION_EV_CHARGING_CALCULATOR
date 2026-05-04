@@ -290,6 +290,26 @@ export function MapView({
       )}
 
       <LocateButton onLocate={() => {}} />
+      <LegendOverlay />
     </MapContainer>
+  );
+}
+
+function LegendOverlay() {
+  return (
+    <div className="absolute bottom-4 left-4 z-[1000] bg-forest-dark/85 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 text-xs flex flex-col gap-1.5 pointer-events-none">
+      <span className="flex items-center gap-2 text-white/70">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#27AE60] border border-white" />
+        Tersedia
+      </span>
+      <span className="flex items-center gap-2 text-white/70">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#E74C3C] border border-white" />
+        Penuh / Tidak diketahui
+      </span>
+      <span className="flex items-center gap-2 text-white/70">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#FFC300] border border-white" />
+        Terpilih
+      </span>
+    </div>
   );
 }

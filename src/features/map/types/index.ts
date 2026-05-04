@@ -31,7 +31,8 @@ export interface Connector {
   type: import('./base').ConnectorType;
   powerKw: number;
   currentType: 'AC' | 'DC';
-  status: 'available' | 'occupied' | 'offline' | 'maintenance';
+  status: 'available' | 'occupied' | 'offline' | 'maintenance' | 'unknown';
+  count?: number;
   pricePerKwh?: number;
 }
 
