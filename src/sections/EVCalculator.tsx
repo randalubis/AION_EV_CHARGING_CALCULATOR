@@ -3,37 +3,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Zap, Battery, MapPin, Clock, Wallet, Route, Share2, RotateCcw, ChevronDown, Info, AlertTriangle } from 'lucide-react';
 import { BRANDS, CARS } from '../features/calculator/data/carData';
+import { CHARGERS, EFF } from '../features/calculator/data/chargers';
+import { TARIFFS } from '../features/calculator/data/tariffs';
+import { TIPS } from '../features/calculator/data/tips';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// ─── CHARGING SPECIFIC DATA ─────────────────────────────────────────────────────────
-const CHARGERS: { label: string; kw: number; type: "ac" | "dc" }[] = [
-  { label: "Home Charger (7.4 kW AC)", kw: 7.4, type: "ac" },
-  { label: "Public AC (22 kW)", kw: 22, type: "ac" },
-  { label: "Fast DC (60 kW)", kw: 60, type: "dc" },
-  { label: "Rapid DC (100 kW)", kw: 100, type: "dc" },
-  { label: "Rapid DC (120 kW)", kw: 120, type: "dc" },
-  { label: "Ultra DC (180 kW)", kw: 180, type: "dc" },
-  { label: "Ultra Fast DC (480 kW)", kw: 480, type: "dc" },
-];
-
-const TARIFFS = [
-  { label: "PLN R1", val: 1444, desc: "Rumah daya ≤ 3.500 VA" },
-  { label: "PLN R2", val: 2076, desc: "Rumah daya 3.500–6.600 VA" },
-  { label: "PLN R3", val: 2654, desc: "Rumah daya > 6.600 VA" },
-  { label: "Umum", val: 3000, desc: "Perkiraan tarif SPKLU publik" },
-];
-
-const EFF = { ac: 0.90, dc: 0.93 };
-
-const TIPS = [
-  { icon: "🔋", title: "Isi Daya Sampai 80% Setiap Hari", body: "Baterai lithium paling awet di antara 20–80%. Simpan pengisian 100% untuk perjalanan jauh." },
-  { icon: "⚡", title: "Hindari Fast DC Charging Terlalu Sering", body: "Cas DC cepat menghasilkan panas yang merusak sel. Gunakan AC rumah untuk pengisian harian." },
-  { icon: "❄️", title: "Jangan Cas Baterai yang Masih Panas", body: "Setelah perjalanan jauh, tunggu 20–30 menit sebelum dicas. Parkir di tempat teduh jika bisa." },
-  { icon: "📉", title: "Jangan Biarkan Baterai di Bawah 10%", body: "Pengosongan dalam membebani sel. Cas sebelum mencapai 15–20%." },
-  { icon: "🌙", title: "Jadwalkan Pengisian di Malam Hari", body: "Jadwalkan agar cas selesai tepat sebelum bangun — menjaga baterai di level ideal." },
-  { icon: "🌡️", title: "Suhu Sangat Berpengaruh", body: "Parkir di garasi atau tempat teduh saat panas. Pre-conditioning saat masih tercolok." },
-];
 
 // ─── HELPERS ──────────────────────────────────────────────────────
 const fmtTime = (h: number) => {
