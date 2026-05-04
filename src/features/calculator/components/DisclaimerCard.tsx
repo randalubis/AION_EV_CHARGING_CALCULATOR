@@ -10,12 +10,18 @@ export function DisclaimerCard() {
       <div className="text-white/60 text-sm space-y-2">
         <p>Ini estimasi. Hasil aktual dapat bervariasi karena:</p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Suhu baterai &amp; kondisi sekitar</li>
+          <li>Suhu baterai &amp; kondisi sekitar (cas dingin lebih lambat)</li>
           <li>Usia baterai &amp; penurunan kapasitas</li>
-          <li>Kualitas dan panjang kabel cas</li>
-          <li>Efisiensi charger aktual per merek/model</li>
-          <li>Cas di atas 80% kurang efisien (cell balancing) — sudah diperhitungkan untuk DC</li>
-          <li>Cas AC ~10% rugi · Cas DC ~7% rugi (tipikal)</li>
+          <li>Kualitas &amp; panjang kabel cas</li>
+          <li>Kurva pengisian aktual per mobil — kami pakai profil rata-rata EV modern</li>
+          <li>
+            DC fast charging melambat di atas 80% (cell balancing) — sudah diperhitungkan
+            dengan kurva 5-tahap dalam estimasi waktu
+          </li>
+          <li>
+            Rugi efisiensi: AC ~10% (onboard charger), DC ~5% (kabel &amp; baterai).
+            Biaya tarif rumah PLN sudah memperhitungkan rugi AC; tarif SPKLU per kWh ke baterai.
+          </li>
         </ul>
         <p className="mt-3">Gunakan sebagai panduan. Pantau sesi cas aktual untuk data akurat.</p>
       </div>

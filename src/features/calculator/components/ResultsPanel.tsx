@@ -1,6 +1,6 @@
 import { Battery, Clock, Info, MapPin, Route, RotateCcw, Share2, Wallet, Zap } from 'lucide-react';
 import { MapsPicker, searchTargets } from '../../map/components/MapsPicker';
-import { fmtRp, fmtTime, TAPER_START_PCT } from '../utils/charging';
+import { fmtRp, fmtTime, TAPER_NOTE_PCT } from '../utils/charging';
 
 export interface CalcResult {
   isCurEmpty: boolean;
@@ -9,7 +9,8 @@ export interface CalcResult {
   needBat: number;
   rangeAdded: number;
   tgtRange: number;
-  gridKwh: number;
+  paidKwh: number;
+  billingMode: 'home' | 'public';
   chargerLabel: string;
   effPwr: number;
   effPct: number;
@@ -56,7 +57,11 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
         </div>
         {!r.isCurEmpty && r.tariff > 0 && (
           <div className="text-white/50 text-xs mt-1">
-            {fmtRp(r.tariff)}/kWh × {r.gridKwh.toFixed(1)} kWh
+            {fmtRp(r.tariff)}/kWh × {r.paidKwh.toFixed(1)} kWh
+            {' '}
+            <span className="text-white/40">
+              ({r.billingMode === 'home' ? 'tarif rumah, termasuk rugi cas AC' : 'kWh ke baterai di SPKLU'})
+            </span>
           </div>
         )}
       </div>
@@ -107,7 +112,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
         <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 mb-4 flex items-start gap-2">
           <Info className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
           <p className="text-amber-200/90 text-xs leading-relaxed">
-            Estimasi memperhitungkan taper di atas {TAPER_START_PCT}% — DC fast charging melambat
+            Estimasi memperhitungkan taper di atas {TAPER_NOTE_PCT}% — DC fast charging melambat
             untuk melindungi baterai. Untuk perjalanan jauh, lebih hemat waktu cas sampai 80% lalu
             lanjut perjalanan.
           </p>
