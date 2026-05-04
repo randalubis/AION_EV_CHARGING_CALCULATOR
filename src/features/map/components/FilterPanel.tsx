@@ -1,9 +1,8 @@
-import { useMemo } from 'react';
 import type { MapFilters, ConnectorType } from '../types';
-import { getAllOperators } from '../data/sampleStations';
 
 interface FilterPanelProps {
   filters: MapFilters;
+  operators: string[];
   onUpdateFilters: (filters: Partial<MapFilters>) => void;
   onClearFilters: () => void;
 }
@@ -22,25 +21,24 @@ const POWER_RANGES = [
   { value: 150, label: '150+ kW' },
 ];
 
-export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: FilterPanelProps) {
-  const operators = useMemo(() => getAllOperators(), []);
-  const hasActiveFilters = 
+export function FilterPanel({ filters, operators, onUpdateFilters, onClearFilters }: FilterPanelProps) {
+  const hasActiveFilters =
     filters.connectorTypes.length > 0 ||
     filters.minPowerKw > 0 ||
     filters.operators.length > 0;
 
   const toggleConnectorType = (type: ConnectorType) => {
-    const newTypes = filters.connectorTypes.includes(type)
+    const next = filters.connectorTypes.includes(type)
       ? filters.connectorTypes.filter(t => t !== type)
       : [...filters.connectorTypes, type];
-    onUpdateFilters({ connectorTypes: newTypes });
+    onUpdateFilters({ connectorTypes: next });
   };
 
   const toggleOperator = (operator: string) => {
-    const newOperators = filters.operators.includes(operator)
+    const next = filters.operators.includes(operator)
       ? filters.operators.filter(o => o !== operator)
       : [...filters.operators, operator];
-    onUpdateFilters({ operators: newOperators });
+    onUpdateFilters({ operators: next });
   };
 
   return (
@@ -86,26 +84,27 @@ export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: Filter
       </div>
 
       {/* Operators */}
-      <div>
-        <label className="text-white/40 text-xs mb-1.5 block">Operator</label>
-        <div className="flex flex-wrap gap-1.5">
-          {operators.map(operator => (
-            <button
-              key={operator}
-              onClick={() => toggleOperator(operator)}
-              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                filters.operators.includes(operator)
-                  ? 'bg-[#FFC300] text-forest-dark'
-                  : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
-              }`}
-            >
-              {operator}
-            </button>
-          ))}
+      {operators.length > 0 && (
+        <div>
+          <label className="text-white/40 text-xs mb-1.5 block">Operator</label>
+          <div className="flex flex-wrap gap-1.5">
+            {operators.map(operator => (
+              <button
+                key={operator}
+                onClick={() => toggleOperator(operator)}
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                  filters.operators.includes(operator)
+                    ? 'bg-[#FFC300] text-forest-dark'
+                    : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
+                }`}
+              >
+                {operator}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Clear Button */}
       {hasActiveFilters && (
         <button
           onClick={onClearFilters}

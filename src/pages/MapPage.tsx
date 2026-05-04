@@ -5,7 +5,7 @@ import {
   Compass, Filter, ChevronDown, Crosshair
 } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel, AddStationButton, AddStationModal } from '../features/map';
-import { useStations } from '../features/map/hooks/useStations';
+import { useStations, type Bounds } from '../features/map/hooks/useStations';
 import type { MapViewport } from '../features/map/types';
 
 export default function MapPage() {
@@ -13,6 +13,7 @@ export default function MapPage() {
   const [showList, setShowList] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [bounds, setBounds] = useState<Bounds | null>(null);
   const [viewport, setViewport] = useState<MapViewport>({
     center: [-2.5489, 118.0149],
     zoom: 5,
@@ -30,10 +31,13 @@ export default function MapPage() {
     searchQuery,
     setSearchQuery,
     stats,
+    availableOperators,
+    loading,
+    error,
     updateFilters,
     clearFilters,
     selectStation,
-  } = useStations({ userLocation });
+  } = useStations({ userLocation, bounds });
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -237,6 +241,7 @@ export default function MapPage() {
                   <div className="px-3 pb-3">
                     <FilterPanel
                       filters={filters}
+                      operators={availableOperators}
                       onUpdateFilters={updateFilters}
                       onClearFilters={clearFilters}
                     />
@@ -281,7 +286,25 @@ export default function MapPage() {
                 viewport={viewport}
                 userLocation={userLocation}
                 onMapClick={handleMapClick}
+                onBoundsChange={setBounds}
               />
+
+              {/* Loading & error indicators */}
+              {(loading || error) && (
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
+                  {loading && (
+                    <div className="bg-forest-dark/90 border border-white/10 rounded-full px-3 py-1.5 text-xs text-white/80 flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+                      Memuat stasiun...
+                    </div>
+                  )}
+                  {error && !loading && (
+                    <div className="bg-red-500/20 border border-red-500/40 rounded-full px-3 py-1.5 text-xs text-red-200">
+                      Gagal memuat: {error}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Pick-from-map banner */}
               {pickingLocation && (

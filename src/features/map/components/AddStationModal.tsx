@@ -5,9 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Plus, Trash2, Crosshair, AlertTriangle,
 } from 'lucide-react';
-import { submitStationToSheets } from '../services/submissionApi';
+import { submitStation, findNearbyStation } from '../services/submissionApi';
 import { submissionSchema, STEP_FIELDS, type SubmissionFormValues } from '../schemas/submissionSchema';
-import { SAMPLE_STATIONS, calculateDistance } from '../data/sampleStations';
 import type { AmenityType, ConnectorType } from '../types/base';
 
 interface AddStationModalProps {
@@ -53,7 +52,7 @@ const AMENITIES: { value: AmenityType; label: string; icon: string }[] = [
   { value: 'atm', label: 'ATM', icon: '🏧' },
 ];
 
-const DUPLICATE_DISTANCE_KM = 0.05; // 50m
+const DUPLICATE_RADIUS_METERS = 50;
 
 const DEFAULT_VALUES: SubmissionFormValues = {
   latitude: 0,
@@ -72,10 +71,6 @@ const DEFAULT_VALUES: SubmissionFormValues = {
   notes: '',
   submittedBy: { name: '', email: '', phone: '' },
 };
-
-function findNearbyStation(lat: number, lng: number) {
-  return SAMPLE_STATIONS.find(s => calculateDistance(lat, lng, s.latitude, s.longitude) <= DUPLICATE_DISTANCE_KM);
-}
 
 export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initialLocation }: AddStationModalProps) {
   const methods = useForm<SubmissionFormValues>({
@@ -123,14 +118,16 @@ export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initial
     setSubmitError(null);
 
     if (!duplicateWarning) {
-      const nearby = findNearbyStation(values.latitude, values.longitude);
+      const nearby = await findNearbyStation(values.latitude, values.longitude, DUPLICATE_RADIUS_METERS);
       if (nearby) {
-        setDuplicateWarning(`Stasiun "${nearby.name}" sudah terdaftar di sekitar lokasi ini. Tetap kirim?`);
+        setDuplicateWarning(
+          `Stasiun "${nearby.name}" sudah terdaftar sekitar ${Math.round(nearby.distanceMeters)}m dari sini. Tetap kirim?`,
+        );
         return;
       }
     }
 
-    const result = await submitStationToSheets({
+    const result = await submitStation({
       ...values,
       submittedBy: { ...values.submittedBy },
     });
