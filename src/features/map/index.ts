@@ -6,6 +6,7 @@ export { StationDetail } from './components/StationDetail';
 export { FilterPanel } from './components/FilterPanel';
 export { AddStationButton } from './components/AddStationButton';
 export { AddStationModal } from './components/AddStationModal';
+export { HowToUseDialog } from './components/HowToUseDialog';
 
 export { useStations, type Bounds } from './hooks/useStations';
 

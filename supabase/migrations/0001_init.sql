@@ -4,8 +4,9 @@
 --  Idempotent: safe to re-run.
 -- ════════════════════════════════════════════════════════════════════
 
--- PostGIS for geospatial queries
+-- PostGIS for geospatial queries; pg_trgm for fast text search
 CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 -- ──────────────────────────────────────────────────────────────────
 --  stations
@@ -43,6 +44,11 @@ CREATE INDEX IF NOT EXISTS stations_external_ids_idx ON public.stations USING GI
 CREATE INDEX IF NOT EXISTS stations_operator_idx     ON public.stations (operator);
 CREATE INDEX IF NOT EXISTS stations_province_idx     ON public.stations (province);
 CREATE INDEX IF NOT EXISTS stations_source_idx       ON public.stations (source);
+
+-- Trigram indexes for fast ILIKE search across name/city/operator
+CREATE INDEX IF NOT EXISTS stations_name_trgm_idx     ON public.stations USING GIN (name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS stations_city_trgm_idx     ON public.stations USING GIN (city gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS stations_operator_trgm_idx ON public.stations USING GIN (operator gin_trgm_ops);
 
 -- Unique partial index lets ingestion upsert by source-specific external id
 -- e.g. don't insert two stations with the same PLN station_id.
@@ -157,6 +163,139 @@ AS $$
 $$;
 
 -- ──────────────────────────────────────────────────────────────────
+--  RPC: fetch one station by id
+--  Used for deep-linking from URL ?id= param when the station may not
+--  be in the currently-loaded viewport.
+-- ──────────────────────────────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.station_by_id(p_id UUID)
+RETURNS TABLE (
+  id                   UUID,
+  name                 TEXT,
+  operator             TEXT,
+  latitude             FLOAT,
+  longitude            FLOAT,
+  address              TEXT,
+  city                 TEXT,
+  province             TEXT,
+  status               TEXT,
+  amenities            TEXT[],
+  operating_hours      TEXT,
+  pricing_rate_per_kwh NUMERIC,
+  source               TEXT,
+  last_verified_at     TIMESTAMPTZ,
+  connectors           JSONB
+)
+LANGUAGE SQL STABLE
+AS $$
+  SELECT
+    s.id,
+    s.name,
+    s.operator,
+    ST_Y(s.location::geometry) AS latitude,
+    ST_X(s.location::geometry) AS longitude,
+    s.address,
+    s.city,
+    s.province,
+    s.status,
+    s.amenities,
+    s.operating_hours,
+    s.pricing_rate_per_kwh,
+    s.source,
+    s.last_verified_at,
+    COALESCE(
+      (SELECT jsonb_agg(jsonb_build_object(
+         'id',           c.id,
+         'type',         c.type,
+         'power_kw',     c.power_kw,
+         'current_type', c.current_type,
+         'count',        c.count,
+         'status',       c.status
+       ))
+       FROM public.connectors c
+       WHERE c.station_id = s.id),
+      '[]'::jsonb
+    ) AS connectors
+  FROM public.stations s
+  WHERE s.id = p_id
+  LIMIT 1;
+$$;
+
+-- ──────────────────────────────────────────────────────────────────
+--  RPC: global text search across stations
+--  Used by the sidebar search box. Returns matches even when they're
+--  outside the current map viewport (with fly-to-on-click on the client).
+-- ──────────────────────────────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.search_stations(
+  q TEXT,
+  result_limit INT DEFAULT 30
+)
+RETURNS TABLE (
+  id                   UUID,
+  name                 TEXT,
+  operator             TEXT,
+  latitude             FLOAT,
+  longitude            FLOAT,
+  address              TEXT,
+  city                 TEXT,
+  province             TEXT,
+  status               TEXT,
+  amenities            TEXT[],
+  operating_hours      TEXT,
+  pricing_rate_per_kwh NUMERIC,
+  source               TEXT,
+  last_verified_at     TIMESTAMPTZ,
+  connectors           JSONB
+)
+LANGUAGE SQL STABLE
+AS $$
+  SELECT
+    s.id,
+    s.name,
+    s.operator,
+    ST_Y(s.location::geometry) AS latitude,
+    ST_X(s.location::geometry) AS longitude,
+    s.address,
+    s.city,
+    s.province,
+    s.status,
+    s.amenities,
+    s.operating_hours,
+    s.pricing_rate_per_kwh,
+    s.source,
+    s.last_verified_at,
+    COALESCE(
+      (SELECT jsonb_agg(jsonb_build_object(
+         'id',           c.id,
+         'type',         c.type,
+         'power_kw',     c.power_kw,
+         'current_type', c.current_type,
+         'count',        c.count,
+         'status',       c.status
+       ))
+       FROM public.connectors c
+       WHERE c.station_id = s.id),
+      '[]'::jsonb
+    ) AS connectors
+  FROM public.stations s
+  WHERE
+    s.canonical_id IS NULL
+    AND length(trim(q)) >= 2
+    AND (
+      s.name     ILIKE '%' || q || '%'
+      OR s.city  ILIKE '%' || q || '%'
+      OR s.operator ILIKE '%' || q || '%'
+      OR s.address  ILIKE '%' || q || '%'
+    )
+  ORDER BY
+    -- Prefix match on name first
+    CASE WHEN s.name ILIKE q || '%' THEN 0 ELSE 1 END,
+    -- Then city match
+    CASE WHEN s.city ILIKE q || '%' THEN 0 ELSE 1 END,
+    s.name
+  LIMIT LEAST(result_limit, 50);
+$$;
+
+-- ──────────────────────────────────────────────────────────────────
 --  Row-level security
 -- ──────────────────────────────────────────────────────────────────
 ALTER TABLE public.stations            ENABLE ROW LEVEL SECURITY;
@@ -180,6 +319,16 @@ CREATE POLICY "submissions: insert anon"
 -- Nobody can SELECT submissions via anon. Admin reviews via service-role only.
 -- (No SELECT policy defined → RLS denies by default.)
 
--- Allow anon to call the RPC (RLS policies on stations/connectors still apply
--- since the function is STABLE and runs as caller).
+-- NOTE on PostGIS' public.spatial_ref_sys table:
+-- Supabase's linter flags this with "RLS Disabled in Public". It cannot be
+-- fixed from the SQL Editor — the table is owned by `postgres` and ALTER
+-- TABLE requires ownership, which managed Supabase projects don't grant.
+-- The warning is a false positive: spatial_ref_sys holds static, public
+-- EPSG/SRID reference data installed by PostGIS itself. Dismiss it in the
+-- dashboard linter (Database → Linter → "Ignore for this lint").
+
+-- Allow anon to call the RPCs (RLS policies on stations/connectors still
+-- apply since these functions are STABLE and run as caller).
 GRANT EXECUTE ON FUNCTION public.stations_in_bbox(FLOAT, FLOAT, FLOAT, FLOAT, INT) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.station_by_id(UUID) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.search_stations(TEXT, INT) TO anon, authenticated;

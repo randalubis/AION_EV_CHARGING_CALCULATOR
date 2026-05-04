@@ -62,6 +62,7 @@ function mapRpcRow(row: RpcRow): ChargingStation {
       powerKw: Number(c.power_kw),
       currentType: c.current_type,
       status: (c.status as ChargingStation['connectors'][number]['status']) ?? 'unknown',
+      count: c.count,
     })),
   };
 }
@@ -91,6 +92,8 @@ export function useStations(options: UseStationsOptions = {}) {
   const debouncedSearchQuery = useDebounce(searchQuery, 200);
 
   const [rawStations, setRawStations] = useState<ChargingStation[]>([]);
+  const [searchResults, setSearchResults] = useState<ChargingStation[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedStation, setSelectedStation] = useState<ChargingStation | null>(null);
@@ -127,19 +130,50 @@ export function useStations(options: UseStationsOptions = {}) {
     };
   }, [debouncedBounds]);
 
-  // Apply filters + search client-side on the fetched set
+  // Global search: when user types ≥2 chars, query the server. Independent
+  // of the bounds-based fetch so users can find stations outside the viewport.
+  useEffect(() => {
+    const q = debouncedSearchQuery.trim();
+    if (q.length < 2) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setSearchLoading(true);
+    supabase
+      .rpc('search_stations', { q, result_limit: 30 })
+      .then(({ data, error: rpcError }) => {
+        if (cancelled) return;
+        setSearchLoading(false);
+        if (rpcError) {
+          console.error('search_stations error:', rpcError.message);
+          setSearchResults([]);
+          return;
+        }
+        const mapped: ChargingStation[] = (data ?? []).map((row: RpcRow) => mapRpcRow(row));
+        if (!userLocation) {
+          setSearchResults(mapped);
+          return;
+        }
+        setSearchResults(
+          mapped
+            .map((s: ChargingStation) => ({
+              ...s,
+              distance: calculateDistance(userLocation[0], userLocation[1], s.latitude, s.longitude),
+            }))
+            .sort((a: ChargingStation, b: ChargingStation) => (a.distance ?? 0) - (b.distance ?? 0)),
+        );
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedSearchQuery, userLocation]);
+
+  // Filters applied to the viewport set. Search is handled globally (above)
+  // and surfaces in `searchResults`, not here.
   const filteredStations = useMemo(() => {
     return rawStations.filter((station) => {
-      if (debouncedSearchQuery) {
-        const q = debouncedSearchQuery.toLowerCase();
-        const match =
-          station.name.toLowerCase().includes(q) ||
-          station.address.toLowerCase().includes(q) ||
-          station.city.toLowerCase().includes(q) ||
-          station.operator.toLowerCase().includes(q);
-        if (!match) return false;
-      }
-
       if (filters.connectorTypes.length > 0) {
         const has = station.connectors.some((c) => filters.connectorTypes.includes(c.type));
         if (!has) return false;
@@ -165,7 +199,7 @@ export function useStations(options: UseStationsOptions = {}) {
 
       return true;
     });
-  }, [rawStations, filters, debouncedSearchQuery]);
+  }, [rawStations, filters]);
 
   const stationsWithDistance = useMemo(() => {
     if (!userLocation) return filteredStations;
@@ -225,8 +259,35 @@ export function useStations(options: UseStationsOptions = {}) {
     [rawStations, userLocation],
   );
 
+  const loadStationById = useCallback(
+    async (id: string): Promise<ChargingStation | null> => {
+      const { data, error: rpcError } = await supabase.rpc('station_by_id', { p_id: id });
+      if (rpcError || !data || data.length === 0) return null;
+      const station = mapRpcRow(data[0] as RpcRow);
+      const withDistance = userLocation
+        ? {
+            ...station,
+            distance: calculateDistance(
+              userLocation[0],
+              userLocation[1],
+              station.latitude,
+              station.longitude,
+            ),
+          }
+        : station;
+      setSelectedStation(withDistance);
+      return withDistance;
+    },
+    [userLocation],
+  );
+
+  const isSearching = debouncedSearchQuery.trim().length >= 2;
+
   return {
     stations: stationsWithDistance,
+    searchResults,
+    isSearching,
+    searchLoading,
     selectedStation,
     filters,
     searchQuery,
@@ -238,5 +299,6 @@ export function useStations(options: UseStationsOptions = {}) {
     updateFilters,
     clearFilters,
     selectStation,
+    loadStationById,
   };
 }
