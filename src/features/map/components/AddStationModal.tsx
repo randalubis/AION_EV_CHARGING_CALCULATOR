@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Upload, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { X, ChevronLeft, ChevronRight, Check, MapPin, Navigation, Upload, Plus, Trash2, Crosshair } from 'lucide-react';
 import { submitStationToSheets } from '../services/submissionApi';
 import type { StationSubmissionFormData, ConnectorSubmission } from '../types';
 import type { AmenityType, ConnectorType } from '../types/base';
@@ -7,6 +7,7 @@ import type { AmenityType, ConnectorType } from '../types/base';
 interface AddStationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onRequestPickFromMap?: () => void;
   initialLocation?: { lat: number; lng: number } | null;
 }
 
@@ -60,12 +61,12 @@ const INITIAL_FORM_DATA: StationSubmissionFormData = {
   connectors: [],
   amenities: [],
   photos: [],
-  pricing: '',
+  pricing: null,
   operatingHours: '24 Jam',
   notes: ''
 };
 
-export function AddStationModal({ isOpen, onClose, initialLocation }: AddStationModalProps) {
+export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initialLocation }: AddStationModalProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<StationSubmissionFormData>({
     ...INITIAL_FORM_DATA,
@@ -73,6 +74,18 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
     longitude: initialLocation?.lng ?? null,
     locationSource: initialLocation ? 'map_click' : null
   });
+
+  // Sync incoming initialLocation (e.g. user picked from map and reopened modal)
+  useEffect(() => {
+    if (initialLocation) {
+      setFormData(prev => ({
+        ...prev,
+        latitude: initialLocation.lat,
+        longitude: initialLocation.lng,
+        locationSource: 'map_click',
+      }));
+    }
+  }, [initialLocation]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -279,17 +292,22 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           </div>
         )}
 
-        <div className="p-4 bg-forest-mid border border-white/10 rounded-xl">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-              <MapPin className="w-5 h-5 text-blue-400" />
+        {onRequestPickFromMap && (
+          <button
+            onClick={onRequestPickFromMap}
+            className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-[#FFC300]/50 transition-colors text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Crosshair className="w-5 h-5 text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-white font-medium">Pilih dari Peta</p>
+                <p className="text-white/50 text-sm">Tutup form dan ketuk lokasi di peta</p>
+              </div>
             </div>
-            <div>
-              <p className="text-white font-medium">Klik di Peta</p>
-              <p className="text-white/50 text-sm">Tutup modal dan klik lokasi di peta</p>
-            </div>
-          </div>
-        </div>
+          </button>
+        )}
 
         {formData.latitude && formData.longitude && (
           <div className="p-4 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-xl">
@@ -479,8 +497,11 @@ export function AddStationModal({ isOpen, onClose, initialLocation }: AddStation
           <span className="text-white/50">Rp</span>
           <input
             type="number"
-            value={formData.pricing}
-            onChange={e => setFormData(prev => ({ ...prev, pricing: e.target.value }))}
+            value={formData.pricing ?? ''}
+            onChange={e => {
+              const v = e.target.value;
+              setFormData(prev => ({ ...prev, pricing: v === '' ? null : Number(v) }));
+            }}
             placeholder="Harga per kWh"
             className="flex-1 bg-forest-mid border border-white/20 rounded-lg px-4 py-2.5 text-white placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none"
           />

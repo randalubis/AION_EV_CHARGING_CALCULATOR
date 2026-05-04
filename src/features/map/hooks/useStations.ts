@@ -1,6 +1,7 @@
 // Hook for managing charging station data
 
 import { useState, useMemo, useCallback } from 'react';
+import { useDebounce } from '../../../hooks/useDebounce';
 import type { MapFilters } from '../types';
 import { SAMPLE_STATIONS, calculateDistance } from '../data/sampleStations';
 
@@ -18,15 +19,16 @@ export function useStations(options: UseStationsOptions = {}) {
     amenities: [],
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 200);
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
 
   // Filter stations based on criteria
   const filteredStations = useMemo(() => {
     return SAMPLE_STATIONS.filter(station => {
       // Search query filter
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        const matchesSearch = 
+      if (debouncedSearchQuery) {
+        const query = debouncedSearchQuery.toLowerCase();
+        const matchesSearch =
           station.name.toLowerCase().includes(query) ||
           station.address.toLowerCase().includes(query) ||
           station.city.toLowerCase().includes(query) ||
@@ -60,17 +62,17 @@ export function useStations(options: UseStationsOptions = {}) {
         if (!filters.status.includes(station.status as 'active' | 'maintenance')) return false;
       }
 
-      // Amenities filter
+      // Amenities filter — match stations with ANY of the selected amenities
       if (filters.amenities.length > 0) {
-        const hasAmenities = filters.amenities.every(amenity => 
+        const hasAnyAmenity = filters.amenities.some(amenity =>
           station.amenities.includes(amenity)
         );
-        if (!hasAmenities) return false;
+        if (!hasAnyAmenity) return false;
       }
 
       return true;
     });
-  }, [filters, searchQuery]);
+  }, [filters, debouncedSearchQuery]);
 
   // Get selected station details with distance
   const selectedStation = useMemo(() => {
