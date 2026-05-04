@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Drawer } from 'vaul';
 import gsap from 'gsap';
 import { useDelayedFlag } from '../hooks/useDelayedFlag';
@@ -130,7 +130,7 @@ export default function MapPage() {
   };
 
   return (
-    <div ref={containerRef} className="bg-forest-dark pt-20">
+    <div ref={containerRef} className="bg-forest-dark">
       {/* Beta banner */}
       <div className="bg-amber-500/10 border-b border-amber-500/30 px-4 py-1.5">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
@@ -141,31 +141,39 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* Compact header */}
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Compass className="w-5 h-5 text-[#FFC300]" />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-white font-bold text-base sm:text-lg leading-tight truncate">Peta SPKLU</h1>
-            <p className="text-white/50 text-xs truncate">
-              {stats.total} di area · {stats.fastCharging} fast
-            </p>
-          </div>
+      {/* Header — matches the calculator page's structure */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-4">
+        <div className="flex items-center gap-2 text-white/50 text-sm mb-4">
+          <Link to="/" className="hover:text-[#FFC300] transition-colors">Beranda</Link>
+          <span>/</span>
+          <span className="text-[#FFC300]">Peta SPKLU</span>
         </div>
-        <HowToUseDialog
-          trigger={
-            <button className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/30 transition-colors flex-shrink-0">
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Cara pakai</span>
-            </button>
-          }
-        />
+
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Compass className="w-5 h-5 text-[#FFC300]" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-white font-bold text-xl md:text-2xl leading-tight">Peta SPKLU</h1>
+              <p className="text-white/50 text-xs md:text-sm">
+                {stats.total} stasiun di area · {stats.fastCharging} fast (50kW+)
+              </p>
+            </div>
+          </div>
+          <HowToUseDialog
+            trigger={
+              <button className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/30 transition-colors flex-shrink-0">
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>Cara pakai</span>
+              </button>
+            }
+          />
+        </div>
       </div>
 
       {/* Map Section — fills viewport below header */}
-      <div className="max-w-7xl mx-auto px-4 pb-4">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pb-4">
         {/* Mobile: Toggle List Button */}
         <button
           onClick={() => setShowList(!showList)}
@@ -180,7 +188,7 @@ export default function MapPage() {
         </button>
 
         <div className="bg-forest-mid/30 border border-white/10 rounded-xl sm:rounded-2xl overflow-hidden">
-          <div className="flex flex-col md:flex-row h-[calc(100svh-10rem)] min-h-[420px] md:min-h-[520px]">
+          <div className="flex flex-col md:flex-row h-[calc(100svh-15rem)] min-h-[420px] md:min-h-[520px]">
             {/* Sidebar */}
             <aside className={`
               ${showList ? 'block' : 'hidden'}
