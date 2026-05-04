@@ -54,6 +54,8 @@ const AMENITIES: { value: AmenityType; label: string; icon: string }[] = [
 
 const DUPLICATE_RADIUS_METERS = 50;
 
+const STEP_TITLES = ['Lokasi', 'Detail Stasiun', 'Informasi Anda'] as const;
+
 const DEFAULT_VALUES: SubmissionFormValues = {
   latitude: 0,
   longitude: 0,
@@ -164,9 +166,16 @@ export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initial
                         <ChevronLeft className="w-5 h-5" />
                       </button>
                     )}
-                    <Dialog.Title className="text-lg font-bold text-white">Tambah Stasiun</Dialog.Title>
+                    <div className="min-w-0">
+                      <Dialog.Title className="text-base font-bold text-white leading-tight">
+                        Tambah Stasiun
+                      </Dialog.Title>
+                      <p className="text-white/40 text-xs mt-0.5">
+                        Langkah {step} dari 3 — {STEP_TITLES[step - 1]}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1" aria-hidden>
+                  <div className="hidden sm:flex items-center gap-1" aria-hidden>
                     {[1, 2, 3].map(i => (
                       <div
                         key={i}

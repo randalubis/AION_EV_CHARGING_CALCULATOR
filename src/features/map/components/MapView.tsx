@@ -6,13 +6,21 @@ import './MapView.css';
 import { useEffect, useRef } from 'react';
 import type { ChargingStation, MapViewport } from '../types';
 
-const STATION_SVG = `
+// Marker glyphs — chosen so available vs unavailable differ by shape, not
+// just color (accessibility for colorblind users).
+const PLUG_SVG = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width: 16px; height: 16px;">
     <path d="M11 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11V21ZM13 21H19C20.1046 21 21 20.1046 21 19V12L17 12V8L21 8V5C21 3.89543 20.1046 3 19 3H13V21ZM19 14V19H15V14H19ZM9 7V11L7 11V7H9ZM15 7V11L13 11V7H15Z"/>
   </svg>
 `;
+const QUESTION_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;">
+    <path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/>
+    <path d="M12 17h.01"/>
+  </svg>
+`;
 
-function buildStationIcon(color: string, shadow: string): L.DivIcon {
+function buildStationIcon(color: string, shadow: string, glyph: string, size = 32, borderWidth = 3): L.DivIcon {
   return L.divIcon({
     html: `
       <div style="
@@ -20,24 +28,24 @@ function buildStationIcon(color: string, shadow: string): L.DivIcon {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        border: 3px solid white;
+        border: ${borderWidth}px solid white;
         box-shadow: ${shadow};
         display: flex;
         align-items: center;
         justify-content: center;
-      ">${STATION_SVG}</div>
+      ">${glyph}</div>
     `,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-    popupAnchor: [0, -16],
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2],
     className: 'custom-marker-icon',
   });
 }
 
 const STATION_ICONS = {
-  selected: buildStationIcon('#FFC300', '0 0 0 4px rgba(255, 195, 0, 0.3)'),
-  available: buildStationIcon('#27AE60', '0 2px 4px rgba(0,0,0,0.3)'),
-  unavailable: buildStationIcon('#E74C3C', '0 2px 4px rgba(0,0,0,0.3)'),
+  selected: buildStationIcon('#FFC300', '0 0 0 4px rgba(255, 195, 0, 0.3)', PLUG_SVG, 36, 4),
+  available: buildStationIcon('#27AE60', '0 2px 4px rgba(0,0,0,0.3)', PLUG_SVG),
+  unavailable: buildStationIcon('#E74C3C', '0 2px 4px rgba(0,0,0,0.3)', QUESTION_SVG),
 };
 
 const USER_ICON = L.divIcon({
@@ -299,17 +307,29 @@ function LegendOverlay() {
   return (
     <div className="absolute bottom-4 left-4 z-[1000] bg-forest-dark/85 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 text-xs flex flex-col gap-1.5 pointer-events-none">
       <span className="flex items-center gap-2 text-white/70">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#27AE60] border border-white" />
+        <LegendDot color="#27AE60">⚡</LegendDot>
         Tersedia
       </span>
       <span className="flex items-center gap-2 text-white/70">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#E74C3C] border border-white" />
-        Penuh / Tidak diketahui
+        <LegendDot color="#E74C3C">?</LegendDot>
+        Status tidak diketahui
       </span>
       <span className="flex items-center gap-2 text-white/70">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FFC300] border border-white" />
+        <LegendDot color="#FFC300" thicker>⚡</LegendDot>
         Terpilih
       </span>
     </div>
+  );
+}
+
+function LegendDot({ color, thicker, children }: { color: string; thicker?: boolean; children: React.ReactNode }) {
+  return (
+    <span
+      className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white border-white ${thicker ? 'border-2' : 'border'}`}
+      style={{ background: color }}
+      aria-hidden
+    >
+      {children}
+    </span>
   );
 }

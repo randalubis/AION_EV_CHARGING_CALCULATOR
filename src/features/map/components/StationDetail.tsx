@@ -1,4 +1,6 @@
-import { X, MapPin, Clock, Navigation, Zap, DollarSign } from 'lucide-react';
+import { useState } from 'react';
+import * as Popover from '@radix-ui/react-popover';
+import { X, MapPin, Clock, Navigation, Zap, DollarSign, RefreshCw, ExternalLink } from 'lucide-react';
 import type { ChargingStation } from '../types';
 
 interface StationDetailProps {
@@ -13,6 +15,8 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
     acc[connector.type].push(connector);
     return acc;
   }, {} as Record<string, typeof station.connectors>);
+
+  const lastVerified = formatLastVerified(station.lastUpdated);
 
   return (
     <div className="bg-forest-dark rounded-xl border border-white/10 overflow-hidden shadow-2xl">
@@ -38,13 +42,22 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
         <div className="flex items-start gap-2">
           <MapPin className="w-4 h-4 text-white/40 flex-shrink-0 mt-0.5" />
           <div className="min-w-0">
-            <p className="text-white/80 text-xs">{station.address}</p>
-            <p className="text-white/40 text-[10px]">{station.city}</p>
+            {station.address && <p className="text-white/80 text-xs">{station.address}</p>}
+            {station.city && <p className="text-white/40 text-[10px]">{station.city}</p>}
             {distance !== undefined && (
-              <p className="text-[#FFC300] text-xs mt-0.5">{distance} km dari Anda</p>
+              <p className="text-[#FFC300] text-xs mt-0.5">
+                {distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance} km`} dari Anda
+              </p>
             )}
           </div>
         </div>
+
+        {lastVerified && (
+          <div className="flex items-center gap-1.5 text-white/40 text-[10px]">
+            <RefreshCw className="w-3 h-3" />
+            <span>Diperbarui {lastVerified}</span>
+          </div>
+        )}
 
         {/* Hours & Price — only render rows that have data */}
         {(station.operatingHours || (station.pricing && station.pricing.ratePerKwh > 0)) && (
@@ -109,19 +122,80 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
 
       {/* Action Button */}
       <div className="p-3 border-t border-white/10">
-        <button
-          onClick={() => {
-            const url = `https://www.google.com/maps/dir/?api=1&destination=${station.latitude},${station.longitude}`;
-            window.open(url, '_blank');
-          }}
-          className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors"
-        >
-          <Navigation className="w-4 h-4" />
-          Navigasi
-        </button>
+        <NavigatePicker station={station} />
       </div>
     </div>
   );
+}
+
+function NavigatePicker({ station }: { station: ChargingStation }) {
+  const [open, setOpen] = useState(false);
+  const { latitude: lat, longitude: lng, name } = station;
+  const encodedName = encodeURIComponent(name);
+  const targets: { label: string; href: string }[] = [
+    {
+      label: 'Google Maps',
+      href: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${encodedName}`,
+    },
+    {
+      label: 'Waze',
+      href: `https://www.waze.com/ul?ll=${lat},${lng}&navigate=yes`,
+    },
+    {
+      label: 'Apple Maps',
+      href: `https://maps.apple.com/?daddr=${lat},${lng}&q=${encodedName}`,
+    },
+  ];
+
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <button className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors">
+          <Navigation className="w-4 h-4" />
+          Navigasi
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          align="end"
+          sideOffset={6}
+          className="z-[10000] bg-forest-dark border border-white/10 rounded-lg shadow-2xl p-1 min-w-[180px]"
+        >
+          {targets.map((t) => (
+            <a
+              key={t.label}
+              href={t.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+            >
+              <span>{t.label}</span>
+              <ExternalLink className="w-3.5 h-3.5 text-white/30" />
+            </a>
+          ))}
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
+const relativeTimeFormatter = new Intl.RelativeTimeFormat('id', { numeric: 'auto' });
+
+function formatLastVerified(iso: string): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  const diffMs = d.getTime() - Date.now();
+  const absHours = Math.abs(diffMs / 3_600_000);
+  if (absHours < 1) {
+    const minutes = Math.round(diffMs / 60_000);
+    return relativeTimeFormatter.format(minutes, 'minute');
+  }
+  if (absHours < 24) {
+    return relativeTimeFormatter.format(Math.round(diffMs / 3_600_000), 'hour');
+  }
+  return relativeTimeFormatter.format(Math.round(diffMs / 86_400_000), 'day');
 }
 
 function getConnectorLabel(type: string): string {

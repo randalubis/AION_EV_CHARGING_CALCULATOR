@@ -10,6 +10,8 @@ export interface Bounds {
   maxLat: number;
 }
 
+export type SortBy = 'distance' | 'name' | 'power';
+
 interface UseStationsOptions {
   userLocation?: [number, number] | null;
   bounds?: Bounds | null;
@@ -67,6 +69,32 @@ function mapRpcRow(row: RpcRow): ChargingStation {
   };
 }
 
+function sortStations(
+  stations: ChargingStation[],
+  sortBy: SortBy,
+  userLocation: [number, number] | null | undefined,
+): ChargingStation[] {
+  const enriched = userLocation
+    ? stations.map((s) => ({
+        ...s,
+        distance: calculateDistance(userLocation[0], userLocation[1], s.latitude, s.longitude),
+      }))
+    : stations;
+
+  // Fall back to name sort when distance can't be computed.
+  const effective: SortBy = sortBy === 'distance' && !userLocation ? 'name' : sortBy;
+
+  return [...enriched].sort((a, b) => {
+    if (effective === 'distance') return (a.distance ?? 0) - (b.distance ?? 0);
+    if (effective === 'power') {
+      const aMax = a.connectors.length ? Math.max(...a.connectors.map((c) => c.powerKw)) : 0;
+      const bMax = b.connectors.length ? Math.max(...b.connectors.map((c) => c.powerKw)) : 0;
+      return bMax - aMax;
+    }
+    return a.name.localeCompare(b.name, 'id');
+  });
+}
+
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -89,6 +117,7 @@ export function useStations(options: UseStationsOptions = {}) {
     amenities: [],
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortBy>('distance');
   const debouncedSearchQuery = useDebounce(searchQuery, 200);
 
   const [rawStations, setRawStations] = useState<ChargingStation[]>([]);
@@ -152,18 +181,8 @@ export function useStations(options: UseStationsOptions = {}) {
           return;
         }
         const mapped: ChargingStation[] = (data ?? []).map((row: RpcRow) => mapRpcRow(row));
-        if (!userLocation) {
-          setSearchResults(mapped);
-          return;
-        }
-        setSearchResults(
-          mapped
-            .map((s: ChargingStation) => ({
-              ...s,
-              distance: calculateDistance(userLocation[0], userLocation[1], s.latitude, s.longitude),
-            }))
-            .sort((a: ChargingStation, b: ChargingStation) => (a.distance ?? 0) - (b.distance ?? 0)),
-        );
+        // Sorting (and distance enrichment) happens centrally in sortStations.
+        setSearchResults(mapped);
       });
     return () => {
       cancelled = true;
@@ -201,20 +220,28 @@ export function useStations(options: UseStationsOptions = {}) {
     });
   }, [rawStations, filters]);
 
-  const stationsWithDistance = useMemo(() => {
-    if (!userLocation) return filteredStations;
-    return filteredStations
-      .map((s) => ({
-        ...s,
-        distance: calculateDistance(userLocation[0], userLocation[1], s.latitude, s.longitude),
-      }))
-      .sort((a, b) => (a.distance || 0) - (b.distance || 0));
-  }, [filteredStations, userLocation]);
+  const stationsWithDistance = useMemo(
+    () => sortStations(filteredStations, sortBy, userLocation),
+    [filteredStations, userLocation, sortBy],
+  );
+
+  const sortedSearchResults = useMemo(
+    () => sortStations(searchResults, sortBy, userLocation),
+    [searchResults, userLocation, sortBy],
+  );
 
   const availableOperators = useMemo(
     () => Array.from(new Set(rawStations.map((s) => s.operator))).sort(),
     [rawStations],
   );
+
+  const availableAmenities = useMemo(() => {
+    const set = new Set<string>();
+    for (const s of rawStations) {
+      for (const a of s.amenities) set.add(a);
+    }
+    return Array.from(set).sort();
+  }, [rawStations]);
 
   const stats = useMemo(() => {
     const total = filteredStations.length;
@@ -285,7 +312,7 @@ export function useStations(options: UseStationsOptions = {}) {
 
   return {
     stations: stationsWithDistance,
-    searchResults,
+    searchResults: sortedSearchResults,
     isSearching,
     searchLoading,
     selectedStation,
@@ -293,6 +320,9 @@ export function useStations(options: UseStationsOptions = {}) {
     searchQuery,
     stats,
     availableOperators,
+    availableAmenities,
+    sortBy,
+    setSortBy,
     loading,
     error,
     setSearchQuery,

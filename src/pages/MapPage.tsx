@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Drawer } from 'vaul';
 import gsap from 'gsap';
+import { useDelayedFlag } from '../hooks/useDelayedFlag';
+import { useIsMobile } from '../hooks/use-mobile';
 import {
   Search, MapPin, List, X, AlertTriangle,
   Compass, Filter, ChevronDown, Crosshair, HelpCircle,
@@ -12,6 +15,7 @@ import type { MapViewport } from '../features/map/types';
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const isMobile = useIsMobile();
   const [showList, setShowList] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -37,6 +41,9 @@ export default function MapPage() {
     setSearchQuery,
     stats,
     availableOperators,
+    availableAmenities,
+    sortBy,
+    setSortBy,
     loading,
     error,
     updateFilters,
@@ -46,6 +53,8 @@ export default function MapPage() {
   } = useStations({ userLocation, bounds });
 
   const listStations = isSearching ? searchResults : stations;
+  const showLoadingPill = useDelayedFlag(loading, 500);
+  const initialLoading = loading && stations.length === 0 && !isSearching;
 
   // URL deep-linking: when ?id=... is present in the URL on mount, fetch
   // that station and fly the map to it.
@@ -184,7 +193,8 @@ export default function MapPage() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                   <input
                     type="text"
-                    placeholder="Cari stasiun..."
+                    placeholder="Cari stasiun, kota, atau operator..."
+                    aria-label="Cari stasiun"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full bg-forest-mid border border-white/20 rounded-lg pl-9 pr-8 py-2 text-white text-sm placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none"
@@ -218,6 +228,9 @@ export default function MapPage() {
                     <FilterPanel
                       filters={filters}
                       operators={availableOperators}
+                      amenities={availableAmenities}
+                      sortBy={sortBy}
+                      onSortChange={setSortBy}
                       onUpdateFilters={updateFilters}
                       onClearFilters={clearFilters}
                     />
@@ -232,7 +245,18 @@ export default function MapPage() {
                     {searchLoading ? 'Mencari...' : `Hasil untuk "${searchQuery}"`}
                   </p>
                 )}
-                {listStations.length === 0 ? (
+                {initialLoading && listStations.length === 0 ? (
+                  Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="p-3 rounded-lg border border-white/10 bg-forest-mid/20 animate-pulse">
+                      <div className="h-3 bg-white/10 rounded w-3/4 mb-2" />
+                      <div className="h-2.5 bg-white/10 rounded w-1/3 mb-3" />
+                      <div className="flex gap-2">
+                        <div className="h-2 bg-white/10 rounded w-12" />
+                        <div className="h-2 bg-white/10 rounded w-16" />
+                      </div>
+                    </div>
+                  ))
+                ) : listStations.length === 0 ? (
                   <div className="text-center py-8">
                     <MapPin className="w-10 h-10 text-white/20 mx-auto mb-2" />
                     <p className="text-white/50 text-sm">
@@ -280,19 +304,29 @@ export default function MapPage() {
               />
 
               {/* Loading & error indicators */}
-              {(loading || error) && (
+              {(showLoadingPill || error) && (
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
-                  {loading && (
+                  {showLoadingPill && (
                     <div className="bg-forest-dark/90 border border-white/10 rounded-full px-3 py-1.5 text-xs text-white/80 flex items-center gap-2">
                       <div className="w-3 h-3 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
                       Memuat stasiun...
                     </div>
                   )}
-                  {error && !loading && (
+                  {error && !showLoadingPill && (
                     <div className="bg-red-500/20 border border-red-500/40 rounded-full px-3 py-1.5 text-xs text-red-200">
                       Gagal memuat: {error}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* First-load skeleton over the map area */}
+              {initialLoading && (
+                <div className="absolute inset-0 z-[500] flex items-center justify-center bg-forest-dark/40 backdrop-blur-[1px] pointer-events-none">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+                    <p className="text-white/70 text-sm">Memuat stasiun di area Anda...</p>
+                  </div>
                 </div>
               )}
 
@@ -329,18 +363,36 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* Station Detail — mobile bottom sheet */}
-      {selectedStation && (
-        <div className="md:hidden fixed inset-x-0 bottom-0 z-[2000] bg-forest-dark border-t border-white/10 rounded-t-2xl shadow-2xl max-h-[70vh] overflow-y-auto pb-safe animate-slide-up">
-          <div className="sticky top-0 flex justify-center pt-2 pb-1 bg-forest-dark">
-            <span className="w-10 h-1 rounded-full bg-white/20" />
-          </div>
-          <StationDetail
-            station={selectedStation}
-            onClose={() => selectAndSyncUrl(null)}
-            distance={selectedStation.distance}
-          />
-        </div>
+      {/* Station Detail — mobile bottom sheet (drag-to-dismiss) */}
+      {isMobile && (
+        <Drawer.Root
+          open={!!selectedStation}
+          onOpenChange={(open) => {
+            if (!open) selectAndSyncUrl(null);
+          }}
+        >
+          <Drawer.Portal>
+            <Drawer.Overlay className="fixed inset-0 bg-black/40 z-[1999]" />
+            <Drawer.Content
+              aria-describedby={undefined}
+              className="fixed inset-x-0 bottom-0 z-[2000] bg-forest-dark border-t border-white/10 rounded-t-2xl flex flex-col max-h-[80vh] outline-none"
+            >
+              <Drawer.Title className="sr-only">Detail Stasiun</Drawer.Title>
+              <div className="flex justify-center pt-2 pb-1 flex-shrink-0">
+                <span className="w-10 h-1 rounded-full bg-white/30" />
+              </div>
+              <div className="overflow-y-auto pb-safe">
+                {selectedStation && (
+                  <StationDetail
+                    station={selectedStation}
+                    onClose={() => selectAndSyncUrl(null)}
+                    distance={selectedStation.distance}
+                  />
+                )}
+              </div>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
       )}
 
       {/* Add Station Button */}
