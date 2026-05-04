@@ -9,10 +9,11 @@ import { TARIFFS } from '../features/calculator/data/tariffs';
 import {
   batteryColor,
   calcChargeTimeHours,
+  calcCost,
   findBestChargerIdx,
   fmtRp,
   fmtTime,
-  TAPER_START_PCT,
+  TAPER_NOTE_PCT,
 } from '../features/calculator/utils/charging';
 import { ResultsPanel } from '../features/calculator/components/ResultsPanel';
 import { TipsAccordion } from '../features/calculator/components/TipsAccordion';
@@ -137,21 +138,23 @@ export function EVCalculator() {
   
   const needBat = Math.max(0, tgtKwh - curKwh);
   const charger = CHARGERS[chargerIdx];
-  const isAC = charger.type === "ac";
+  const isAC = charger.type === 'ac';
   const eff = EFF[charger.type];
   const effPct = Math.round(eff * 100);
-  const lossPct = 100 - effPct;
-  const effPwr = isAC 
-    ? Math.min(charger.kw, car?.maxAcKw || 0) 
+  const effPwr = isAC
+    ? Math.min(charger.kw, car?.maxAcKw || 0)
     : Math.min(charger.kw, car?.maxDcKw || 0);
-  
-  const gridKwh = needBat / eff;
-  const timeH = car
-    ? calcChargeTimeHours(curPct, tgtPct, car.battery, eff, effPwr, !isAC)
-    : 0;
-  const cost = gridKwh * tariff;
+
+  // Cost depends on the tariff's billing mode. Home (R1/R2/R3) bills the grid
+  // meter so the user pays for AC OBC losses; public (Umum + custom) bills the
+  // connector so users pay for what's delivered to the battery. Custom tariffs
+  // default to public — most non-PLN-home users are at SPKLU.
+  const billingMode = TARIFFS.find((t) => t.val === tariff)?.billingMode ?? 'public';
+  const { paidKwh, rupiah: cost } = calcCost(needBat, tariff, billingMode, isAC, eff);
+
+  const timeH = car ? calcChargeTimeHours(curPct, tgtPct, car.battery, eff, effPwr, !isAC) : 0;
   const rangeAdded = Math.max(0, tgtRange - curRange);
-  const hasTaperImpact = !isAC && tgtPct > TAPER_START_PCT;
+  const hasTaperImpact = !isAC && tgtPct > TAPER_NOTE_PCT;
 
   const unit = inputMode === "range" ? "km" : "%";
   const curMax = inputMode === "range" ? (car?.maxRange || 0) : 100;
@@ -809,12 +812,15 @@ Buka: ${shareUrl}`;
                 <div className="mt-4 bg-white/5 rounded-lg p-3 border border-white/10">
                   <div className="text-white/70 text-sm">
                     <strong className="text-[#FFC300]">
-                      {isAC ? `AC Charging: ~${effPct}% efisiensi` : `DC Fast Charging: ~${effPct}% efisiensi`}
+                      {isAC
+                        ? `AC ~${effPct}% (rugi onboard charger ~${100 - effPct}%)`
+                        : `DC ~${effPct}% (rugi kabel & baterai ~${100 - effPct}%)`}
                     </strong>
-                    <span className="text-white/50"> ({lossPct}% rugi dari PLN)</span>
                   </div>
                   <div className="text-white/40 text-xs mt-1">
-                    Berdasarkan riset EPA/ADAC 2023–24. Bervariasi tergantung suhu, kabel & baterai.
+                    {isAC
+                      ? 'AC: meter PLN mengukur sisi grid — Anda bayar untuk rugi onboard charger.'
+                      : 'DC: SPKLU bayar rugi konversi grid; Anda bayar per kWh ke baterai.'}
                   </div>
                 </div>
               </div>
@@ -849,7 +855,8 @@ Buka: ${shareUrl}`;
                 needBat,
                 rangeAdded,
                 tgtRange,
-                gridKwh,
+                paidKwh,
+                billingMode,
                 chargerLabel: charger.label,
                 effPwr,
                 effPct,
