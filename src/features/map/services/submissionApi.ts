@@ -1,11 +1,5 @@
+import { supabase } from '../../../lib/supabase';
 import type { StationSubmissionFormData } from '../types';
-
-// Google Sheets Configuration
-// Set up a Google Apps Script web app to handle submissions; see template at the bottom of this file.
-const GOOGLE_SHEETS_WEBAPP_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL || '';
-
-// In dev (no VITE_GOOGLE_SHEETS_WEBAPP_URL), submissions are stored in localStorage instead.
-const USE_MOCK_SUBMISSION = !GOOGLE_SHEETS_WEBAPP_URL;
 
 export interface SubmissionResponse {
   success: boolean;
@@ -13,133 +7,87 @@ export interface SubmissionResponse {
   error?: string;
 }
 
-interface PendingSubmission extends StationSubmissionFormData {
-  id: string;
-  status: 'pending';
-  submittedAt: string;
-}
-
 function errorMessage(err: unknown): string {
   if (err instanceof Error) return err.message;
   return typeof err === 'string' ? err : 'Unknown error';
 }
 
-export async function submitStationToSheets(
-  formData: StationSubmissionFormData
+export async function submitStation(
+  formData: StationSubmissionFormData,
 ): Promise<SubmissionResponse> {
-  if (USE_MOCK_SUBMISSION) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const mockId = `SUB-${Date.now()}`;
-    const existing = JSON.parse(localStorage.getItem('pending_submissions') || '[]') as PendingSubmission[];
-    existing.push({
-      id: mockId,
-      status: 'pending',
-      submittedAt: new Date().toISOString(),
-      ...formData,
-    });
-    localStorage.setItem('pending_submissions', JSON.stringify(existing));
-
-    return { success: true, id: mockId };
-  }
-
   try {
-    const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'submit', data: formData }),
-    });
+    const { submittedBy, ...payload } = formData;
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    const { data, error } = await supabase
+      .from('station_submissions')
+      .insert({
+        payload,
+        submitted_by_name: submittedBy.name,
+        submitted_by_email: submittedBy.email,
+        submitted_by_phone: submittedBy.phone || null,
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
     }
 
-    const result = await response.json();
-
-    if (result.success === false) {
-      throw new Error(result.error || 'Unknown error');
-    }
-
-    return { success: true, id: result.id };
+    return { success: true, id: data.id };
   } catch (err: unknown) {
-    const message = errorMessage(err);
-
-    if (message.includes('Failed to fetch') || message.includes('NetworkError')) {
-      return {
-        success: false,
-        error: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
-      };
-    }
-
-    if (message.includes('CORS')) {
-      return {
-        success: false,
-        error: 'Error koneksi ke server (CORS). Hubungi admin.',
-      };
-    }
-
     return {
       success: false,
-      error: 'Gagal mengirim data: ' + message,
+      error: 'Gagal mengirim data: ' + errorMessage(err),
     };
   }
 }
 
-export function getPendingSubmissions(): PendingSubmission[] {
-  if (typeof window === 'undefined') return [];
-  return JSON.parse(localStorage.getItem('pending_submissions') || '[]') as PendingSubmission[];
+interface NearbyStation {
+  id: string;
+  name: string;
+  distanceMeters: number;
 }
 
-// Google Apps Script template — paste into your Apps Script editor and redeploy after edits.
-/*
-function doPost(e) {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-  try {
-    const payload = JSON.parse(e.postData.contents);
-    if (payload.action !== 'submit') {
-      return ContentService.createTextOutput(JSON.stringify({ success: false, error: 'Invalid action' }))
-        .setMimeType(ContentService.MimeType.JSON);
+/**
+ * Find an existing station within `radiusMeters` of the given coords.
+ * Uses the stations_in_bbox RPC with a small bounding box (~100m wide), then
+ * checks exact distance client-side.
+ */
+export async function findNearbyStation(
+  lat: number,
+  lng: number,
+  radiusMeters = 50,
+): Promise<NearbyStation | null> {
+  // ~0.001° lat ≈ 111m. ~0.001° lng ≈ 111m × cos(lat). At Indonesia lats this is roughly 110m.
+  // 0.0009° gives us ~100m on a side, well over the 50m default radius.
+  const pad = 0.0009;
+  const { data, error } = await supabase.rpc('stations_in_bbox', {
+    min_lng: lng - pad,
+    min_lat: lat - pad,
+    max_lng: lng + pad,
+    max_lat: lat + pad,
+    result_limit: 10,
+  });
+
+  if (error || !data || data.length === 0) return null;
+
+  let closest: NearbyStation | null = null;
+  for (const row of data as Array<{ id: string; name: string; latitude: number; longitude: number }>) {
+    const meters = haversineMeters(lat, lng, row.latitude, row.longitude);
+    if (meters <= radiusMeters && (closest === null || meters < closest.distanceMeters)) {
+      closest = { id: row.id, name: row.name, distanceMeters: meters };
     }
-
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const formData = payload.data;
-    const id = 'SUB-' + Date.now();
-    const timestamp = new Date().toISOString();
-
-    sheet.appendRow([
-      id,
-      'pending',
-      timestamp,
-      formData.submittedBy.name,
-      formData.submittedBy.email,
-      formData.submittedBy.phone || '',
-      formData.name,
-      formData.operator,
-      formData.operatorOther || '',
-      formData.address,
-      formData.city,
-      formData.province,
-      formData.latitude,
-      formData.longitude,
-      formData.locationSource,
-      JSON.stringify(formData.connectors),
-      formData.amenities.join(', '),
-      formData.pricing != null ? formData.pricing : '',
-      formData.operatingHours,
-      formData.notes || '',
-    ]);
-
-    return ContentService.createTextOutput(JSON.stringify({ success: true, id }))
-      .setHeaders(headers)
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ success: false, error: String(err) }))
-      .setMimeType(ContentService.MimeType.JSON);
   }
+
+  return closest;
 }
-*/
+
+function haversineMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6_371_000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}

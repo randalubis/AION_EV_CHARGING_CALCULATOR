@@ -142,6 +142,13 @@ function LocateButton({ onLocate }: LocateButtonProps) {
   );
 }
 
+interface MapBounds {
+  minLng: number;
+  minLat: number;
+  maxLng: number;
+  maxLat: number;
+}
+
 interface MapViewProps {
   stations: ChargingStation[];
   selectedStationId: string | null;
@@ -150,6 +157,33 @@ interface MapViewProps {
   onViewportChange?: (viewport: MapViewport) => void;
   userLocation: [number, number] | null;
   onMapClick?: (lat: number, lng: number) => void;
+  onBoundsChange?: (bounds: MapBounds) => void;
+}
+
+function BoundsTracker({ onChange }: { onChange?: (bounds: MapBounds) => void }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!onChange) return;
+
+    const emit = () => {
+      const b = map.getBounds();
+      onChange({
+        minLng: b.getWest(),
+        minLat: b.getSouth(),
+        maxLng: b.getEast(),
+        maxLat: b.getNorth(),
+      });
+    };
+
+    emit();
+    map.on('moveend', emit);
+    return () => {
+      map.off('moveend', emit);
+    };
+  }, [map, onChange]);
+
+  return null;
 }
 
 function MapClickHandler({ onMapClick }: { onMapClick?: (lat: number, lng: number) => void }) {
@@ -178,6 +212,7 @@ export function MapView({
   viewport,
   userLocation,
   onMapClick,
+  onBoundsChange,
 }: MapViewProps) {
   const defaultCenter: [number, number] = [-2.5489, 118.0149];
   const defaultZoom = 5;
@@ -209,6 +244,7 @@ export function MapView({
 
       <ViewportController viewport={viewport} />
       <MapClickHandler onMapClick={onMapClick} />
+      <BoundsTracker onChange={onBoundsChange} />
 
       <MarkerClusterGroup
         chunkedLoading
