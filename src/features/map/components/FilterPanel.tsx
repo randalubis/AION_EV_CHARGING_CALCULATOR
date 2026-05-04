@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { MapFilters, ConnectorType } from '../types';
 import { getAllOperators } from '../data/sampleStations';
 
@@ -22,7 +23,7 @@ const POWER_RANGES = [
 ];
 
 export function FilterPanel({ filters, onUpdateFilters, onClearFilters }: FilterPanelProps) {
-  const operators = getAllOperators();
+  const operators = useMemo(() => getAllOperators(), []);
   const hasActiveFilters = 
     filters.connectorTypes.length > 0 ||
     filters.minPowerKw > 0 ||

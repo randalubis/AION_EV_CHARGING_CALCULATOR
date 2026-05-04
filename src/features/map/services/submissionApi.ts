@@ -1,10 +1,10 @@
 import type { StationSubmissionFormData } from '../types';
 
 // Google Sheets Configuration
-// You'll need to set up a Google Apps Script web app to handle submissions
+// Set up a Google Apps Script web app to handle submissions; see template at the bottom of this file.
 const GOOGLE_SHEETS_WEBAPP_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL || '';
 
-// For development/testing, you can use a mock submission
+// In dev (no VITE_GOOGLE_SHEETS_WEBAPP_URL), submissions are stored in localStorage instead.
 const USE_MOCK_SUBMISSION = !GOOGLE_SHEETS_WEBAPP_URL;
 
 export interface SubmissionResponse {
@@ -13,39 +13,33 @@ export interface SubmissionResponse {
   error?: string;
 }
 
-/**
- * Submit a new charging station to Google Sheets
- * 
- * To set up:
- * 1. Create a Google Sheet with columns matching the data structure
- * 2. Open Extensions > Apps Script
- * 3. Deploy as Web App (Execute as: Me, Access: Anyone)
- * 4. Set VITE_GOOGLE_SHEETS_WEBAPP_URL in your .env
- */
+interface PendingSubmission extends StationSubmissionFormData {
+  id: string;
+  status: 'pending';
+  submittedAt: string;
+}
+
+function errorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  return typeof err === 'string' ? err : 'Unknown error';
+}
+
 export async function submitStationToSheets(
   formData: StationSubmissionFormData
 ): Promise<SubmissionResponse> {
-  // Debug logging
-  console.log('Google Sheets URL:', GOOGLE_SHEETS_WEBAPP_URL ? 'Set' : 'Not set');
-  console.log('Using mock submission:', USE_MOCK_SUBMISSION);
-  
   if (USE_MOCK_SUBMISSION) {
-    // Mock submission for testing
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const mockId = `SUB-${Date.now()}`;
-    console.log('Mock submission:', { id: mockId, data: formData });
-    
-    // Store in localStorage for demo purposes
-    const existing = JSON.parse(localStorage.getItem('pending_submissions') || '[]');
+    const existing = JSON.parse(localStorage.getItem('pending_submissions') || '[]') as PendingSubmission[];
     existing.push({
       id: mockId,
       status: 'pending',
       submittedAt: new Date().toISOString(),
-      ...formData
+      ...formData,
     });
     localStorage.setItem('pending_submissions', JSON.stringify(existing));
-    
+
     return { success: true, id: mockId };
   }
 
@@ -53,220 +47,99 @@ export async function submitStationToSheets(
     const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
       method: 'POST',
       mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        action: 'submit',
-        data: formData
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'submit', data: formData }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP ${response.status}`);
     }
 
     const result = await response.json();
-    
+
     if (result.success === false) {
       throw new Error(result.error || 'Unknown error');
     }
-    
+
     return { success: true, id: result.id };
-  } catch (error: any) {
-    console.error('Submission error:', error);
-    
-    // More specific error messages
-    if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-      return { 
-        success: false, 
-        error: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.' 
+  } catch (err: unknown) {
+    const message = errorMessage(err);
+
+    if (message.includes('Failed to fetch') || message.includes('NetworkError')) {
+      return {
+        success: false,
+        error: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
       };
     }
-    
-    if (error.message?.includes('CORS')) {
-      return { 
-        success: false, 
-        error: 'Error koneksi ke server (CORS). Hubungi admin.' 
+
+    if (message.includes('CORS')) {
+      return {
+        success: false,
+        error: 'Error koneksi ke server (CORS). Hubungi admin.',
       };
     }
-    
-    return { 
-      success: false, 
-      error: 'Gagal mengirim data: ' + (error.message || 'Unknown error')
+
+    return {
+      success: false,
+      error: 'Gagal mengirim data: ' + message,
     };
   }
 }
 
-/**
- * Get user's pending submissions from localStorage
- */
-export function getPendingSubmissions(): any[] {
+export function getPendingSubmissions(): PendingSubmission[] {
   if (typeof window === 'undefined') return [];
-  return JSON.parse(localStorage.getItem('pending_submissions') || '[]');
+  return JSON.parse(localStorage.getItem('pending_submissions') || '[]') as PendingSubmission[];
 }
 
-/**
- * Get approved submissions from Google Sheets
- * This would be called on app load to merge with existing stations
- */
-export async function getApprovedSubmissions(): Promise<any[]> {
-  if (USE_MOCK_SUBMISSION) {
-    // Return mock approved submissions
-    return [];
-  }
-
-  try {
-    const response = await fetch(`${GOOGLE_SHEETS_WEBAPP_URL}?action=getApproved`);
-    if (!response.ok) throw new Error('Failed to fetch');
-    return await response.json();
-  } catch (error) {
-    console.error('Fetch error:', error);
-    return [];
-  }
-}
-
-// Google Apps Script Code (paste this in your Google Apps Script editor):
-// IMPORTANT: You must redeploy the web app after updating this code!
+// Google Apps Script template — paste into your Apps Script editor and redeploy after edits.
 /*
-// CORS headers for cross-origin requests
-function getCorsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
-  };
-}
-
-// Handle preflight OPTIONS request
-function doOptions(e) {
-  var headers = getCorsHeaders();
-  return ContentService.createTextOutput('')
-    .setHeaders(headers)
-    .setMimeType(ContentService.MimeType.TEXT);
-}
-
 function doPost(e) {
-  var headers = getCorsHeaders();
-  
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
   try {
-    const data = JSON.parse(e.postData.contents);
-    
-    if (data.action === 'submit') {
-      const result = handleSubmit(data.data);
-      return ContentService.createTextOutput(JSON.stringify(result))
-        .setHeaders(headers)
+    const payload = JSON.parse(e.postData.contents);
+    if (payload.action !== 'submit') {
+      return ContentService.createTextOutput(JSON.stringify({ success: false, error: 'Invalid action' }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: 'Invalid action'
-    })).setHeaders(headers).setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: error.toString()
-    })).setHeaders(headers).setMimeType(ContentService.MimeType.JSON);
-  }
-}
 
-function doGet(e) {
-  var headers = getCorsHeaders();
-  const action = e.parameter.action;
-  
-  if (action === 'getApproved') {
-    const result = handleGetApproved();
-    return ContentService.createTextOutput(JSON.stringify(result))
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const formData = payload.data;
+    const id = 'SUB-' + Date.now();
+    const timestamp = new Date().toISOString();
+
+    sheet.appendRow([
+      id,
+      'pending',
+      timestamp,
+      formData.submittedBy.name,
+      formData.submittedBy.email,
+      formData.submittedBy.phone || '',
+      formData.name,
+      formData.operator,
+      formData.operatorOther || '',
+      formData.address,
+      formData.city,
+      formData.province,
+      formData.latitude,
+      formData.longitude,
+      formData.locationSource,
+      JSON.stringify(formData.connectors),
+      formData.amenities.join(', '),
+      formData.pricing != null ? formData.pricing : '',
+      formData.operatingHours,
+      formData.notes || '',
+    ]);
+
+    return ContentService.createTextOutput(JSON.stringify({ success: true, id }))
       .setHeaders(headers)
       .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
   }
-  
-  return ContentService.createTextOutput(JSON.stringify([]))
-    .setHeaders(headers)
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function handleSubmit(formData) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  
-  const id = 'SUB-' + Date.now();
-  const timestamp = new Date().toISOString();
-  
-  const row = [
-    id,
-    'pending',
-    timestamp,
-    formData.submittedBy.name,
-    formData.submittedBy.email,
-    formData.submittedBy.phone || '',
-    formData.name,
-    formData.operator,
-    formData.operatorOther || '',
-    formData.address,
-    formData.city,
-    formData.province,
-    formData.latitude,
-    formData.longitude,
-    formData.locationSource,
-    JSON.stringify(formData.connectors),
-    formData.amenities.join(', '),
-    '', // Photo URLs - would need separate upload handling
-    formData.pricing || '',
-    formData.operatingHours,
-    formData.notes || '',
-    '', // reviewedAt
-    '', // reviewedBy
-    '', // rejectionReason
-    ''  // adminNotes
-  ];
-  
-  sheet.appendRow(row);
-  
-  // Send email notification to admin
-  sendAdminNotification(formData);
-  
-  return ContentService.createTextOutput(JSON.stringify({
-    success: true,
-    id: id
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function handleGetApproved() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const data = sheet.getDataRange().getValues();
-  const headers = data[0];
-  
-  const approvedRows = data.slice(1)
-    .filter(row => row[1] === 'approved')
-    .map(row => {
-      const obj = {};
-      headers.forEach((header, i) => {
-        obj[header] = row[i];
-      });
-      return obj;
-    });
-  
-  return ContentService.createTextOutput(JSON.stringify(approvedRows))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function sendAdminNotification(formData) {
-  const adminEmail = 'your-admin-email@example.com'; // Change this
-  const subject = 'New Charging Station Submission: ' + formData.name;
-  const body = `
-    A new charging station has been submitted:
-    
-    Name: ${formData.name}
-    Operator: ${formData.operator}
-    Location: ${formData.address}, ${formData.city}, ${formData.province}
-    Coordinates: ${formData.latitude}, ${formData.longitude}
-    
-    Submitter: ${formData.submittedBy.name} (${formData.submittedBy.email})
-    
-    Review at: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit
-  `;
-  
-  MailApp.sendEmail(adminEmail, subject, body);
 }
 */

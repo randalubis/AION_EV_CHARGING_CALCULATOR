@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { 
-  Search, MapPin, List, X, AlertTriangle, Info, 
-  Compass, Filter, ChevronDown
+import {
+  Search, MapPin, List, X, AlertTriangle, Info,
+  Compass, Filter, ChevronDown, Crosshair
 } from 'lucide-react';
 import { MapView, StationCard, StationDetail, FilterPanel, AddStationButton, AddStationModal } from '../features/map';
 import { useStations } from '../features/map/hooks/useStations';
@@ -12,21 +12,23 @@ export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showList, setShowList] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [viewport, setViewport] = useState<MapViewport>({
     center: [-2.5489, 118.0149],
     zoom: 5,
   });
-  
-  // Crowdsourcing modal state
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [clickLocation, setClickLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Add-station flow state
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [pickingLocation, setPickingLocation] = useState(false);
+  const [pickedLocation, setPickedLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const {
     stations,
     selectedStation,
     filters,
+    searchQuery,
+    setSearchQuery,
     stats,
     updateFilters,
     clearFilters,
@@ -57,13 +59,23 @@ export default function MapPage() {
     return () => ctx.revert();
   }, []);
 
-  const filteredStations = stations.filter(s => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return s.name.toLowerCase().includes(q) || 
-           s.city.toLowerCase().includes(q) || 
-           s.operator.toLowerCase().includes(q);
-  });
+  const handleMapClick = pickingLocation
+    ? (lat: number, lng: number) => {
+        setPickedLocation({ lat, lng });
+        setPickingLocation(false);
+        setAddModalOpen(true);
+      }
+    : undefined;
+
+  const handleRequestPickFromMap = () => {
+    setAddModalOpen(false);
+    setPickingLocation(true);
+  };
+
+  const handleCancelPick = () => {
+    setPickingLocation(false);
+    setAddModalOpen(true);
+  };
 
   return (
     <div ref={containerRef} className="min-h-screen bg-forest-dark pt-20">
@@ -87,7 +99,7 @@ export default function MapPage() {
             <div className="flex-1 min-w-0">
               <h2 className="text-white font-bold text-lg sm:text-xl mb-1">Temukan Stasiun Charging</h2>
               <p className="text-white/60 text-sm leading-relaxed">
-                Peta SPKLU (Stasiun Pengisian Kendaraan Listrik Umum) membantu Anda menemukan lokasi charger 
+                Peta SPKLU (Stasiun Pengisian Kendaraan Listrik Umum) membantu Anda menemukan lokasi charger
                 dengan informasi real-time: ketersediaan, tipe connector, kecepatan, dan harga.
               </p>
             </div>
@@ -173,7 +185,7 @@ export default function MapPage() {
           <div className="flex items-center gap-2">
             <List className="w-4 h-4" />
             <span className="text-sm">Daftar Stasiun</span>
-            <span className="bg-[#FFC300]/20 text-[#FFC300] text-xs px-2 py-0.5 rounded-full">{filteredStations.length}</span>
+            <span className="bg-[#FFC300]/20 text-[#FFC300] text-xs px-2 py-0.5 rounded-full">{stations.length}</span>
           </div>
           <ChevronDown className={`w-4 h-4 transition-transform ${showList ? 'rotate-180' : ''}`} />
         </button>
@@ -182,7 +194,7 @@ export default function MapPage() {
           <div className="flex flex-col md:flex-row h-[500px] md:h-[600px]">
             {/* Sidebar */}
             <aside className={`
-              ${showList ? 'block' : 'hidden'} 
+              ${showList ? 'block' : 'hidden'}
               md:block w-full md:w-72 lg:w-80 bg-forest-dark border-b md:border-b-0 md:border-r border-white/10
               flex flex-col flex-shrink-0
             `}>
@@ -220,7 +232,7 @@ export default function MapPage() {
                   </div>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
                 </button>
-                
+
                 {showFilters && (
                   <div className="px-3 pb-3">
                     <FilterPanel
@@ -234,13 +246,13 @@ export default function MapPage() {
 
               {/* Station List - with proper scroll */}
               <div className="flex-1 overflow-y-auto p-3 space-y-2" style={{ maxHeight: 'calc(500px - 120px)', WebkitOverflowScrolling: 'touch' }}>
-                {filteredStations.length === 0 ? (
+                {stations.length === 0 ? (
                   <div className="text-center py-8">
                     <MapPin className="w-10 h-10 text-white/20 mx-auto mb-2" />
                     <p className="text-white/50 text-sm">Tidak ada stasiun</p>
                   </div>
                 ) : (
-                  filteredStations.map(station => (
+                  stations.map(station => (
                     <StationCard
                       key={station.id}
                       station={station}
@@ -263,20 +275,35 @@ export default function MapPage() {
             {/* Map */}
             <div className="flex-1 relative min-h-0">
               <MapView
-                stations={filteredStations}
+                stations={stations}
                 selectedStationId={selectedStation?.id || null}
                 onStationSelect={selectStation}
                 viewport={viewport}
                 userLocation={userLocation}
-                onMapClick={(lat, lng) => {
-                  setClickLocation({ lat, lng });
-                  setShowAddModal(true);
-                }}
+                onMapClick={handleMapClick}
               />
 
-              {/* Station Detail - Right side panel */}
+              {/* Pick-from-map banner */}
+              {pickingLocation && (
+                <div className="absolute top-3 left-3 right-3 z-[1000] bg-[#FFC300] text-forest-dark rounded-lg px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Crosshair className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm font-medium truncate">
+                      Ketuk lokasi di peta untuk memilih
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleCancelPick}
+                    className="flex-shrink-0 text-sm font-semibold underline"
+                  >
+                    Batal
+                  </button>
+                </div>
+              )}
+
+              {/* Station Detail — desktop side panel */}
               {selectedStation && (
-                <div className="absolute top-3 right-3 w-64 sm:w-72 z-[1000] max-h-[calc(100%-24px)] overflow-y-auto">
+                <div className="hidden md:block absolute top-3 right-3 w-72 z-[1000] max-h-[calc(100%-24px)] overflow-y-auto">
                   <StationDetail
                     station={selectedStation}
                     onClose={() => selectStation(null)}
@@ -289,17 +316,32 @@ export default function MapPage() {
         </div>
       </div>
 
+      {/* Station Detail — mobile bottom sheet */}
+      {selectedStation && (
+        <div className="md:hidden fixed inset-x-0 bottom-0 z-[2000] bg-forest-dark border-t border-white/10 rounded-t-2xl shadow-2xl max-h-[70vh] overflow-y-auto pb-safe animate-slide-up">
+          <div className="sticky top-0 flex justify-center pt-2 pb-1 bg-forest-dark">
+            <span className="w-10 h-1 rounded-full bg-white/20" />
+          </div>
+          <StationDetail
+            station={selectedStation}
+            onClose={() => selectStation(null)}
+            distance={selectedStation.distance}
+          />
+        </div>
+      )}
+
       {/* Add Station Button */}
-      <AddStationButton onClick={() => setShowAddModal(true)} />
+      {!pickingLocation && <AddStationButton onClick={() => setAddModalOpen(true)} />}
 
       {/* Add Station Modal */}
       <AddStationModal
-        isOpen={showAddModal}
+        isOpen={addModalOpen}
         onClose={() => {
-          setShowAddModal(false);
-          setClickLocation(null);
+          setAddModalOpen(false);
+          setPickedLocation(null);
         }}
-        initialLocation={clickLocation}
+        onRequestPickFromMap={handleRequestPickFromMap}
+        initialLocation={pickedLocation}
       />
     </div>
   );
