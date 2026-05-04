@@ -1,48 +1,107 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Zap, Battery, MapPin, Clock, Wallet, Route, Share2, RotateCcw, ChevronDown, Info, AlertTriangle } from 'lucide-react';
+import { Zap, Battery, Route, ChevronDown, Info, AlertTriangle, RotateCcw } from 'lucide-react';
 import { BRANDS, CARS } from '../features/calculator/data/carData';
 import { CHARGERS, EFF } from '../features/calculator/data/chargers';
 import { TARIFFS } from '../features/calculator/data/tariffs';
-import { TIPS } from '../features/calculator/data/tips';
+import {
+  batteryColor,
+  calcChargeTimeHours,
+  findBestChargerIdx,
+  fmtRp,
+  fmtTime,
+  TAPER_START_PCT,
+} from '../features/calculator/utils/charging';
+import { ResultsPanel } from '../features/calculator/components/ResultsPanel';
+import { TipsAccordion } from '../features/calculator/components/TipsAccordion';
+import { DisclaimerCard } from '../features/calculator/components/DisclaimerCard';
+import './EVCalculator.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── HELPERS ──────────────────────────────────────────────────────
-const fmtTime = (h: number) => {
-  if (h < 0.017) return "<1 menit";
-  const hh = Math.floor(h);
-  const mm = Math.round((h - hh) * 60);
-  if (hh === 0) return `${mm}m`;
-  if (mm === 0) return `${hh}j`;
-  return `${hh}j ${mm}m`;
-};
+const STORAGE_KEY = 'evhub:calc:v1';
 
-const fmtRp = (n: number) => `Rp ${Math.round(n).toLocaleString("id-ID")}`;
+interface PersistedState {
+  carId?: string;
+  inputMode?: 'pct' | 'range';
+  tariff?: number;
+  chargerIdx?: number;
+}
 
-const barClr = (p: number) => {
-  if (p <= 15) return "#C0392B";
-  if (p <= 30) return "#E67E22";
-  if (p <= 50) return "#F1C40F";
-  return "#27AE60";
-};
+function loadPersisted(): PersistedState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as PersistedState) : {};
+  } catch {
+    return {};
+  }
+}
+
+function savePersisted(state: PersistedState) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    /* private browsing, full quota — silently ignore */
+  }
+}
+
+function readNumberParam(params: URLSearchParams, key: string): number | null {
+  const v = params.get(key);
+  if (v === null) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
 
 export function EVCalculator() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
   const calcRef = useRef<HTMLDivElement>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Resolve initial state from (priority order): URL params → localStorage → defaults
+  const initialState = useMemo(() => {
+    const persisted = loadPersisted();
+    const urlCarId = searchParams.get('car');
+    const urlMode = searchParams.get('mode') as 'pct' | 'range' | null;
+
+    const carId = (urlCarId && CARS.some((c) => c.id === urlCarId) ? urlCarId : null)
+      ?? (persisted.carId && CARS.some((c) => c.id === persisted.carId) ? persisted.carId : null)
+      ?? 'bmw_ix1';
+    const carMaybe = CARS.find((c) => c.id === carId);
+    const brandId = carMaybe?.brand ?? 'bmw';
+
+    const inputMode: 'pct' | 'range' = (urlMode === 'pct' || urlMode === 'range')
+      ? urlMode
+      : (persisted.inputMode === 'pct' || persisted.inputMode === 'range') ? persisted.inputMode : 'pct';
+
+    const tariff = readNumberParam(searchParams, 'tariff') ?? persisted.tariff ?? 1444;
+    const chargerIdx = (() => {
+      const fromUrl = readNumberParam(searchParams, 'charger');
+      if (fromUrl !== null && fromUrl >= 0 && fromUrl < CHARGERS.length) return fromUrl;
+      const fromStore = persisted.chargerIdx;
+      if (typeof fromStore === 'number' && fromStore >= 0 && fromStore < CHARGERS.length) return fromStore;
+      return 0;
+    })();
+
+    const cur = readNumberParam(searchParams, 'cur') ?? 0;
+    const tgtFromUrl = readNumberParam(searchParams, 'tgt');
+    const tgt = tgtFromUrl !== null
+      ? tgtFromUrl
+      : (inputMode === 'range' ? Math.round((carMaybe?.maxRange ?? 0) * 0.8) : 80);
+
+    return { brandId, carId, inputMode, tariff, chargerIdx, cur, tgt };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // State
-  const [brandId, setBrandId] = useState("bmw");
-  const [carId, setCarId] = useState("bmw_ix1");
-  const [inputMode, setInputMode] = useState<"pct" | "range">("pct");
-  const [curVal, setCurVal] = useState(0);
-  const [tgtVal, setTgtVal] = useState(80);
-  const [chargerIdx, setChargerIdx] = useState(0);
-  const [tariff, setTariff] = useState(1444);
-  const [tipsOpen, setTipsOpen] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+  const [brandId, setBrandId] = useState(initialState.brandId);
+  const [carId, setCarId] = useState(initialState.carId);
+  const [inputMode, setInputMode] = useState<'pct' | 'range'>(initialState.inputMode);
+  const [curVal, setCurVal] = useState(initialState.cur);
+  const [tgtVal, setTgtVal] = useState(initialState.tgt);
+  const [chargerIdx, setChargerIdx] = useState(initialState.chargerIdx);
+  const [tariff, setTariff] = useState(initialState.tariff);
 
   // Derived values
   const brand = BRANDS.find(b => b.id === brandId);
@@ -87,37 +146,46 @@ export function EVCalculator() {
     : Math.min(charger.kw, car?.maxDcKw || 0);
   
   const gridKwh = needBat / eff;
-  const timeH = effPwr > 0 ? gridKwh / effPwr : 0;
+  const timeH = car
+    ? calcChargeTimeHours(curPct, tgtPct, car.battery, eff, effPwr, !isAC)
+    : 0;
   const cost = gridKwh * tariff;
   const rangeAdded = Math.max(0, tgtRange - curRange);
+  const hasTaperImpact = !isAC && tgtPct > TAPER_START_PCT;
 
   const unit = inputMode === "range" ? "km" : "%";
   const curMax = inputMode === "range" ? (car?.maxRange || 0) : 100;
   const tgtMax = inputMode === "range" ? (car?.maxRange || 0) : 100;
   const tgtMin = inputMode === "range" ? Math.round((car?.maxRange || 0) * 0.1) : 10;
 
+  // Persist user preferences (not session values like cur/tgt)
+  useEffect(() => {
+    savePersisted({ carId, inputMode, tariff, chargerIdx });
+  }, [carId, inputMode, tariff, chargerIdx]);
+
+  // Reflect full state in URL params so links are shareable + back/forward stays sane.
+  useEffect(() => {
+    const next = new URLSearchParams();
+    next.set('car', carId);
+    next.set('mode', inputMode);
+    if (curVal > 0) next.set('cur', String(curVal));
+    next.set('tgt', String(tgtVal));
+    next.set('charger', String(chargerIdx));
+    next.set('tariff', String(tariff));
+    setSearchParams(next, { replace: true });
+  }, [carId, inputMode, curVal, tgtVal, chargerIdx, tariff, setSearchParams]);
+
   // Animation
   useEffect(() => {
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
-        trigger: headingRef.current,
-        start: 'top 85%',
-        onEnter: () => {
-          gsap.fromTo(headingRef.current,
-            { y: 60, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }
-          );
-        },
-        once: true,
-      });
-
-      ScrollTrigger.create({
         trigger: calcRef.current,
         start: 'top 78%',
         onEnter: () => {
-          gsap.fromTo(calcRef.current,
-            { y: 60, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }
+          gsap.fromTo(
+            calcRef.current,
+            { y: 40, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' },
           );
         },
         once: true,
@@ -135,7 +203,6 @@ export function EVCalculator() {
       const newCar = brandCars[0];
       setCarId(newCar.id);
       setCurVal(0);
-      setShowResult(false);
       setTgtVal(inputMode === "range" ? Math.round(newCar.maxRange * 0.8) : 80);
       if (newCar.maxDcKw === 0 && CHARGERS[chargerIdx].type === "dc") {
         setChargerIdx(0);
@@ -148,7 +215,6 @@ export function EVCalculator() {
     if (newCar) {
       setCarId(newCarId);
       setCurVal(0);
-      setShowResult(false);
       setTgtVal(inputMode === "range" ? Math.round(newCar.maxRange * 0.8) : 80);
       if (newCar.maxDcKw === 0 && CHARGERS[chargerIdx].type === "dc") {
         setChargerIdx(0);
@@ -159,21 +225,13 @@ export function EVCalculator() {
   const handleModeChange = (mode: "pct" | "range") => {
     setInputMode(mode);
     setCurVal(0);
-    setShowResult(false);
     if (car) {
       setTgtVal(mode === "range" ? Math.round(car.maxRange * 0.8) : 80);
     }
   };
 
-  const handleCalculate = () => {
-    if (curVal > 0) {
-      setShowResult(true);
-    }
-  };
-
   const handleReset = () => {
     setCurVal(0);
-    setShowResult(false);
     if (car) {
       setTgtVal(inputMode === "range" ? Math.round(car.maxRange * 0.8) : 80);
     }
@@ -181,69 +239,50 @@ export function EVCalculator() {
 
   const handleShare = async () => {
     if (!car || !brand) return;
-    const shareText = `⚡ EV Charging Estimate — evhub.id
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : 'https://evhub.id/kalkulator';
+    const shareText = `⚡ Estimasi Pengisian EV — evhub.id
 🚗 ${brand.name} ${car.series} ${car.variant}
-🔋 ${curPct.toFixed(0)}% → ${tgtPct.toFixed(0)}% (${needBat.toFixed(1)} kWh needed)
-⏱ ${fmtTime(timeH)} via ${charger.label}
-📏 +${rangeAdded.toFixed(0)} km range added
-💰 ~${fmtRp(cost)}`;
+🔋 ${curPct.toFixed(0)}% → ${tgtPct.toFixed(0)}% (${needBat.toFixed(1)} kWh)
+⏱ ${fmtTime(timeH)} · ${charger.label}
+📏 +${rangeAdded.toFixed(0)} km
+💰 ~${fmtRp(cost)}
+
+Buka: ${shareUrl}`;
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'EV Charging Estimate', text: shareText, url: 'https://evhub.id' });
-      } catch {}
-    } else {
-      try {
-        await navigator.clipboard.writeText(shareText);
-        alert('Hasil disalin ke clipboard!');
-      } catch {}
+        await navigator.share({ title: 'Estimasi Pengisian EV', text: shareText, url: shareUrl });
+        return;
+      } catch {
+        /* fall through to clipboard */
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareText);
+      alert('Hasil & link disalin ke clipboard!');
+    } catch {
+      /* clipboard blocked — last-resort, do nothing rather than break */
     }
   };
 
-  const brandCars = CARS.filter(c => c.brand === brandId);
+  const brandCars = useMemo(() => CARS.filter((c) => c.brand === brandId), [brandId]);
   const isOverTarget = curVal > 0 && tgtPct <= curPct + 0.5;
   const isCurEmpty = curVal === 0;
 
-  // Find best charger for the car
-  const bestACIdx = CHARGERS.reduce((best, ci, i) => {
-    if (ci.type !== 'ac') return best;
-    const pw = Math.min(ci.kw, car?.maxAcKw || 0);
-    if (best === -1) return i;
-    const bestPw = Math.min(CHARGERS[best].kw, car?.maxAcKw || 0);
-    return pw > bestPw ? i : best;
-  }, -1);
-
-  const bestDCIdx = car && car.maxDcKw > 0 
-    ? CHARGERS.reduce((best, ci, i) => {
-        if (ci.type !== 'dc') return best;
-        const pw = Math.min(ci.kw, car.maxDcKw);
-        if (best === -1) return i;
-        const bestPw = Math.min(CHARGERS[best].kw, car.maxDcKw);
-        return pw > bestPw ? i : best;
-      }, -1)
-    : -1;
+  // "Best charger" = smallest one whose kW saturates the car's accept rate.
+  // Bigger chargers don't help; smaller ones leave performance on the table.
+  const bestACIdx = useMemo(
+    () => (car ? findBestChargerIdx(car.maxAcKw, 'ac') : -1),
+    [car],
+  );
+  const bestDCIdx = useMemo(
+    () => (car && car.maxDcKw > 0 ? findBestChargerIdx(car.maxDcKw, 'dc') : -1),
+    [car],
+  );
 
   return (
-    <section ref={sectionRef} id="kalkulator" className="relative w-full py-24 md:py-32 bg-forest-dark">
+    <section ref={sectionRef} id="kalkulator" className="relative w-full pb-24 md:pb-32 bg-forest-dark">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Header */}
-        <div ref={headingRef} className="opacity-0 mb-12">
-          <p className="text-white/50 text-sm font-body uppercase tracking-widest mb-4">
-            Kalkulator Charging
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-sans font-bold text-white tracking-tight leading-tight">
-            Hitung Kebutuhan
-            <br />
-            <span className="font-serif italic font-normal text-white/80">
-              Pengisian Daya
-            </span>
-          </h2>
-          <p className="mt-6 text-white/60 font-body text-base md:text-lg max-w-xl leading-relaxed">
-            Pilih mobil EV kamu, atur level baterai saat ini dan target pengisian. 
-            Dapatkan estimasi waktu, biaya, dan jarak tempuh dalam hitungan detik.
-          </p>
-        </div>
-
         {/* Calculator */}
         <div ref={calcRef} className="opacity-0">
           <div className="grid lg:grid-cols-2 gap-8">
@@ -359,15 +398,15 @@ export function EVCalculator() {
                               key={i}
                               className="flex-1 h-6 rounded"
                               style={{
-                                background: isFilled ? barClr(curPct) : 'rgba(255,255,255,0.07)',
-                                boxShadow: isFilled ? `0 0 8px ${barClr(curPct)}55` : 'none'
+                                background: isFilled ? batteryColor(curPct) : 'rgba(255,255,255,0.07)',
+                                boxShadow: isFilled ? `0 0 8px ${batteryColor(curPct)}55` : 'none'
                               }}
                             />
                           );
                         })}
                       </div>
                       <div className="flex justify-between text-xs">
-                        <span style={{ color: curVal > 0 ? barClr(curPct) : 'rgba(255,255,255,0.5)' }}>
+                        <span style={{ color: curVal > 0 ? batteryColor(curPct) : 'rgba(255,255,255,0.5)' }}>
                           {curVal > 0 ? `${curRange.toFixed(0)} km` : 'Belum diatur'}
                         </span>
                         <span className="text-[#FFC300]">▶ {tgtPct.toFixed(0)}% · {tgtRange.toFixed(0)} km</span>
@@ -458,15 +497,25 @@ export function EVCalculator() {
                   </div>
                 </div>
 
-                {/* Manual Input */}
+                {/* Manual Input — clamped to 0..max so user can't type 200% or -10 */}
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-white/50 text-sm whitespace-nowrap">Atur manual:</span>
                   <div className="relative flex-1">
                     <input
                       type="number"
+                      min={0}
+                      max={curMax}
                       value={curVal || ''}
-                      onChange={(e) => setCurVal(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const n = parseInt(e.target.value);
+                        if (!Number.isFinite(n)) {
+                          setCurVal(0);
+                          return;
+                        }
+                        setCurVal(Math.max(0, Math.min(curMax, n)));
+                      }}
                       placeholder="0"
+                      aria-label={`Level baterai saat ini dalam ${unit}`}
                       className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-2 text-white font-body focus:border-[#FFC300] focus:outline-none"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-sm">{unit}</span>
@@ -623,35 +672,46 @@ export function EVCalculator() {
                   Biaya Listrik & Charger
                 </label>
                 
-                {/* Tariff */}
+                {/* Tariff — presets primary, manual entry secondary */}
                 <div className="mb-4">
-                  <div className="relative mb-3">
-                    <input
-                      type="number"
-                      value={tariff}
-                      onChange={(e) => setTariff(parseInt(e.target.value) || 0)}
-                      className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-body focus:border-[#FFC300] focus:outline-none"
-                    />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-sm">Rp/kWh</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="text-white/50 text-xs uppercase tracking-wider mb-2">Tarif Listrik</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
                     {TARIFFS.map(t => (
                       <button
                         key={t.label}
                         onClick={() => setTariff(t.val)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                        title={t.desc}
+                        className={`py-2 px-2 rounded-lg border text-xs font-semibold transition-all ${
                           tariff === t.val
                             ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
                             : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
                         }`}
-                        title={t.desc}
                       >
-                        {t.label}: {t.val.toLocaleString('id-ID')}
+                        <div>{t.label}</div>
+                        <div className={`text-[10px] mt-0.5 ${tariff === t.val ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                          Rp{t.val.toLocaleString('id-ID')}
+                        </div>
                       </button>
                     ))}
                   </div>
+                  <details className="group">
+                    <summary className="text-white/50 text-xs cursor-pointer hover:text-white/80 list-none flex items-center gap-1.5">
+                      <ChevronDown className="w-3 h-3 transition-transform group-open:rotate-180" />
+                      Atur tarif sendiri
+                    </summary>
+                    <div className="relative mt-2">
+                      <input
+                        type="number"
+                        value={tariff}
+                        onChange={(e) => setTariff(parseInt(e.target.value) || 0)}
+                        aria-label="Tarif kustom per kWh"
+                        className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-2 text-white text-sm focus:border-[#FFC300] focus:outline-none"
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-xs">Rp/kWh</span>
+                    </div>
+                  </details>
                   <p className="text-white/40 text-xs mt-3">
-                    PLN R1–R3 adalah tarif rumah tangga. 'Umum' adalah perkiraan tarif SPKLU publik.
+                    PLN R1–R3 adalah tarif rumah tangga. &quot;Umum&quot; adalah perkiraan tarif SPKLU publik.
                   </p>
                 </div>
 
@@ -671,7 +731,6 @@ export function EVCalculator() {
                       <button
                         key={c.label}
                         onClick={() => setChargerIdx(actualIdx)}
-                        disabled={!car}
                         className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
                           chargerIdx === actualIdx
                             ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
@@ -762,230 +821,56 @@ export function EVCalculator() {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-4 mt-8">
-            <button
-              onClick={handleCalculate}
-              disabled={curVal === 0}
-              className="flex-1 bg-[#FFC300] hover:bg-[#FFD60A] disabled:opacity-50 disabled:cursor-not-allowed text-forest-dark font-sans font-bold py-4 px-8 rounded-xl transition-all flex items-center justify-center gap-2"
-            >
-              <Zap className="w-5 h-5" />
-              Hitung Pengisian Daya
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-6 py-4 border border-white/20 hover:border-[#FFC300] text-white/70 hover:text-[#FFC300] rounded-xl transition-all flex items-center gap-2"
-            >
-              <RotateCcw className="w-5 h-5" />
-              Reset
-            </button>
-          </div>
-
-          {/* Validation Messages */}
-          {isOverTarget && (
-            <div className="mt-4 bg-[#FFC300]/10 border border-[#FFC300]/40 rounded-lg p-4 flex items-center gap-3 text-[#FFC300]">
-              <AlertTriangle className="w-5 h-5" />
-              Level saat ini lebih tinggi dari target — tidak perlu pengisian.
-            </div>
-          )}
-
-          {isCurEmpty && !showResult && (
-            <div className="mt-4 bg-white/5 border border-white/20 rounded-lg p-4 flex items-center gap-3 text-white/50">
-              <Info className="w-5 h-5" />
-              Atur level baterai saat ini untuk melihat hasil.
-            </div>
-          )}
-
-          {/* Results */}
-          {showResult && curVal > 0 && !isOverTarget && (
-            <div className="mt-8 bg-gradient-to-br from-forest-mid to-forest-dark rounded-2xl p-8 border border-white/10">
-              <div className="flex items-center gap-2 text-[#FFC300] text-sm uppercase tracking-wider mb-6">
-                <Zap className="w-4 h-4" />
-                Perlu Pengisian Daya
-              </div>
-
-              {/* Main kWh */}
-              <div className="text-center mb-8">
-                <div className="text-7xl font-sans font-bold text-[#FFD60A]">{gridKwh.toFixed(1)}</div>
-                <div className="text-white/50 text-lg">kWh dari PLN</div>
-              </div>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-forest-dark/50 rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider mb-2">
-                    <Clock className="w-4 h-4" />
-                    Estimasi Waktu
-                  </div>
-                  <div className="text-2xl font-sans font-bold text-white">{fmtTime(timeH)}</div>
-                </div>
-                <div className="bg-forest-dark/50 rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider mb-2">
-                    <Battery className="w-4 h-4" />
-                    Ke Baterai
-                  </div>
-                  <div className="text-2xl font-sans font-bold text-white">{needBat.toFixed(1)} <span className="text-sm text-white/50">kWh</span></div>
-                </div>
-                <div className="bg-forest-dark/50 rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider mb-2">
-                    <Route className="w-4 h-4" />
-                    Jarak Bertambah
-                  </div>
-                  <div className="text-2xl font-sans font-bold text-[#27AE60]">+{rangeAdded.toFixed(0)} <span className="text-sm text-white/50">km</span></div>
-                </div>
-                <div className="bg-forest-dark/50 rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider mb-2">
-                    <MapPin className="w-4 h-4" />
-                    Jarak Akhir
-                  </div>
-                  <div className="text-2xl font-sans font-bold text-white">{tgtRange.toFixed(0)} <span className="text-sm text-white/50">km</span></div>
-                </div>
-              </div>
-
-              {/* Charger Info */}
-              <div className="bg-[#FFC300]/10 rounded-xl p-4 border border-[#FFC300]/30 mb-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-[#FFC300]" />
-                    </div>
-                    <div>
-                      <div className="text-white/50 text-xs uppercase tracking-wider">Jenis Charger</div>
-                      <div className="text-white font-semibold">{effPwr} kW</div>
-                    </div>
-                  </div>
-                  <span className="bg-[#FFC300]/20 text-[#FFC300] text-xs font-semibold px-3 py-1 rounded-full">
-                    {isAC ? 'AC' : 'DC Fast'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Cost */}
-              {tariff > 0 && (
-                <div className="bg-[#FFC300]/10 rounded-xl p-6 border border-[#FFC300]/30 mb-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-[#FFC300] text-sm uppercase tracking-wider">
-                      <Wallet className="w-4 h-4" />
-                      Estimasi Biaya
-                    </div>
-                    <div className="text-3xl font-sans font-bold text-[#FFD60A]">{fmtRp(cost)}</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Efficiency Note */}
-              <div className="text-white/50 text-sm mb-6">
-                Cas {effPwr} kW · ~{effPct}% efisiensi ({lossPct}% rugi PLN)
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-4">
-                <a
-                  href="https://maps.google.com/?q=SPKLU+stasiun+pengisian+daya+EV+terdekat"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-forest-dark hover:bg-forest-mid border border-white/20 hover:border-[#FFC300] text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
-                >
-                  <MapPin className="w-5 h-5" />
-                  Cari SPKLU Terdekat
-                </a>
-                <button
-                  onClick={handleShare}
-                  className="px-6 py-3 border border-white/20 hover:border-[#FFC300] text-white/70 hover:text-[#FFC300] rounded-xl transition-all flex items-center gap-2"
-                >
-                  <Share2 className="w-5 h-5" />
-                  Bagikan
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Already at Target */}
-          {showResult && curVal > 0 && isOverTarget && (
+          {/* Already at target */}
+          {!isCurEmpty && isOverTarget && (
             <div className="mt-8 bg-[#27AE60]/10 rounded-2xl p-8 border border-[#27AE60]/30 text-center">
               <div className="text-5xl mb-4">✅</div>
               <div className="text-2xl font-sans font-bold text-[#27AE60] mb-2">Sudah mencapai target!</div>
               <div className="text-white/60">
                 Baterai ({curPct.toFixed(0)}{unit}) sudah di atau di atas target ({tgtPct.toFixed(0)}{unit}).
               </div>
+              <button
+                onClick={handleReset}
+                className="mt-6 px-5 py-2 border border-white/20 hover:border-[#27AE60] text-white/70 hover:text-[#27AE60] text-sm rounded-lg transition-all inline-flex items-center gap-2"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Atur ulang
+              </button>
             </div>
           )}
 
-          {/* Tips Accordion */}
-          <div className="mt-8 bg-forest-mid/50 rounded-xl border border-white/10 overflow-hidden">
-            <button
-              onClick={() => setTipsOpen(!tipsOpen)}
-              className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-forest-dark rounded-lg flex items-center justify-center">
-                  <Battery className="w-5 h-5 text-[#FFC300]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-white font-semibold">Panduan Kesehatan Baterai</div>
-                  <div className="text-white/50 text-sm">6 tips memperpanjang umur baterai</div>
-                </div>
-              </div>
-              <ChevronDown className={`w-6 h-6 text-[#FFC300] transition-transform ${tipsOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {tipsOpen && (
-              <div className="px-6 pb-6 space-y-4">
-                {TIPS.map((tip, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-8 h-8 bg-forest-dark rounded-full flex items-center justify-center flex-shrink-0 text-lg">
-                      {tip.icon}
-                    </div>
-                    <div>
-                      <div className="text-white font-semibold text-sm mb-1">{tip.title}</div>
-                      <div className="text-white/50 text-sm">{tip.body}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Results — live updates as inputs change */}
+          {!isOverTarget && (
+            <ResultsPanel
+              result={{
+                isCurEmpty,
+                cost,
+                timeH,
+                needBat,
+                rangeAdded,
+                tgtRange,
+                gridKwh,
+                chargerLabel: charger.label,
+                effPwr,
+                effPct,
+                isAC,
+                hasTaperImpact,
+                tariff,
+              }}
+              onReset={handleReset}
+              onShare={handleShare}
+            />
+          )}
 
-          {/* Disclaimer */}
-          <div className="mt-6 bg-forest-mid/30 rounded-xl p-6 border-l-4 border-[#FFC300]">
-            <div className="text-[#FFC300] text-sm font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" />
-              Catatan Penting
-            </div>
-            <div className="text-white/60 text-sm space-y-2">
-              <p>Ini estimasi. Hasil aktual dapat bervariasi karena:</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>Suhu baterai & kondisi sekitar</li>
-                <li>Usia baterai & penurunan kapasitas</li>
-                <li>Kualitas dan panjang kabel cas</li>
-                <li>Efisiensi charger aktual per merek/model</li>
-                <li>Cas di atas 80% kurang efisien (cell balancing)</li>
-                <li>Cas AC ~10% rugi · Cas DC ~7% rugi (tipikal)</li>
-              </ul>
-              <p className="mt-3">Gunakan sebagai panduan. Pantau sesi cas aktual untuk data akurat.</p>
-            </div>
-          </div>
+          <TipsAccordion />
+          <DisclaimerCard />
         </div>
       </div>
 
       {/* Decorative element */}
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255,255,255,0.05);
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255,195,0,0.3);
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255,195,0,0.5);
-        }
-      `}</style>
     </section>
   );
 }
+

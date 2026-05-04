@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import * as Popover from '@radix-ui/react-popover';
-import { X, MapPin, Clock, Navigation, Zap, DollarSign, RefreshCw, ExternalLink } from 'lucide-react';
+import { X, MapPin, Clock, Navigation, Zap, DollarSign, RefreshCw } from 'lucide-react';
+import { MapsPicker, navigateTargets } from './MapsPicker';
 import type { ChargingStation } from '../types';
 
 interface StationDetailProps {
@@ -129,54 +128,16 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
 }
 
 function NavigatePicker({ station }: { station: ChargingStation }) {
-  const [open, setOpen] = useState(false);
-  const { latitude: lat, longitude: lng, name } = station;
-  const encodedName = encodeURIComponent(name);
-  const targets: { label: string; href: string }[] = [
-    {
-      label: 'Google Maps',
-      href: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${encodedName}`,
-    },
-    {
-      label: 'Waze',
-      href: `https://www.waze.com/ul?ll=${lat},${lng}&navigate=yes`,
-    },
-    {
-      label: 'Apple Maps',
-      href: `https://maps.apple.com/?daddr=${lat},${lng}&q=${encodedName}`,
-    },
-  ];
-
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger asChild>
+    <MapsPicker
+      targets={navigateTargets(station.latitude, station.longitude, station.name)}
+      trigger={
         <button className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors">
           <Navigation className="w-4 h-4" />
           Navigasi
         </button>
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content
-          align="end"
-          sideOffset={6}
-          className="z-[10000] bg-forest-dark border border-white/10 rounded-lg shadow-2xl p-1 min-w-[180px]"
-        >
-          {targets.map((t) => (
-            <a
-              key={t.label}
-              href={t.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-md transition-colors"
-            >
-              <span>{t.label}</span>
-              <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-            </a>
-          ))}
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+      }
+    />
   );
 }
 
