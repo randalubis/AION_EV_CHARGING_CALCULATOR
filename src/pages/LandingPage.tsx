@@ -74,12 +74,12 @@ const capabilities = [
   {
     id: 'komunitas',
     title: 'Komunitas EV',
-    description: 'Bergabung dengan komunitas pemilik EV Indonesia. Bagikan pengalaman, review SPKLU, dan dapatkan tips dari sesama pengguna.',
+    description: 'Direktori grup pemilik EV di Indonesia — diorganisir per merek, wilayah, dan minat. Klik untuk gabung Facebook group atau formulir pendaftaran.',
     icon: Users,
-    status: 'coming-soon',
-    statusText: 'Segera Hadir',
+    status: 'live',
+    statusText: 'Tersedia Sekarang',
     href: '/komunitas',
-    features: ['Review SPKLU', 'Tips & Trik', 'Forum Diskusi'],
+    features: ['Per Merek', 'Per Wilayah', 'Per Minat'],
     image: '/grid-4.jpg',
   },
 ];
