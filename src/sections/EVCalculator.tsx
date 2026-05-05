@@ -18,6 +18,7 @@ import {
 import { ResultsPanel } from '../features/calculator/components/ResultsPanel';
 import { TipsAccordion } from '../features/calculator/components/TipsAccordion';
 import { DisclaimerCard } from '../features/calculator/components/DisclaimerCard';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import './EVCalculator.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -59,6 +60,7 @@ export function EVCalculator() {
   const sectionRef = useRef<HTMLElement>(null);
   const calcRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   // Resolve initial state from (priority order): URL params → localStorage → defaults
   const initialState = useMemo(() => {
@@ -178,8 +180,9 @@ export function EVCalculator() {
     setSearchParams(next, { replace: true });
   }, [carId, inputMode, curVal, tgtVal, chargerIdx, tariff, setSearchParams]);
 
-  // Animation
+  // Animation — skip when the user prefers reduced motion.
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: calcRef.current,
@@ -196,7 +199,7 @@ export function EVCalculator() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   // Handlers
   const handleBrandChange = (newBrandId: string) => {
@@ -286,8 +289,8 @@ Buka: ${shareUrl}`;
   return (
     <section ref={sectionRef} id="kalkulator" className="relative w-full pb-24 md:pb-32 bg-forest-dark">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Calculator */}
-        <div ref={calcRef} className="opacity-0">
+        {/* Calculator — opacity-0 only when motion is allowed (GSAP fades it in) */}
+        <div ref={calcRef} className={prefersReducedMotion ? '' : 'opacity-0'}>
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Left Column - Inputs */}
             <div className="space-y-6">

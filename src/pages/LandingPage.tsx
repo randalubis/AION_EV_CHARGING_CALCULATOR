@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { 
   Zap, 
   MapPin, 
@@ -88,8 +89,10 @@ export default function LandingPage() {
   const capsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const faqRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (prefersReducedMotion) return; // honor the user's vestibular preference
     const ctx = gsap.context(() => {
       // Hero animation
       const heroElements = heroRef.current?.querySelectorAll('.hero-animate');
@@ -151,7 +154,7 @@ export default function LandingPage() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <div className="relative w-full">
