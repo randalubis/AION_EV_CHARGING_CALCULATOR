@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import * as Tabs from '@radix-ui/react-tabs';
-import { ArrowLeft, HelpCircle, Users } from 'lucide-react';
+import { ArrowLeft, HelpCircle, MessageSquare, Sparkles, Users } from 'lucide-react';
 import { COMMUNITIES } from '../features/community/data/communities';
 import { AboutDialog } from '../features/community/components/AboutDialog';
 import {
@@ -83,6 +83,43 @@ export default function CommunityPage() {
             evhub.id bukan pengurus komunitas di bawah — kami hanya kurator daftar.
             Setiap kartu membuka link asli ke Facebook atau formulir pendaftaran.
           </p>
+        </div>
+      </div>
+
+      {/* Decorative banner */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pb-6">
+        <div
+          className="animate-in relative overflow-hidden rounded-2xl border border-white/10 p-6 sm:p-8"
+          style={{
+            background:
+              'radial-gradient(120% 100% at 0% 0%, rgba(255, 195, 0, 0.18) 0%, transparent 60%), radial-gradient(120% 100% at 100% 100%, rgba(39, 174, 96, 0.14) 0%, transparent 60%), #1f2922',
+          }}
+        >
+          {/* Soft decorative icons in the background */}
+          <Users
+            aria-hidden
+            className="absolute -right-6 -top-6 w-40 h-40 sm:w-48 sm:h-48 text-[#FFC300]/10"
+            strokeWidth={1.25}
+          />
+          <MessageSquare
+            aria-hidden
+            className="absolute -right-20 -bottom-12 w-44 h-44 text-[#27AE60]/10 hidden sm:block"
+            strokeWidth={1.25}
+          />
+
+          <div className="relative max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-full px-3 py-1 mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-[#FFC300]" />
+              <span className="text-[#FFC300] text-xs font-medium">Direktori Komunitas</span>
+            </div>
+            <h2 className="text-white font-bold text-xl sm:text-2xl leading-tight mb-2">
+              Cari komunitasmu — per merek, wilayah, atau minat.
+            </h2>
+            <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+              Punya mobil baru dan belum tahu mau gabung grup mana? Jelajahi tab di bawah dan
+              langsung buka link ke Facebook group atau formulir pendaftaran komunitas.
+            </p>
+          </div>
         </div>
       </div>
 

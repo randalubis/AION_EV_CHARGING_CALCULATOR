@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Users } from 'lucide-react';
 import { BRANDS } from '../../calculator/data/carData';
+import { BRAND_COLORS, fallbackColorFor } from '../data/brandColors';
 import { INTEREST_LABELS, INTEREST_ORDER, REGION_LABELS, REGION_ORDER } from '../data/categories';
 import type { Community, CommunityInterest, CommunityRegion } from '../types';
 import { CommunityCard } from './CommunityCard';
@@ -58,9 +59,15 @@ export function CommunitiesByBrand({ communities }: GroupsProps) {
     <div className="space-y-10">
       {brandSections.map((brand) => {
         const items = byBrand.get(brand.id)!;
+        const swatch = BRAND_COLORS[brand.id] ?? fallbackColorFor(brand.id);
         return (
           <section key={brand.id}>
-            <header className="flex items-baseline gap-3 mb-4">
+            <header className="flex items-center gap-3 mb-4">
+              <span
+                aria-hidden
+                className="w-1.5 h-6 rounded-sm flex-shrink-0"
+                style={{ background: swatch }}
+              />
               <h2 className="text-white font-semibold text-lg">{brand.name}</h2>
               <span className="text-white/40 text-xs">
                 {items.length} komunitas
@@ -77,7 +84,11 @@ export function CommunitiesByBrand({ communities }: GroupsProps) {
 
       {crossBrand.length > 0 && (
         <section>
-          <header className="flex items-baseline gap-3 mb-4">
+          <header className="flex items-center gap-3 mb-4">
+            <span
+              aria-hidden
+              className="w-1.5 h-6 rounded-sm flex-shrink-0 bg-[#FFC300]"
+            />
             <h2 className="text-white font-semibold text-lg">Lintas Merek</h2>
             <span className="text-white/40 text-xs">{crossBrand.length} komunitas</span>
           </header>
