@@ -9,6 +9,18 @@ interface GroupsProps {
   communities: Community[];
 }
 
+/**
+ * Pick the most-specific interest tag for grouping in the Per Minat tab.
+ * `general` is treated as a fallback — communities with both `general` and
+ * a more specific tag (e.g. `chinese`, `women`, `roadtrip`) are grouped under
+ * the specific one. This keeps each card in exactly one section per tab.
+ */
+function primaryInterest(interests: Community['interests']): Community['interests'][number] | null {
+  if (interests.length === 0) return null;
+  const specific = interests.find((i) => i !== 'general');
+  return specific ?? interests[0];
+}
+
 /** Empty state for any of the three tabs. */
 function EmptyState({ message }: { message: string }) {
   return (
@@ -29,16 +41,21 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-/** Renders the per-brand view: one section per calculator brand that has at least one community. */
+/**
+ * Renders the per-brand view: one section per calculator brand that has at
+ * least one community. Each community is placed in exactly one section
+ * (its primary brand = `brands[0]`); cards spanning multiple brands keep
+ * their other brands as visible badges on the card itself.
+ */
 export function CommunitiesByBrand({ communities }: GroupsProps) {
   const byBrand = useMemo(() => {
     const map = new Map<string, Community[]>();
     for (const c of communities) {
-      for (const brand of c.brands) {
-        const arr = map.get(brand);
-        if (arr) arr.push(c);
-        else map.set(brand, [c]);
-      }
+      const primary = c.brands[0];
+      if (!primary) continue;
+      const arr = map.get(primary);
+      if (arr) arr.push(c);
+      else map.set(primary, [c]);
     }
     return map;
   }, [communities]);
@@ -141,17 +158,21 @@ export function CommunitiesByRegion({ communities }: GroupsProps) {
   );
 }
 
-/** Renders the per-interest view. */
+/**
+ * Renders the per-interest view. Each community is placed in exactly one
+ * interest section, chosen via `primaryInterest()` so a card with both
+ * `general` and `chinese` lands under "EV Cina" (not duplicated). The
+ * other tags stay visible as chips on the card.
+ */
 export function CommunitiesByInterest({ communities }: GroupsProps) {
   const byInterest = useMemo(() => {
     const map = new Map<CommunityInterest, Community[]>();
     for (const c of communities) {
-      // Each community can appear in multiple interest sections.
-      for (const tag of c.interests) {
-        const arr = map.get(tag);
-        if (arr) arr.push(c);
-        else map.set(tag, [c]);
-      }
+      const tag = primaryInterest(c.interests);
+      if (!tag) continue;
+      const arr = map.get(tag);
+      if (arr) arr.push(c);
+      else map.set(tag, [c]);
     }
     return map;
   }, [communities]);
