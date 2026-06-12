@@ -21,10 +21,10 @@ export function WhyEvhub() {
             return (
               <div
                 key={prop.title}
-                className="why-card bg-forest-mid/40 border border-white/10 rounded-2xl p-6 hover:border-[#FFC300]/30 transition"
+                className="why-card bg-forest-mid/40 border border-white/10 rounded-2xl p-6 hover:border-volt/30 transition"
               >
-                <div className="w-11 h-11 rounded-lg bg-[#FFC300]/15 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-[#FFC300]" aria-hidden />
+                <div className="w-11 h-11 rounded-lg bg-volt/15 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-volt" aria-hidden />
                 </div>
                 <h3 className="text-white font-bold mt-4">{prop.title}</h3>
                 <p className="text-white/55 text-sm leading-relaxed mt-2">{prop.body}</p>

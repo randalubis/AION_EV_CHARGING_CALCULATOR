@@ -120,7 +120,7 @@ export function CostParameters({
                 onClick={() => onRegionChange(r.region as TCOInputs['region'])}
                 className={`p-3 rounded-lg border transition-all text-left ${
                   region === r.region
-                    ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
+                    ? 'bg-volt border-volt text-forest-dark'
                     : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
                 }`}
               >

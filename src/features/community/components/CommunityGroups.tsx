@@ -31,7 +31,7 @@ function EmptyState({ message }: { message: string }) {
         Tahu komunitas yang harus masuk daftar?{' '}
         <a
           href="mailto:hello@evhub.id?subject=Usulan%20komunitas%20EV"
-          className="text-[#FFC300] hover:underline"
+          className="text-volt hover:underline"
         >
           Kirim usulan
         </a>
@@ -101,8 +101,8 @@ export function CommunitiesByBrand({ communities }: GroupsProps) {
       {crossBrand.length > 0 && (
         <section>
           <header className="flex items-center gap-3 mb-4">
-            <div className="w-7 h-7 rounded-md bg-[#FFC300]/20 flex items-center justify-center flex-shrink-0">
-              <Users className="w-4 h-4 text-[#FFC300]" />
+            <div className="w-7 h-7 rounded-md bg-volt/20 flex items-center justify-center flex-shrink-0">
+              <Users className="w-4 h-4 text-volt" />
             </div>
             <h2 className="text-white font-semibold text-lg">Lintas Merek</h2>
             <span className="text-white/40 text-xs">{crossBrand.length} komunitas</span>

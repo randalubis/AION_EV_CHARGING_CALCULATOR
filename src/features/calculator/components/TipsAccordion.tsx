@@ -14,14 +14,14 @@ export function TipsAccordion() {
       >
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-forest-dark rounded-lg flex items-center justify-center">
-            <Battery className="w-5 h-5 text-[#FFC300]" />
+            <Battery className="w-5 h-5 text-volt" />
           </div>
           <div className="text-left">
             <div className="text-white font-semibold">Panduan Kesehatan Baterai</div>
             <div className="text-white/50 text-sm">{TIPS.length} tips memperpanjang umur baterai</div>
           </div>
         </div>
-        <ChevronDown className={`w-6 h-6 text-[#FFC300] transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-6 h-6 text-volt transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
         <div className="px-6 pb-6 space-y-4">

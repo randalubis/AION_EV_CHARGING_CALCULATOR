@@ -144,15 +144,15 @@ export default function MapPage() {
       {/* Header — matches the calculator page's structure */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-4">
         <div className="flex items-center gap-2 text-white/50 text-sm mb-4">
-          <Link to="/" className="hover:text-[#FFC300] transition-colors">Beranda</Link>
+          <Link to="/" className="hover:text-volt transition-colors">Beranda</Link>
           <span>/</span>
-          <span className="text-[#FFC300]">Peta SPKLU</span>
+          <span className="text-volt">Peta SPKLU</span>
         </div>
 
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Compass className="w-5 h-5 text-[#FFC300]" />
+            <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Compass className="w-5 h-5 text-volt" />
             </div>
             <div className="min-w-0">
               <h1 className="text-white font-bold text-xl md:text-2xl leading-tight">Peta SPKLU</h1>
@@ -182,7 +182,7 @@ export default function MapPage() {
           <div className="flex items-center gap-2">
             <List className="w-4 h-4" />
             <span className="text-sm">Daftar Stasiun</span>
-            <span className="bg-[#FFC300]/20 text-[#FFC300] text-xs px-2 py-0.5 rounded-full">{listStations.length}</span>
+            <span className="bg-volt/20 text-volt text-xs px-2 py-0.5 rounded-full">{listStations.length}</span>
           </div>
           <ChevronDown className={`w-4 h-4 transition-transform ${showList ? 'rotate-180' : ''}`} />
         </button>
@@ -205,7 +205,7 @@ export default function MapPage() {
                     aria-label="Cari stasiun"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-forest-mid border border-white/20 rounded-lg pl-9 pr-8 py-2 text-white text-sm placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none"
+                    className="w-full bg-forest-mid border border-white/20 rounded-lg pl-9 pr-8 py-2 text-white text-sm placeholder:text-white/30 focus:border-volt focus:outline-none"
                   />
                   {searchQuery && (
                     <button onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 p-1">
@@ -225,7 +225,7 @@ export default function MapPage() {
                     <Filter className="w-4 h-4" />
                     <span className="text-sm">Filter</span>
                     {(filters.connectorTypes.length > 0 || filters.minPowerKw > 0) && (
-                      <span className="bg-[#FFC300] text-forest-dark text-xs px-1.5 py-0.5 rounded-full">!</span>
+                      <span className="bg-volt text-forest-dark text-xs px-1.5 py-0.5 rounded-full">!</span>
                     )}
                   </div>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
@@ -316,7 +316,7 @@ export default function MapPage() {
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
                   {showLoadingPill && (
                     <div className="bg-forest-dark/90 border border-white/10 rounded-full px-3 py-1.5 text-xs text-white/80 flex items-center gap-2">
-                      <div className="w-3 h-3 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+                      <div className="w-3 h-3 border-2 border-volt border-t-transparent rounded-full animate-spin" />
                       Memuat stasiun...
                     </div>
                   )}
@@ -332,7 +332,7 @@ export default function MapPage() {
               {initialLoading && (
                 <div className="absolute inset-0 z-[500] flex items-center justify-center bg-forest-dark/40 backdrop-blur-[1px] pointer-events-none">
                   <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-8 h-8 border-2 border-volt border-t-transparent rounded-full animate-spin" />
                     <p className="text-white/70 text-sm">Memuat stasiun di area Anda...</p>
                   </div>
                 </div>
@@ -340,7 +340,7 @@ export default function MapPage() {
 
               {/* Pick-from-map banner */}
               {pickingLocation && (
-                <div className="absolute top-3 left-3 right-3 z-[1000] bg-[#FFC300] text-forest-dark rounded-lg px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
+                <div className="absolute top-3 left-3 right-3 z-[1000] bg-volt text-forest-dark rounded-lg px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
                   <div className="flex items-center gap-2 min-w-0">
                     <Crosshair className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm font-medium truncate">

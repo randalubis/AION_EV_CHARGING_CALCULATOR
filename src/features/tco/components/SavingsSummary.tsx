@@ -91,13 +91,13 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
         {/* Break Even Info */}
         {savings.breakEvenYear && (
           <div className="mt-6 bg-forest-dark/50 rounded-xl p-4 flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#FFC300]/20 rounded-xl flex items-center justify-center">
-              <Award className="w-6 h-6 text-[#FFC300]" />
+            <div className="w-12 h-12 bg-volt/20 rounded-xl flex items-center justify-center">
+              <Award className="w-6 h-6 text-volt" />
             </div>
             <div>
               <div className="text-white font-medium">Break-Even Point</div>
               <div className="text-white/60 text-sm">
-                EV mulai lebih hemat pada <span className="text-[#FFC300] font-semibold">Tahun {savings.breakEvenYear}</span>
+                EV mulai lebih hemat pada <span className="text-volt font-semibold">Tahun {savings.breakEvenYear}</span>
               </div>
             </div>
           </div>

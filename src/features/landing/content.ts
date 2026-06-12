@@ -39,7 +39,7 @@ export const TOOLS: Tool[] = [
     description:
       'Hitung waktu pengisian, biaya listrik, dan jarak tempuh untuk 73+ model EV. Kurva taper DC dan tarif PLN diperhitungkan.',
     icon: Zap,
-    accent: '#FFC300',
+    accent: '#C6FF4D',
     status: 'live',
     statusText: 'Tersedia Sekarang',
     href: '/kalkulator',

@@ -110,15 +110,15 @@ Buka: ${shareUrl}`;
       <div className="pt-8 pb-4">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="animate-in flex items-center gap-2 text-white/50 text-sm mb-4">
-            <Link to="/" className="hover:text-[#FFC300] transition-colors">Beranda</Link>
+            <Link to="/" className="hover:text-volt transition-colors">Beranda</Link>
             <span>/</span>
-            <span className="text-[#FFC300]">TCO Calculator</span>
+            <span className="text-volt">TCO Calculator</span>
           </div>
 
           <div className="animate-in flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Wallet className="w-5 h-5 text-[#FFC300]" />
+              <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Wallet className="w-5 h-5 text-volt" />
               </div>
               <div className="min-w-0">
                 <h1 className="text-white font-bold text-xl md:text-2xl leading-tight">
@@ -147,7 +147,7 @@ Buka: ${shareUrl}`;
           {/* Step 1 — Vehicle Selection */}
           <section className="animate-in">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-10 h-10 bg-[#FFC300] rounded-full flex items-center justify-center text-forest-dark font-bold">
+              <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-forest-dark font-bold">
                 1
               </div>
               <div>
@@ -174,7 +174,7 @@ Buka: ${shareUrl}`;
           {bothVehiclesSelected && (
             <section className="animate-in">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 bg-[#FFC300] rounded-full flex items-center justify-center text-forest-dark font-bold">
+                <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-forest-dark font-bold">
                   2
                 </div>
                 <div>
@@ -200,7 +200,7 @@ Buka: ${shareUrl}`;
           {bothVehiclesSelected && (
             <section className="animate-in">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 bg-[#FFC300] rounded-full flex items-center justify-center text-forest-dark font-bold">
+                <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-forest-dark font-bold">
                   3
                 </div>
                 <div>
@@ -225,7 +225,7 @@ Buka: ${shareUrl}`;
             <div className="animate-in flex flex-wrap justify-center gap-3">
               <button
                 onClick={handleReset}
-                className="flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-xl text-sm text-white/70 hover:text-[#FFC300] hover:border-[#FFC300] transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-xl text-sm text-white/70 hover:text-volt hover:border-volt transition-all"
               >
                 <RotateCcw className="w-4 h-4" />
                 Reset ke Default
@@ -233,7 +233,7 @@ Buka: ${shareUrl}`;
               {result && (
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-xl text-sm text-white/70 hover:text-[#FFC300] hover:border-[#FFC300] transition-all"
+                  className="flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-xl text-sm text-white/70 hover:text-volt hover:border-volt transition-all"
                 >
                   <Share2 className="w-4 h-4" />
                   Bagikan
@@ -272,7 +272,7 @@ Buka: ${shareUrl}`;
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-[#FFC300] transition-colors"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-volt transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Kembali ke Beranda

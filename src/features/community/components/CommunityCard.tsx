@@ -41,7 +41,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
           />
         ) : (
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-            <Users className="w-6 h-6 text-[#FFC300]" />
+            <Users className="w-6 h-6 text-volt" />
           </div>
         )}
       </div>
@@ -66,7 +66,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
             </span>
           )}
           {brandNames.slice(0, 2).map((label, i) => (
-            <span key={i} className="bg-[#FFC300]/10 text-[#FFC300] px-2 py-0.5 rounded">
+            <span key={i} className="bg-volt/10 text-volt px-2 py-0.5 rounded">
               {label}
             </span>
           ))}
@@ -103,7 +103,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
             href={community.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 bg-[#FFC300] text-forest-dark text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-[#FFD60A] transition-colors flex-shrink-0"
+            className="flex items-center gap-1 bg-volt text-forest-dark text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-volt-bright transition-colors flex-shrink-0"
           >
             {platform.cta}
             <ExternalLink className="w-3 h-3" />

@@ -75,7 +75,7 @@ export function VehicleSelector({
                 <select
                   value={evBrandFilter}
                   onChange={(e) => setEVBrandFilter(e.target.value)}
-                  className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-[#FFC300] focus:outline-none"
+                  className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-volt focus:outline-none"
                 >
                   <option value="all">Semua Merek</option>
                   {evBrands.map(brand => (
@@ -140,7 +140,7 @@ export function VehicleSelector({
                 <select
                   value={iceBrandFilter}
                   onChange={(e) => setICEBrandFilter(e.target.value)}
-                  className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-[#FFC300] focus:outline-none"
+                  className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-volt focus:outline-none"
                 >
                   <option value="all">Semua Merek</option>
                   {iceBrands.map(brand => (

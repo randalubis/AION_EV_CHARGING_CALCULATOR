@@ -57,7 +57,7 @@ export function StatsStrip() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-4xl md:text-5xl font-sans font-bold text-[#FFC300] mb-2">
+              <div className="text-4xl md:text-5xl font-sans font-bold text-volt mb-2">
                 <CountUp value={stat.value} />
                 {stat.suffix}
               </div>

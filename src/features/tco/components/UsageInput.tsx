@@ -33,8 +33,8 @@ export function UsageInput({
       {/* Annual Distance */}
       <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-            <MapPin className="w-5 h-5 text-[#FFC300]" />
+          <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
+            <MapPin className="w-5 h-5 text-volt" />
           </div>
           <div>
             <h3 className="text-white font-semibold">Jarak Tempuh</h3>
@@ -50,7 +50,7 @@ export function UsageInput({
               onClick={() => onAnnualKmChange(km)}
               className={`py-2 px-1 rounded-lg text-xs font-medium transition-all ${
                 annualKm === km
-                  ? 'bg-[#FFC300] text-forest-dark'
+                  ? 'bg-volt text-forest-dark'
                   : 'bg-forest-dark border border-white/10 text-white/70 hover:border-white/30'
               }`}
             >
@@ -65,7 +65,7 @@ export function UsageInput({
             type="number"
             value={annualKm}
             onChange={(e) => onAnnualKmChange(parseInt(e.target.value) || 0)}
-            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-[#FFC300] focus:outline-none"
+            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-volt focus:outline-none"
             min={0}
             step={1000}
           />
@@ -82,8 +82,8 @@ export function UsageInput({
       {/* Ownership Duration */}
       <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-            <span className="text-[#FFC300] font-bold text-sm">Yr</span>
+          <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
+            <span className="text-volt font-bold text-sm">Yr</span>
           </div>
           <div>
             <h3 className="text-white font-semibold">Periode Kepemilikan</h3>
@@ -98,7 +98,7 @@ export function UsageInput({
               onClick={() => onOwnershipYearsChange(years)}
               className={`py-3 rounded-xl text-center font-semibold transition-all ${
                 ownershipYears === years
-                  ? 'bg-[#FFC300] text-forest-dark'
+                  ? 'bg-volt text-forest-dark'
                   : 'bg-forest-dark border border-white/10 text-white/70 hover:border-white/30'
               }`}
             >
@@ -118,7 +118,7 @@ export function UsageInput({
               if (val >= 1 && val <= 20) onOwnershipYearsChange(val);
             }}
             placeholder="Lainnya (6-20 thn)"
-            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-[#FFC300] focus:outline-none placeholder:text-white/30"
+            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-volt focus:outline-none placeholder:text-white/30"
             min={6}
             max={20}
           />
@@ -157,7 +157,7 @@ export function UsageInput({
                   onClick={() => onElectricityRateChange(rate.category)}
                   className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all text-left ${
                     electricityRateCategory === rate.category
-                      ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
+                      ? 'bg-volt border-volt text-forest-dark'
                       : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
                   }`}
                 >
@@ -167,7 +167,7 @@ export function UsageInput({
                       {rate.description}
                     </div>
                   </div>
-                  <div className={`font-bold text-sm ${electricityRateCategory === rate.category ? 'text-forest-dark' : 'text-[#FFC300]'}`}>
+                  <div className={`font-bold text-sm ${electricityRateCategory === rate.category ? 'text-forest-dark' : 'text-volt'}`}>
                     Rp {rate.ratePerKwh.toLocaleString('id-ID')}
                   </div>
                 </button>
@@ -210,7 +210,7 @@ export function UsageInput({
                   <div className="text-xs text-white/40">Home Charging</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-[#FFC300]">{publicChargingPercentage}%</div>
+                  <div className="text-2xl font-bold text-volt">{publicChargingPercentage}%</div>
                   <div className="text-xs text-white/40">Public Charging</div>
                 </div>
               </div>

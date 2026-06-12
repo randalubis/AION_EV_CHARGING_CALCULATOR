@@ -180,7 +180,7 @@ export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initial
                       <div
                         key={i}
                         className={`w-2 h-2 rounded-full ${
-                          i === step ? 'bg-[#FFC300]'
+                          i === step ? 'bg-volt'
                             : i < step ? 'bg-[#27AE60]' : 'bg-white/20'
                         }`}
                       />
@@ -220,7 +220,7 @@ export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initial
                     <button
                       type="button"
                       onClick={goNext}
-                      className="flex items-center gap-2 bg-[#FFC300] text-forest-dark px-5 py-2 rounded-lg font-semibold hover:bg-[#e6b000] transition-colors"
+                      className="flex items-center gap-2 bg-volt text-forest-dark px-5 py-2 rounded-lg font-semibold hover:bg-volt-dim transition-colors"
                     >
                       Lanjut
                       <ChevronRight className="w-4 h-4" />
@@ -302,8 +302,8 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-16 h-16 bg-[#FFC300]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <MapPin className="w-8 h-8 text-[#FFC300]" />
+        <div className="w-16 h-16 bg-volt/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <MapPin className="w-8 h-8 text-volt" />
         </div>
         <h3 className="text-xl font-bold text-white mb-2">Pilih Lokasi</h3>
         <p className="text-white/60 text-sm">Tentukan lokasi stasiun charging</p>
@@ -314,7 +314,7 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
           type="button"
           onClick={handleGetCurrentLocation}
           disabled={geoLoading}
-          className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-[#FFC300]/50 transition-colors text-left"
+          className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-volt/50 transition-colors text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#27AE60]/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -325,7 +325,7 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
               <p className="text-white/50 text-sm">Ambil dari GPS perangkat</p>
             </div>
             {geoLoading && (
-              <div className="w-5 h-5 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-volt border-t-transparent rounded-full animate-spin" />
             )}
           </div>
         </button>
@@ -340,7 +340,7 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
           <button
             type="button"
             onClick={onRequestPickFromMap}
-            className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-[#FFC300]/50 transition-colors text-left"
+            className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-volt/50 transition-colors text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -355,8 +355,8 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
         )}
 
         {hasLocation && (
-          <div className="p-4 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-xl">
-            <p className="text-[#FFC300] font-medium mb-1">Lokasi Terpilih</p>
+          <div className="p-4 bg-volt/10 border border-volt/30 rounded-xl">
+            <p className="text-volt font-medium mb-1">Lokasi Terpilih</p>
             <p className="text-white/70 text-sm">
               Lat: {latitude.toFixed(6)}, Lng: {longitude.toFixed(6)}
             </p>
@@ -443,7 +443,7 @@ function StepDetails() {
           <button
             type="button"
             onClick={() => append({ id: crypto.randomUUID(), type: 'ccs2', powerKw: 50, currentType: 'DC', count: 1 })}
-            className="flex items-center gap-1 text-[#FFC300] text-sm hover:text-[#e6b000]"
+            className="flex items-center gap-1 text-volt text-sm hover:text-volt-dim"
           >
             <Plus className="w-4 h-4" />
             Tambah
@@ -523,7 +523,7 @@ function StepDetails() {
               onClick={() => toggleAmenity(a.value)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${
                 amenities.includes(a.value)
-                  ? 'bg-[#FFC300] text-forest-dark'
+                  ? 'bg-volt text-forest-dark'
                   : 'bg-forest-mid text-white/70 hover:bg-forest-mid/80'
               }`}
             >
@@ -658,7 +658,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
       <button
         type="button"
         onClick={onClose}
-        className="bg-[#FFC300] text-forest-dark px-6 py-2.5 rounded-lg font-semibold hover:bg-[#e6b000] transition-colors"
+        className="bg-volt text-forest-dark px-6 py-2.5 rounded-lg font-semibold hover:bg-volt-dim transition-colors"
       >
         Tutup
       </button>
@@ -669,7 +669,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
 // ─── Helpers ─────────────────────────────────────────────
 
 const inputClass =
-  'w-full bg-forest-mid border border-white/20 rounded-lg px-4 py-2.5 text-white placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none';
+  'w-full bg-forest-mid border border-white/20 rounded-lg px-4 py-2.5 text-white placeholder:text-white/30 focus:border-volt focus:outline-none';
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (

@@ -10,7 +10,7 @@ export function FinalCTA() {
       <div ref={ref} className="max-w-4xl mx-auto px-6 md:px-12 text-center">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold text-white mb-6">
           Siap Mengoptimalkan
-          <span className="block text-[#FFC300]">Pengalaman EV Kamu?</span>
+          <span className="block text-volt">Pengalaman EV Kamu?</span>
         </h2>
         <p className="text-white/60 text-lg mb-8 max-w-2xl mx-auto">
           Mulai dengan kalkulator charging kami dan lihat berapa banyak yang bisa kamu hemat dengan
@@ -19,7 +19,7 @@ export function FinalCTA() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/kalkulator"
-            className="inline-flex items-center justify-center gap-2 bg-[#FFC300] hover:bg-[#FFD60A] text-forest-dark font-sans font-bold py-4 px-8 rounded-xl transition-all hover:scale-105"
+            className="inline-flex items-center justify-center gap-2 bg-volt hover:bg-volt-bright text-forest-dark font-sans font-bold py-4 px-8 rounded-xl transition-all hover:scale-105"
           >
             <Zap className="w-5 h-5" aria-hidden />
             Coba Kalkulator Gratis

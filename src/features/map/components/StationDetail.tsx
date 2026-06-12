@@ -24,7 +24,7 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h2 className="text-white font-semibold text-base truncate">{station.name}</h2>
-            <p className="text-[#FFC300] text-xs">{station.operator}</p>
+            <p className="text-volt text-xs">{station.operator}</p>
           </div>
           <button
             onClick={onClose}
@@ -44,7 +44,7 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
             {station.address && <p className="text-white/80 text-xs">{station.address}</p>}
             {station.city && <p className="text-white/40 text-[10px]">{station.city}</p>}
             {distance !== undefined && (
-              <p className="text-[#FFC300] text-xs mt-0.5">
+              <p className="text-volt text-xs mt-0.5">
                 {distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance} km`} dari Anda
               </p>
             )}
@@ -132,7 +132,7 @@ function NavigatePicker({ station }: { station: ChargingStation }) {
     <MapsPicker
       targets={navigateTargets(station.latitude, station.longitude, station.name)}
       trigger={
-        <button className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors">
+        <button className="w-full flex items-center justify-center gap-1.5 bg-volt text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-volt-bright transition-colors">
           <Navigation className="w-4 h-4" />
           Navigasi
         </button>

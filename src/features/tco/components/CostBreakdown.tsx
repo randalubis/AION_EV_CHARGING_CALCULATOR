@@ -78,9 +78,9 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
             })}
             
             {/* Total Row */}
-            <tr className="bg-[#FFC300]/10">
+            <tr className="bg-volt/10">
               <td className="p-4 text-white font-semibold">Total Biaya Operasional</td>
-              <td className="p-4 text-right text-[#FFC300] font-bold">
+              <td className="p-4 text-right text-volt font-bold">
                 Rp {formatCompactNumber(ev.totalCost)}
               </td>
               <td className="p-4 text-right text-white font-bold">
@@ -148,7 +148,7 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
         <details className="group">
           <summary className="flex items-center justify-between p-4 bg-forest-dark/50 rounded-xl cursor-pointer hover:bg-forest-dark transition-colors">
             <span className="text-white font-medium text-sm">Lihat Rincian per Tahun</span>
-            <span className="text-[#FFC300] group-open:rotate-180 transition-transform">▼</span>
+            <span className="text-volt group-open:rotate-180 transition-transform">▼</span>
           </summary>
           
           <div className="mt-4 overflow-x-auto">

@@ -17,8 +17,8 @@ const PALETTE: Record<string, string> = {
   green: 'bg-[#27AE60]/20 text-[#27AE60]',
   green2: 'bg-[#27AE60]/20 text-[#27AE60]',
   blue: 'bg-blue-500/20 text-blue-400',
-  yellow: 'bg-[#FFC300]/20 text-[#FFC300]',
-  yellow2: 'bg-[#FFC300]/20 text-[#FFC300]',
+  yellow: 'bg-volt/20 text-volt',
+  yellow2: 'bg-volt/20 text-volt',
 };
 
 export function HowToUseDialog({ trigger }: HowToUseDialogProps) {

@@ -19,21 +19,21 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-forest-dark via-forest-mid to-forest-dark" />
 
       {/* Decorative glow circles */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFC300]/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#FFC300]/3 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-volt/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-volt/3 rounded-full blur-3xl" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left: Content */}
           <div className="text-center lg:text-left">
-            <div className="hero-animate inline-flex items-center gap-2 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-full px-4 py-2 mb-6">
-              <span className="w-2 h-2 bg-[#FFC300] rounded-full animate-pulse" />
-              <span className="text-[#FFC300] text-sm font-medium">Platform EV Indonesia</span>
+            <div className="hero-animate inline-flex items-center gap-2 bg-volt/10 border border-volt/30 rounded-full px-4 py-2 mb-6">
+              <span className="w-2 h-2 bg-volt rounded-full animate-pulse" />
+              <span className="text-volt text-sm font-medium">Platform EV Indonesia</span>
             </div>
 
             <h1 className="hero-animate text-4xl md:text-5xl lg:text-6xl font-sans font-bold text-white leading-tight mb-6">
               Platform Lengkap untuk
-              <span className="block text-[#FFC300]">Pemilik EV Indonesia</span>
+              <span className="block text-volt">Pemilik EV Indonesia</span>
             </h1>
 
             <p className="hero-animate font-body text-white/60 text-lg md:text-xl max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
@@ -47,7 +47,7 @@ export function HeroSection() {
             <div className="hero-animate flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 to="/kalkulator"
-                className="inline-flex items-center justify-center gap-2 bg-[#FFC300] hover:bg-[#FFD60A] text-forest-dark font-sans font-bold py-4 px-8 rounded-xl transition-all hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 bg-volt hover:bg-volt-bright text-forest-dark font-sans font-bold py-4 px-8 rounded-xl transition-all hover:scale-105"
               >
                 <Zap className="w-5 h-5" />
                 Coba Kalkulator
@@ -94,11 +94,11 @@ export function HeroSection() {
               />
               <Link
                 to="/kalkulator"
-                className="absolute -bottom-4 -left-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-[#FFC300]/40 transition-colors"
+                className="absolute -bottom-4 -left-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-volt/40 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-                    <Battery className="w-5 h-5 text-[#FFC300]" />
+                  <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
+                    <Battery className="w-5 h-5 text-volt" />
                   </div>
                   <div>
                     <div className="text-white font-semibold text-sm">Cek waktu cas</div>
@@ -129,7 +129,7 @@ export function HeroSection() {
       {!reduced && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/20">
           <div className="w-5 h-9 border border-white/20 rounded-full flex justify-center pt-2">
-            <div className="w-1 h-1 bg-[#FFC300]/70 rounded-full animate-bounce" />
+            <div className="w-1 h-1 bg-volt/70 rounded-full animate-bounce" />
           </div>
         </div>
       )}

@@ -31,8 +31,8 @@ export function HowItWorks() {
             return (
               <div key={step.title} className="step-item relative">
                 <div className="flex items-center gap-4 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-[#FFC300]/15 flex items-center justify-center shrink-0">
-                    <Icon className="w-6 h-6 text-[#FFC300]" />
+                  <div className="w-12 h-12 rounded-xl bg-volt/15 flex items-center justify-center shrink-0">
+                    <Icon className="w-6 h-6 text-volt" />
                   </div>
                   <span className="text-5xl font-sans font-bold text-white/10 leading-none">
                     {number}
@@ -44,7 +44,7 @@ export function HowItWorks() {
 
                 <Link
                   to={step.href}
-                  className="group inline-flex items-center gap-1.5 text-[#FFC300] hover:text-[#FFD60A] text-sm font-semibold transition-colors"
+                  className="group inline-flex items-center gap-1.5 text-volt hover:text-volt-bright text-sm font-semibold transition-colors"
                 >
                   {step.linkText}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

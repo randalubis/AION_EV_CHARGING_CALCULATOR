@@ -28,7 +28,7 @@ export function ToolsGrid() {
                 to={tool.href}
                 className={`tool-card group relative flex flex-col bg-forest-mid/50 rounded-2xl border border-white/10 overflow-hidden transition-all ${
                   isLive
-                    ? 'hover:border-[#FFC300]/50 hover:shadow-2xl hover:shadow-[#FFC300]/10'
+                    ? 'hover:border-volt/50 hover:shadow-2xl hover:shadow-volt/10'
                     : 'opacity-75'
                 }`}
               >
@@ -64,7 +64,7 @@ export function ToolsGrid() {
 
                 {/* Card body */}
                 <div className="flex flex-col flex-1 p-6">
-                  <h3 className="text-xl font-sans font-bold text-white mb-3 transition-colors group-hover:text-[#FFC300]">
+                  <h3 className="text-xl font-sans font-bold text-white mb-3 transition-colors group-hover:text-volt">
                     {tool.title}
                   </h3>
                   <p className="text-white/60 text-sm mb-4 line-clamp-2">{tool.description}</p>
@@ -82,7 +82,7 @@ export function ToolsGrid() {
 
                   <div
                     className={`mt-auto flex items-center gap-2 text-sm font-semibold ${
-                      isLive ? 'text-[#FFC300]' : 'text-white/50'
+                      isLive ? 'text-volt' : 'text-white/50'
                     }`}
                   >
                     {isLive ? 'Coba Sekarang' : 'Lihat Detail'}

@@ -72,11 +72,11 @@ export function Navbar() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <NavLink href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-[#FFC300] rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
+              <div className="w-10 h-10 bg-volt rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
                 <Zap className="w-6 h-6 text-forest-dark" />
               </div>
               <span className="text-white font-sans font-bold text-xl tracking-tight">
-                evhub<span className="text-[#FFC300]">.id</span>
+                evhub<span className="text-volt">.id</span>
               </span>
             </NavLink>
 
@@ -88,7 +88,7 @@ export function Navbar() {
                   href={link.href}
                   className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${
                     isActive(link.href)
-                      ? 'bg-[#FFC300] text-forest-dark'
+                      ? 'bg-volt text-forest-dark'
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -143,7 +143,7 @@ export function Navbar() {
                   href={link.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-body font-medium transition-all ${
                     isActive(link.href)
-                      ? 'bg-[#FFC300] text-forest-dark'
+                      ? 'bg-volt text-forest-dark'
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >

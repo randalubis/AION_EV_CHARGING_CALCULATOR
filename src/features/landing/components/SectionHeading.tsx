@@ -19,7 +19,7 @@ export function SectionHeading({
 
   return (
     <div className={`${alignment} mb-12 md:mb-16`}>
-      <p className="text-[#FFC300] text-sm font-body uppercase tracking-widest mb-4">{eyebrow}</p>
+      <p className="text-volt text-sm font-body uppercase tracking-widest mb-4">{eyebrow}</p>
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold text-white">
         {title}
         {titleAccent && (
