@@ -32,7 +32,7 @@ html.lenis, html.lenis body {
 
 /* Selection styling */
 ::selection {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(198, 255, 77, 0.22);
   color: inherit;
 }
 
@@ -57,7 +57,7 @@ img:not([loading="lazy"]) {
   }
 
   ::-webkit-scrollbar-track {
-    background: #0d1310;
+    background: #0A0E0B;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -79,7 +79,7 @@ body {
 
 /* Focus visible styles */
 *:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline: 2px solid rgba(198, 255, 77, 0.6);
   outline-offset: 2px;
 }
 

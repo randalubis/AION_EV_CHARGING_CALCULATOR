@@ -38,9 +38,9 @@ export function HeroSection() {
 
             <p className="hero-animate font-body text-white/60 text-lg md:text-xl max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
               Hitung waktu cas untuk{' '}
-              <span className="font-serif italic text-white/80">73+ model EV</span>, temukan SPKLU
+              <span className="font-sans font-semibold text-white/90">73+ model EV</span>, temukan SPKLU
               dari{' '}
-              <span className="font-serif italic text-white/80">3.000+ stasiun PLN</span>, bandingkan
+              <span className="font-sans font-semibold text-white/90">3.000+ stasiun PLN</span>, bandingkan
               biaya, dan gabung komunitas — semua dirancang khusus untuk kondisi Indonesia.
             </p>
 

@@ -5,8 +5,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
+        sans: ['Space Grotesk', 'sans-serif'],
         body: ['DM Sans', 'sans-serif'],
       },
       colors: {
@@ -15,10 +14,24 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Carbon scale — near-black surfaces with a faint green tint
+        carbon: {
+          950: "#0A0E0B",
+          900: "#111612",
+          800: "#1A211B",
+          700: "#28312A",
+        },
+        // Volt — neon green energy accent
+        volt: {
+          DEFAULT: "#C6FF4D",
+          bright: "#DBFF7E",
+          dim: "#A8DB3F",
+        },
+        // Legacy aliases retargeted to carbon (removed after the rename sweep)
         forest: {
-          dark: "#0d1310",
-          mid: "#1a2420",
-          light: "#2a3a34",
+          dark: "#0A0E0B",
+          mid: "#111612",
+          light: "#1A211B",
         },
         offwhite: "#f4f4f4",
         softblack: "#1a1a1a",

@@ -23,7 +23,7 @@ export function SectionHeading({
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold text-white">
         {title}
         {titleAccent && (
-          <span className="block font-serif italic font-normal text-white/80">{titleAccent}</span>
+          <span className="block font-sans font-light text-volt/90 tracking-tight">{titleAccent}</span>
         )}
       </h2>
       {subtitle && <p className={`text-white/60 text-lg mt-6 ${subtitleWidth}`}>{subtitle}</p>}
