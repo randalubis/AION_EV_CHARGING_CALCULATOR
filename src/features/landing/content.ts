@@ -190,3 +190,30 @@ export const FOOTER_NAV: FooterNavLink[] = [
   { label: 'Komunitas', href: '/komunitas' },
   { label: 'Trip Planner', href: '/trip-planner' },
 ];
+
+// ─── Supported brands (logo marquee) ────────────────────────────────
+export interface BrandLogo {
+  id: string;
+  name: string;
+}
+
+export const BRANDS: BrandLogo[] = [
+  { id: 'bmw', name: 'BMW' },
+  { id: 'byd', name: 'BYD' },
+  { id: 'chery', name: 'Chery' },
+  { id: 'denza', name: 'Denza' },
+  { id: 'gac', name: 'GAC Aion' },
+  { id: 'geely', name: 'Geely' },
+  { id: 'hyundai', name: 'Hyundai' },
+  { id: 'kia', name: 'KIA' },
+  { id: 'lexus', name: 'Lexus' },
+  { id: 'mercedes', name: 'Mercedes-Benz' },
+  { id: 'mg', name: 'MG' },
+  { id: 'mini', name: 'MINI' },
+  { id: 'neta', name: 'Neta' },
+  { id: 'nissan', name: 'Nissan' },
+  { id: 'toyota', name: 'Toyota' },
+  { id: 'vinfast', name: 'VinFast' },
+  { id: 'volvo', name: 'Volvo' },
+  { id: 'wuling', name: 'Wuling' },
+];
