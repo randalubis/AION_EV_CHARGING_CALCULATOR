@@ -39,3 +39,6 @@ Thumbs.db
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Local data dumps from scripts/backup-submissions.ts
+backups
