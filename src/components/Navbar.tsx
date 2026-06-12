@@ -37,6 +37,8 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  // Landing renders a full-bleed hero behind the nav — transparent until scrolled.
+  const isLanding = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,8 +66,10 @@ export function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
           isScrolled
-            ? 'bg-carbon-950/95 backdrop-blur-md border-b border-white/10'
-            : 'bg-carbon-950'
+            ? 'bg-carbon-950/90 backdrop-blur-md border-b border-white/10'
+            : isLanding
+              ? 'bg-transparent'
+              : 'bg-carbon-950'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -156,8 +160,8 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-20" />
+      {/* Spacer for fixed navbar — omitted on landing so the hero sits full-bleed behind the nav */}
+      {!isLanding && <div className="h-20" />}
     </>
   );
 }

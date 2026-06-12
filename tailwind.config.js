@@ -99,6 +99,14 @@ module.exports = {
           "0%": { opacity: "0", transform: "scale(1.1)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "hero-zoom": {
+          "0%": { transform: "scale(1.06)" },
+          "100%": { transform: "scale(1)" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -106,6 +114,8 @@ module.exports = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "fade-in-up": "fade-in-up 0.6s ease-out forwards",
         "scale-in": "scale-in 0.8s ease-out forwards",
+        "hero-zoom": "hero-zoom 8s ease-out forwards",
+        marquee: "marquee 45s linear infinite",
       },
     },
   },
