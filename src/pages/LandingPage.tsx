@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { 
   Zap, 
   MapPin, 
@@ -40,12 +41,12 @@ const capabilities = [
   {
     id: 'peta',
     title: 'Peta SPKLU',
-    description: 'Temukan stasiun pengisian kendaraan listrik umum di seluruh Indonesia dengan informasi real-time tentang ketersediaan dan tipe charger.',
+    description: 'Temukan stasiun pengisian kendaraan listrik umum di seluruh Indonesia. Tipe charger, kecepatan, dan lokasi PLN SPKLU dalam satu peta.',
     icon: MapPin,
-    status: 'coming-soon',
-    statusText: 'Segera Hadir',
+    status: 'live',
+    statusText: 'Tersedia Sekarang',
     href: '/peta-spklu',
-    features: ['1000+ Lokasi', 'Filter Kompatibilitas', 'Status Real-time'],
+    features: ['3.000+ Stasiun PLN', 'Filter Konektor & Daya', 'Cari per Wilayah'],
     image: '/feature-map.jpg',
   },
   {
@@ -64,8 +65,8 @@ const capabilities = [
     title: 'TCO Calculator',
     description: 'Bandingkan biaya kepemilikan EV vs mobil bensin selama 3-5 tahun termasuk bahan bakar, listrik, servis, dan depresiasi.',
     icon: Wallet,
-    status: 'coming-soon',
-    statusText: 'Segera Hadir',
+    status: 'live',
+    statusText: 'Tersedia Sekarang',
     href: '/tco-calculator',
     features: ['Perbandingan 5 Tahun', 'Biaya Lengkap', 'Analisis Hemat'],
     image: '/feature-tco.jpg',
@@ -73,12 +74,12 @@ const capabilities = [
   {
     id: 'komunitas',
     title: 'Komunitas EV',
-    description: 'Bergabung dengan komunitas pemilik EV Indonesia. Bagikan pengalaman, review SPKLU, dan dapatkan tips dari sesama pengguna.',
+    description: 'Direktori grup pemilik EV di Indonesia — diorganisir per merek, wilayah, dan minat. Klik untuk gabung Facebook group atau formulir pendaftaran.',
     icon: Users,
-    status: 'coming-soon',
-    statusText: 'Segera Hadir',
+    status: 'live',
+    statusText: 'Tersedia Sekarang',
     href: '/komunitas',
-    features: ['Review SPKLU', 'Tips & Trik', 'Forum Diskusi'],
+    features: ['Per Merek', 'Per Wilayah', 'Per Minat'],
     image: '/grid-4.jpg',
   },
 ];
@@ -88,8 +89,10 @@ export default function LandingPage() {
   const capsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const faqRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (prefersReducedMotion) return; // honor the user's vestibular preference
     const ctx = gsap.context(() => {
       // Hero animation
       const heroElements = heroRef.current?.querySelectorAll('.hero-animate');
@@ -151,7 +154,7 @@ export default function LandingPage() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <div className="relative w-full">
@@ -174,7 +177,7 @@ export default function LandingPage() {
               <div className="hero-animate inline-flex items-center gap-2 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-full px-4 py-2 mb-6">
                 <span className="w-2 h-2 bg-[#FFC300] rounded-full animate-pulse" />
                 <span className="text-[#FFC300] text-sm font-medium">
-                  Platform EV #1 di Indonesia
+                  Platform EV Indonesia
                 </span>
               </div>
 
@@ -231,29 +234,35 @@ export default function LandingPage() {
                   alt="Electric Vehicle Charging"
                   className="w-full max-w-lg mx-auto drop-shadow-2xl"
                 />
-                {/* Floating cards */}
-                <div className="absolute -bottom-4 -left-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl">
+                {/* Floating cards — link to the actual tools */}
+                <Link
+                  to="/kalkulator"
+                  className="absolute -bottom-4 -left-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-[#FFC300]/40 transition-colors"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
                       <Battery className="w-5 h-5 text-[#FFC300]" />
                     </div>
                     <div>
-                      <div className="text-white font-semibold text-sm">80% Charge</div>
-                      <div className="text-white/50 text-xs">~45 menit</div>
+                      <div className="text-white font-semibold text-sm">Cek waktu cas</div>
+                      <div className="text-white/50 text-xs">untuk EV-mu</div>
                     </div>
                   </div>
-                </div>
-                <div className="absolute -top-4 -right-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl">
+                </Link>
+                <Link
+                  to="/tco-calculator"
+                  className="absolute -top-4 -right-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-[#27AE60]/40 transition-colors"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#27AE60]/20 rounded-lg flex items-center justify-center">
                       <TrendingDown className="w-5 h-5 text-[#27AE60]" />
                     </div>
                     <div>
-                      <div className="text-white font-semibold text-sm">Hemat 70%</div>
-                      <div className="text-white/50 text-xs">vs Bensin</div>
+                      <div className="text-white font-semibold text-sm">Bandingkan biaya</div>
+                      <div className="text-white/50 text-xs">EV vs Bensin</div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </div>
@@ -453,7 +462,7 @@ export default function LandingPage() {
           </div>
 
           <div className="space-y-4">
-            {faqConfig.faqs.slice(0, 4).map((faq) => (
+            {faqConfig.faqs.map((faq) => (
               <details
                 key={faq.id}
                 className="group bg-forest-mid/50 rounded-xl border border-white/10 overflow-hidden"
@@ -467,16 +476,6 @@ export default function LandingPage() {
                 </div>
               </details>
             ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link
-              to="/faq"
-              className="inline-flex items-center gap-2 text-[#FFC300] hover:text-[#FFD60A] font-semibold transition-colors"
-            >
-              Lihat Semua FAQ
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         </div>
       </section>

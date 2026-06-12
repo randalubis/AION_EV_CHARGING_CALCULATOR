@@ -8,4 +8,15 @@ export const CHARGERS: { label: string; kw: number; type: 'ac' | 'dc' }[] = [
   { label: 'Ultra Fast DC (480 kW)', kw: 480, type: 'dc' },
 ];
 
-export const EFF = { ac: 0.90, dc: 0.93 };
+/**
+ * Battery-side efficiency: fraction of input power that ends up in the battery.
+ *
+ * AC (0.90): typical Level 2 onboard-charger conversion efficiency
+ *   (88–93% across modern OBCs; PLN home meter measures the input side, so
+ *   the user pays for this loss). Source: EPA Level 2 charging studies, ADAC.
+ *
+ * DC (0.95): connector → battery. Small cable + battery acceptance losses.
+ *   Excludes the station's own AC→DC conversion loss (~5%) — the operator
+ *   eats that, not the user. Previously 0.93 conflated the two.
+ */
+export const EFF = { ac: 0.90, dc: 0.95 };

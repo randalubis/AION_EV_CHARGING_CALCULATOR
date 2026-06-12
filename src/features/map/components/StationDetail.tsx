@@ -1,4 +1,5 @@
-import { X, MapPin, Clock, Navigation, Zap, DollarSign } from 'lucide-react';
+import { X, MapPin, Clock, Navigation, Zap, DollarSign, RefreshCw } from 'lucide-react';
+import { MapsPicker, navigateTargets } from './MapsPicker';
 import type { ChargingStation } from '../types';
 
 interface StationDetailProps {
@@ -13,6 +14,8 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
     acc[connector.type].push(connector);
     return acc;
   }, {} as Record<string, typeof station.connectors>);
+
+  const lastVerified = formatLastVerified(station.lastUpdated);
 
   return (
     <div className="bg-forest-dark rounded-xl border border-white/10 overflow-hidden shadow-2xl">
@@ -38,27 +41,40 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
         <div className="flex items-start gap-2">
           <MapPin className="w-4 h-4 text-white/40 flex-shrink-0 mt-0.5" />
           <div className="min-w-0">
-            <p className="text-white/80 text-xs">{station.address}</p>
-            <p className="text-white/40 text-[10px]">{station.city}</p>
+            {station.address && <p className="text-white/80 text-xs">{station.address}</p>}
+            {station.city && <p className="text-white/40 text-[10px]">{station.city}</p>}
             {distance !== undefined && (
-              <p className="text-[#FFC300] text-xs mt-0.5">{distance} km dari Anda</p>
+              <p className="text-[#FFC300] text-xs mt-0.5">
+                {distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance} km`} dari Anda
+              </p>
             )}
           </div>
         </div>
 
-        {/* Hours & Price */}
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1.5 text-white/60">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{station.operatingHours}</span>
+        {lastVerified && (
+          <div className="flex items-center gap-1.5 text-white/40 text-[10px]">
+            <RefreshCw className="w-3 h-3" />
+            <span>Diperbarui {lastVerified}</span>
           </div>
-          {station.pricing && (
-            <div className="flex items-center gap-1.5 text-white/60">
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>Rp {station.pricing.ratePerKwh.toLocaleString('id-ID')}/kWh</span>
-            </div>
-          )}
-        </div>
+        )}
+
+        {/* Hours & Price — only render rows that have data */}
+        {(station.operatingHours || (station.pricing && station.pricing.ratePerKwh > 0)) && (
+          <div className="flex items-center gap-4 text-xs flex-wrap">
+            {station.operatingHours && (
+              <div className="flex items-center gap-1.5 text-white/60">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{station.operatingHours}</span>
+              </div>
+            )}
+            {station.pricing && station.pricing.ratePerKwh > 0 && (
+              <div className="flex items-center gap-1.5 text-white/60">
+                <DollarSign className="w-3.5 h-3.5" />
+                <span>Rp {station.pricing.ratePerKwh.toLocaleString('id-ID')}/kWh</span>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Connectors */}
         <div>
@@ -105,19 +121,42 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
 
       {/* Action Button */}
       <div className="p-3 border-t border-white/10">
-        <button
-          onClick={() => {
-            const url = `https://www.google.com/maps/dir/?api=1&destination=${station.latitude},${station.longitude}`;
-            window.open(url, '_blank');
-          }}
-          className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors"
-        >
-          <Navigation className="w-4 h-4" />
-          Navigasi
-        </button>
+        <NavigatePicker station={station} />
       </div>
     </div>
   );
+}
+
+function NavigatePicker({ station }: { station: ChargingStation }) {
+  return (
+    <MapsPicker
+      targets={navigateTargets(station.latitude, station.longitude, station.name)}
+      trigger={
+        <button className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors">
+          <Navigation className="w-4 h-4" />
+          Navigasi
+        </button>
+      }
+    />
+  );
+}
+
+const relativeTimeFormatter = new Intl.RelativeTimeFormat('id', { numeric: 'auto' });
+
+function formatLastVerified(iso: string): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  const diffMs = d.getTime() - Date.now();
+  const absHours = Math.abs(diffMs / 3_600_000);
+  if (absHours < 1) {
+    const minutes = Math.round(diffMs / 60_000);
+    return relativeTimeFormatter.format(minutes, 'minute');
+  }
+  if (absHours < 24) {
+    return relativeTimeFormatter.format(Math.round(diffMs / 3_600_000), 'hour');
+  }
+  return relativeTimeFormatter.format(Math.round(diffMs / 86_400_000), 'day');
 }
 
 function getConnectorLabel(type: string): string {
@@ -134,20 +173,22 @@ function getConnectorLabel(type: string): string {
 
 function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    'available': 'text-[#27AE60]',
-    'occupied': 'text-amber-400',
-    'offline': 'text-[#E74C3C]',
-    'maintenance': 'text-gray-400',
+    available: 'text-[#27AE60]',
+    occupied: 'text-amber-400',
+    offline: 'text-[#E74C3C]',
+    maintenance: 'text-gray-400',
+    unknown: 'text-white/40',
   };
   return colors[status] || 'text-white/50';
 }
 
 function getStatusLabel(status: string): string {
   const labels: Record<string, string> = {
-    'available': 'Tersedia',
-    'occupied': 'Terisi',
-    'offline': 'Offline',
-    'maintenance': 'Perawatan',
+    available: 'Tersedia',
+    occupied: 'Terisi',
+    offline: 'Offline',
+    maintenance: 'Perawatan',
+    unknown: '—',
   };
   return labels[status] || status;
 }
