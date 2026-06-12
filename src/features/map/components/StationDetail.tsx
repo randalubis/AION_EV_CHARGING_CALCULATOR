@@ -18,13 +18,13 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
   const lastVerified = formatLastVerified(station.lastUpdated);
 
   return (
-    <div className="bg-forest-dark rounded-xl border border-white/10 overflow-hidden shadow-2xl">
+    <div className="bg-carbon-950 rounded-xl border border-white/10 overflow-hidden shadow-2xl">
       {/* Header */}
       <div className="p-3 border-b border-white/10">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h2 className="text-white font-semibold text-base truncate">{station.name}</h2>
-            <p className="text-[#FFC300] text-xs">{station.operator}</p>
+            <p className="text-volt text-xs">{station.operator}</p>
           </div>
           <button
             onClick={onClose}
@@ -44,7 +44,7 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
             {station.address && <p className="text-white/80 text-xs">{station.address}</p>}
             {station.city && <p className="text-white/40 text-[10px]">{station.city}</p>}
             {distance !== undefined && (
-              <p className="text-[#FFC300] text-xs mt-0.5">
+              <p className="text-volt text-xs mt-0.5">
                 {distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance} km`} dari Anda
               </p>
             )}
@@ -81,7 +81,7 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
           <p className="text-white/40 text-[10px] uppercase tracking-wider mb-2">Connector</p>
           <div className="space-y-1.5">
             {Object.entries(connectorsByType).map(([type, connectors]) => (
-              <div key={type} className="bg-forest-mid/50 rounded-lg p-2">
+              <div key={type} className="bg-carbon-900/50 rounded-lg p-2">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-white text-xs font-medium">{getConnectorLabel(type)}</span>
                   <span className="text-white/40 text-[10px]">{connectors.length} unit</span>
@@ -110,7 +110,7 @@ export function StationDetail({ station, onClose, distance }: StationDetailProps
             <p className="text-white/40 text-[10px] uppercase tracking-wider mb-1.5">Fasilitas</p>
             <div className="flex flex-wrap gap-1">
               {station.amenities.slice(0, 4).map((amenity, i) => (
-                <span key={i} className="px-2 py-0.5 bg-forest-mid text-white/60 text-[10px] rounded">
+                <span key={i} className="px-2 py-0.5 bg-carbon-900 text-white/60 text-[10px] rounded">
                   {getAmenityLabel(amenity)}
                 </span>
               ))}
@@ -132,7 +132,7 @@ function NavigatePicker({ station }: { station: ChargingStation }) {
     <MapsPicker
       targets={navigateTargets(station.latitude, station.longitude, station.name)}
       trigger={
-        <button className="w-full flex items-center justify-center gap-1.5 bg-[#FFC300] text-forest-dark text-sm font-semibold py-2.5 rounded-lg hover:bg-[#FFD60A] transition-colors">
+        <button className="w-full flex items-center justify-center gap-1.5 bg-volt text-carbon-950 text-sm font-semibold py-2.5 rounded-lg hover:bg-volt-bright transition-colors">
           <Navigation className="w-4 h-4" />
           Navigasi
         </button>

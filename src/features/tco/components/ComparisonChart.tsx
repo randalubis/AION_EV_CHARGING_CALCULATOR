@@ -48,7 +48,7 @@ export function ComparisonChart({ result }: ComparisonChartProps) {
   const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-forest-dark border border-white/20 rounded-lg p-3 shadow-xl">
+        <div className="bg-carbon-950 border border-white/20 rounded-lg p-3 shadow-xl">
           <p className="text-white font-medium mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -64,7 +64,7 @@ export function ComparisonChart({ result }: ComparisonChartProps) {
   return (
     <div className="space-y-6">
       {/* Total Cost Comparison */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <h3 className="text-white font-semibold mb-6">Total Biaya 5 Tahun</h3>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
@@ -94,7 +94,7 @@ export function ComparisonChart({ result }: ComparisonChartProps) {
       
       <div className="grid md:grid-cols-2 gap-6">
         {/* Yearly Trend */}
-        <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+        <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
           <h3 className="text-white font-semibold mb-6">Akumulasi Biaya per Tahun</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -120,7 +120,7 @@ export function ComparisonChart({ result }: ComparisonChartProps) {
         </div>
         
         {/* EV Cost Breakdown */}
-        <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+        <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
           <h3 className="text-white font-semibold mb-6">Komposisi Biaya EV</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">

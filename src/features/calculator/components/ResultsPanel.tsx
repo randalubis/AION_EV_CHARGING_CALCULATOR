@@ -29,9 +29,9 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
   const r = result;
 
   return (
-    <div className="mt-8 bg-gradient-to-br from-forest-mid to-forest-dark rounded-2xl p-6 md:p-8 border border-white/10">
+    <div className="mt-8 bg-gradient-to-br from-carbon-900 to-carbon-950 rounded-2xl p-6 md:p-8 border border-white/10">
       <div className="flex items-center justify-between gap-3 mb-6">
-        <div className="flex items-center gap-2 text-[#FFC300] text-sm uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-volt text-sm uppercase tracking-wider">
           <Zap className="w-4 h-4" />
           {r.isCurEmpty ? 'Estimasi' : 'Estimasi Pengisian'}
         </div>
@@ -47,12 +47,12 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
       </div>
 
       {/* Hero: Cost */}
-      <div className="bg-[#FFC300]/10 rounded-xl p-6 border border-[#FFC300]/30 mb-6">
-        <div className="flex items-center gap-2 text-[#FFC300] text-xs uppercase tracking-wider mb-2">
+      <div className="bg-volt/10 rounded-xl p-6 border border-volt/30 mb-6">
+        <div className="flex items-center gap-2 text-volt text-xs uppercase tracking-wider mb-2">
           <Wallet className="w-4 h-4" />
           Estimasi Biaya
         </div>
-        <div className="text-4xl md:text-5xl font-sans font-bold text-[#FFD60A]">
+        <div className="text-4xl md:text-5xl font-sans font-bold text-volt-bright">
           {r.isCurEmpty || r.tariff <= 0 ? '—' : fmtRp(r.cost)}
         </div>
         {!r.isCurEmpty && r.tariff > 0 && (
@@ -91,10 +91,10 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
       </div>
 
       {/* Charger summary */}
-      <div className="bg-forest-dark/40 rounded-xl p-4 border border-white/10 mb-4 flex items-center justify-between gap-3">
+      <div className="bg-carbon-950/40 rounded-xl p-4 border border-white/10 mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Zap className="w-4 h-4 text-[#FFC300]" />
+          <div className="w-9 h-9 bg-volt/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Zap className="w-4 h-4 text-volt" />
           </div>
           <div className="min-w-0">
             <div className="text-white font-semibold text-sm truncate">{r.chargerLabel}</div>
@@ -103,7 +103,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
             </div>
           </div>
         </div>
-        <span className="bg-[#FFC300]/20 text-[#FFC300] text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0">
+        <span className="bg-volt/20 text-volt text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0">
           {r.isAC ? 'AC' : 'DC Fast'}
         </span>
       </div>
@@ -133,7 +133,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
           trigger={
             <button
               type="button"
-              className="flex-1 bg-forest-dark hover:bg-forest-mid border border-white/20 hover:border-[#FFC300] text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+              className="flex-1 bg-carbon-950 hover:bg-carbon-900 border border-white/20 hover:border-volt text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
             >
               <MapPin className="w-5 h-5" />
               Cari SPKLU Terdekat
@@ -143,7 +143,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
         <button
           onClick={onShare}
           disabled={r.isCurEmpty}
-          className="px-6 py-3 border border-white/20 hover:border-[#FFC300] text-white/70 hover:text-[#FFC300] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-2"
+          className="px-6 py-3 border border-white/20 hover:border-volt text-white/70 hover:text-volt disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-2"
         >
           <Share2 className="w-5 h-5" />
           Bagikan
@@ -167,7 +167,7 @@ function ResultStat({
   accent?: boolean;
 }) {
   return (
-    <div className="bg-forest-dark/50 rounded-xl p-3 md:p-4 border border-white/10">
+    <div className="bg-carbon-950/50 rounded-xl p-3 md:p-4 border border-white/10">
       <div className="flex items-center gap-1.5 text-white/50 text-[10px] md:text-xs uppercase tracking-wider mb-1.5">
         <Icon className="w-3.5 h-3.5" />
         {label}

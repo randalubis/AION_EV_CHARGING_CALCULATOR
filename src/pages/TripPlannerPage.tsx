@@ -47,28 +47,28 @@ export default function TripPlannerPage() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
+    <div ref={containerRef} className="relative w-full min-h-screen bg-carbon-950">
       {/* Header */}
       <div className="pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Breadcrumb */}
           <div className="animate-in flex items-center gap-2 text-white/50 text-sm mb-6">
-            <Link to="/" className="hover:text-[#FFC300] transition-colors">
+            <Link to="/" className="hover:text-volt transition-colors">
               Beranda
             </Link>
             <span>/</span>
-            <span className="text-[#FFC300]">Trip Planner</span>
+            <span className="text-volt">Trip Planner</span>
           </div>
 
           <div className="animate-in text-center max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6">
-              <Route className="w-4 h-4 text-[#FFC300]" />
+              <Route className="w-4 h-4 text-volt" />
               <span className="text-white/70 text-sm font-medium">Segera Hadir</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-bold text-white mb-6">
               Trip
-              <span className="text-[#FFC300]"> Planner</span>
+              <span className="text-volt"> Planner</span>
             </h1>
 
             <p className="text-white/60 text-lg leading-relaxed mb-8">
@@ -82,9 +82,9 @@ export default function TripPlannerPage() {
               <input
                 type="email"
                 placeholder="Masukkan email kamu"
-                className="flex-1 bg-forest-mid border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:border-[#FFC300] focus:outline-none"
+                className="flex-1 bg-carbon-900 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:border-volt focus:outline-none"
               />
-              <button className="bg-[#FFC300] hover:bg-[#FFD60A] text-forest-dark font-semibold px-6 py-3 rounded-xl transition-colors">
+              <button className="bg-volt hover:bg-volt-bright text-carbon-950 font-semibold px-6 py-3 rounded-xl transition-colors">
                 Beritahu Saya
               </button>
             </div>
@@ -100,11 +100,11 @@ export default function TripPlannerPage() {
             alt="Trip Planner Preview"
             className="w-full h-64 md:h-96 object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-forest-dark via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-carbon-950 via-transparent to-transparent" />
           
           {/* Coming Soon Overlay */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-forest-dark/90 backdrop-blur-md rounded-2xl px-8 py-6 border border-[#FFC300]/30 text-center">
+            <div className="bg-carbon-950/90 backdrop-blur-md rounded-2xl px-8 py-6 border border-volt/30 text-center">
               <div className="text-5xl mb-4">🛣️</div>
               <h3 className="text-2xl font-sans font-bold text-white mb-2">
                 COMING SOON
@@ -118,7 +118,7 @@ export default function TripPlannerPage() {
       </div>
 
       {/* How It Works */}
-      <div className="py-16 bg-forest-mid/30">
+      <div className="py-16 bg-carbon-900/30">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-sans font-bold text-white mb-4">
@@ -138,8 +138,8 @@ export default function TripPlannerPage() {
               { step: '4', title: 'Dapatkan Rute', desc: 'Lihat rute optimal dengan charging stops' },
             ].map((item, i) => (
               <div key={i} className="animate-in text-center">
-                <div className="w-16 h-16 bg-[#FFC300]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-sans font-bold text-[#FFC300]">{item.step}</span>
+                <div className="w-16 h-16 bg-volt/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-sans font-bold text-volt">{item.step}</span>
                 </div>
                 <h3 className="text-white font-semibold mb-2">{item.title}</h3>
                 <p className="text-white/50 text-sm">{item.desc}</p>
@@ -164,10 +164,10 @@ export default function TripPlannerPage() {
               return (
                 <div
                   key={i}
-                  className="animate-in bg-forest-mid/50 rounded-xl p-6 border border-white/10 hover:border-[#FFC300]/30 transition-colors"
+                  className="animate-in bg-carbon-900/50 rounded-xl p-6 border border-white/10 hover:border-volt/30 transition-colors"
                 >
-                  <div className="w-12 h-12 bg-[#FFC300]/20 rounded-xl flex items-center justify-center mb-4">
-                    <Icon className="w-6 h-6 text-[#FFC300]" />
+                  <div className="w-12 h-12 bg-volt/20 rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="w-6 h-6 text-volt" />
                   </div>
                   <h3 className="text-white font-semibold mb-2">{feature.title}</h3>
                   <p className="text-white/50 text-sm">{feature.description}</p>
@@ -179,7 +179,7 @@ export default function TripPlannerPage() {
       </div>
 
       {/* Popular Routes Preview */}
-      <div className="py-16 bg-forest-mid/30">
+      <div className="py-16 bg-carbon-900/30">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-sans font-bold text-white mb-4">
@@ -198,17 +198,17 @@ export default function TripPlannerPage() {
             ].map((route, i) => (
               <div
                 key={i}
-                className="animate-in bg-forest-mid/50 rounded-xl p-6 border border-white/10"
+                className="animate-in bg-carbon-900/50 rounded-xl p-6 border border-white/10"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <MapPin className="w-5 h-5 text-[#FFC300]" />
+                  <MapPin className="w-5 h-5 text-volt" />
                   <span className="text-white font-semibold">{route.from}</span>
                   <Navigation className="w-4 h-4 text-white/30" />
                   <span className="text-white font-semibold">{route.to}</span>
                 </div>
                 <div className="flex gap-4 text-sm">
                   <span className="text-white/50">{route.distance}</span>
-                  <span className="text-[#FFC300]">{route.stops}</span>
+                  <span className="text-volt">{route.stops}</span>
                 </div>
               </div>
             ))}
@@ -221,7 +221,7 @@ export default function TripPlannerPage() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-[#FFC300] transition-colors"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-volt transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Kembali ke Beranda

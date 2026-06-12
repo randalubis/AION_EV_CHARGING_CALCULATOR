@@ -43,7 +43,7 @@ function buildStationIcon(color: string, shadow: string, glyph: string, size = 3
 }
 
 const STATION_ICONS = {
-  selected: buildStationIcon('#FFC300', '0 0 0 4px rgba(255, 195, 0, 0.3)', PLUG_SVG, 36, 4),
+  selected: buildStationIcon('#C6FF4D', '0 0 0 4px rgba(198, 255, 77, 0.3)', PLUG_SVG, 36, 4),
   available: buildStationIcon('#27AE60', '0 2px 4px rgba(0,0,0,0.3)', PLUG_SVG),
   unavailable: buildStationIcon('#E74C3C', '0 2px 4px rgba(0,0,0,0.3)', QUESTION_SVG),
 };
@@ -139,7 +139,7 @@ function LocateButton({ onLocate }: LocateButtonProps) {
           );
         }
       }}
-      className="absolute bottom-24 right-6 z-[1000] w-10 h-10 bg-[#FFC300]/90 text-forest-dark rounded-lg shadow-lg hover:bg-[#e6b000] transition-colors flex items-center justify-center pointer-events-auto"
+      className="absolute bottom-24 right-6 z-[1000] w-10 h-10 bg-volt/90 text-carbon-950 rounded-lg shadow-lg hover:bg-volt-dim transition-colors flex items-center justify-center pointer-events-auto"
       title="Lokasi saya"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -305,7 +305,7 @@ export function MapView({
 
 function LegendOverlay() {
   return (
-    <div className="absolute bottom-4 left-4 z-[1000] bg-forest-dark/85 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 text-xs flex flex-col gap-1.5 pointer-events-none">
+    <div className="absolute bottom-4 left-4 z-[1000] bg-carbon-950/85 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 text-xs flex flex-col gap-1.5 pointer-events-none">
       <span className="flex items-center gap-2 text-white/70">
         <LegendDot color="#27AE60">⚡</LegendDot>
         Tersedia
@@ -315,7 +315,7 @@ function LegendOverlay() {
         Status tidak diketahui
       </span>
       <span className="flex items-center gap-2 text-white/70">
-        <LegendDot color="#FFC300" thicker>⚡</LegendDot>
+        <LegendDot color="#C6FF4D" thicker>⚡</LegendDot>
         Terpilih
       </span>
     </div>

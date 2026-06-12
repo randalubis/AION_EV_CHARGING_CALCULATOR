@@ -21,17 +21,21 @@ const SOCIAL_ICONS: Record<string, LucideIcon> = {
 
 export function LandingFooter() {
   return (
-    <footer className="py-16 border-t border-white/10">
+    <footer className="relative py-16 border-t border-white/10">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-volt/40 to-transparent"
+      />
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-[#FFC300] rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-forest-dark" />
+              <div className="w-10 h-10 bg-volt rounded-lg flex items-center justify-center">
+                <Zap className="w-6 h-6 text-carbon-950" />
               </div>
               <span className="text-white font-sans font-bold text-xl">
-                evhub<span className="text-[#FFC300]">.id</span>
+                evhub<span className="text-volt">.id</span>
               </span>
             </Link>
             <p className="text-white/50 font-body max-w-sm mb-6">
@@ -48,7 +52,7 @@ export function LandingFooter() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="w-10 h-10 bg-white/10 hover:bg-[#FFC300] rounded-lg flex items-center justify-center text-white hover:text-forest-dark transition-all"
+                    className="w-10 h-10 bg-white/10 hover:bg-volt rounded-lg flex items-center justify-center text-white hover:text-carbon-950 transition-all"
                   >
                     <Icon className="w-5 h-5" />
                   </a>
@@ -65,7 +69,7 @@ export function LandingFooter() {
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-white/50 hover:text-[#FFC300] transition-colors"
+                    className="text-white/50 hover:text-volt transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -81,13 +85,13 @@ export function LandingFooter() {
               <li>
                 <a
                   href={`mailto:${footerConfig.email}`}
-                  className="hover:text-[#FFC300] transition-colors"
+                  className="hover:text-volt transition-colors"
                 >
                   {footerConfig.email}
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#FFC300] flex-shrink-0" />
+                <MapPin className="w-4 h-4 text-volt flex-shrink-0" />
                 {footerConfig.locationText}
               </li>
             </ul>

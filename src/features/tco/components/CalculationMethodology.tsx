@@ -5,28 +5,28 @@ export function CalculationMethodology() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-forest-mid/30 rounded-2xl border border-white/10 overflow-hidden">
+    <div className="bg-carbon-900/30 rounded-2xl border border-white/10 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-colors"
       >
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center">
-            <Calculator className="w-5 h-5 text-[#FFC300]" />
+          <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
+            <Calculator className="w-5 h-5 text-volt" />
           </div>
           <div className="text-left">
             <div className="text-white font-semibold">Metodologi Perhitungan TCO</div>
             <div className="text-white/50 text-sm">Pahami bagaimana kalkulasi dilakukan</div>
           </div>
         </div>
-        <ChevronDown className={`w-6 h-6 text-[#FFC300] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-6 h-6 text-volt transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
         <div className="px-6 pb-6 space-y-6">
           {/* Formula */}
-          <div className="bg-forest-dark/50 rounded-xl p-4 border border-white/10">
-            <div className="text-[#FFC300] font-medium mb-2">Rumus TCO</div>
+          <div className="bg-carbon-950/50 rounded-xl p-4 border border-white/10">
+            <div className="text-volt font-medium mb-2">Rumus TCO</div>
             <div className="text-white font-mono text-sm">
               TCO = Harga Beli + Biaya Operasional - Nilai Sisa
             </div>
@@ -84,11 +84,11 @@ export function CalculationMethodology() {
           </div>
           
           {/* Data Sources */}
-          <div className="bg-[#FFC300]/5 border border-[#FFC300]/20 rounded-xl p-4">
+          <div className="bg-volt/5 border border-volt/20 rounded-xl p-4">
             <div className="flex items-start gap-3">
-              <Info className="w-5 h-5 text-[#FFC300] flex-shrink-0 mt-0.5" />
+              <Info className="w-5 h-5 text-volt flex-shrink-0 mt-0.5" />
               <div>
-                <div className="text-[#FFC300] font-medium mb-2">Sumber Data & Disclaimer</div>
+                <div className="text-volt font-medium mb-2">Sumber Data & Disclaimer</div>
                 <ul className="space-y-1 text-sm text-white/60">
                   <li>• Harga kendaraan: OTOMOTIF, dealer resmi, dan sumber pasar</li>
                   <li>• Tarif BBM: Pertamina (Pertalite, Pertamax, Dexlite)</li>

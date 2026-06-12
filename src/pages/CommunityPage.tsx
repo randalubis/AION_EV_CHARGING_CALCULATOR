@@ -45,20 +45,20 @@ export default function CommunityPage() {
   }, [prefersReducedMotion]);
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
+    <div ref={containerRef} className="relative w-full min-h-screen bg-carbon-950">
       {/* Compact header */}
       <div className="pt-8 pb-4">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="animate-in flex items-center gap-2 text-white/50 text-sm mb-4">
-            <Link to="/" className="hover:text-[#FFC300] transition-colors">Beranda</Link>
+            <Link to="/" className="hover:text-volt transition-colors">Beranda</Link>
             <span>/</span>
-            <span className="text-[#FFC300]">Komunitas</span>
+            <span className="text-volt">Komunitas</span>
           </div>
 
           <div className="animate-in flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Users className="w-5 h-5 text-[#FFC300]" />
+              <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Users className="w-5 h-5 text-volt" />
               </div>
               <div className="min-w-0">
                 <h1 className="text-white font-bold text-xl md:text-2xl leading-tight">
@@ -92,13 +92,13 @@ export default function CommunityPage() {
           className="animate-in relative overflow-hidden rounded-2xl border border-white/10 p-6 sm:p-8"
           style={{
             background:
-              'radial-gradient(120% 100% at 0% 0%, rgba(255, 195, 0, 0.18) 0%, transparent 60%), radial-gradient(120% 100% at 100% 100%, rgba(39, 174, 96, 0.14) 0%, transparent 60%), #1f2922',
+              'radial-gradient(120% 100% at 0% 0%, rgba(198, 255, 77, 0.18) 0%, transparent 60%), radial-gradient(120% 100% at 100% 100%, rgba(39, 174, 96, 0.14) 0%, transparent 60%), #161C17',
           }}
         >
           {/* Soft decorative icons in the background */}
           <Users
             aria-hidden
-            className="absolute -right-6 -top-6 w-40 h-40 sm:w-48 sm:h-48 text-[#FFC300]/10"
+            className="absolute -right-6 -top-6 w-40 h-40 sm:w-48 sm:h-48 text-volt/10"
             strokeWidth={1.25}
           />
           <MessageSquare
@@ -108,9 +108,9 @@ export default function CommunityPage() {
           />
 
           <div className="relative max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-[#FFC300]/10 border border-[#FFC300]/30 rounded-full px-3 py-1 mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#FFC300]" />
-              <span className="text-[#FFC300] text-xs font-medium">Direktori Komunitas</span>
+            <div className="inline-flex items-center gap-2 bg-volt/10 border border-volt/30 rounded-full px-3 py-1 mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-volt" />
+              <span className="text-volt text-xs font-medium">Direktori Komunitas</span>
             </div>
             <h2 className="text-white font-bold text-xl sm:text-2xl leading-tight mb-2">
               Cari komunitasmu — per merek, wilayah, atau minat.
@@ -132,13 +132,13 @@ export default function CommunityPage() {
         >
           <Tabs.List
             aria-label="Pilih cara menelusuri komunitas"
-            className="inline-flex p-1 bg-forest-mid/40 border border-white/10 rounded-lg gap-1 mb-8"
+            className="inline-flex p-1 bg-carbon-900/40 border border-white/10 rounded-lg gap-1 mb-8"
           >
             {(Object.keys(TAB_LABELS) as TabKey[]).map((k) => (
               <Tabs.Trigger
                 key={k}
                 value={k}
-                className="px-3 sm:px-4 py-2 text-sm rounded-md text-white/60 hover:text-white data-[state=active]:bg-[#FFC300] data-[state=active]:text-forest-dark data-[state=active]:font-semibold transition-colors"
+                className="px-3 sm:px-4 py-2 text-sm rounded-md text-white/60 hover:text-white data-[state=active]:bg-volt data-[state=active]:text-carbon-950 data-[state=active]:font-semibold transition-colors"
               >
                 {TAB_LABELS[k]}
               </Tabs.Trigger>
@@ -157,13 +157,13 @@ export default function CommunityPage() {
         </Tabs.Root>
 
         {/* Submit CTA — anchors the bottom of the page */}
-        <div className="animate-in mt-16 bg-gradient-to-r from-[#FFC300]/10 to-transparent border border-[#FFC300]/30 rounded-2xl p-6 text-center">
+        <div className="animate-in mt-16 bg-gradient-to-r from-volt/10 to-transparent border border-volt/30 rounded-2xl p-6 text-center">
           <h3 className="text-white font-semibold text-lg mb-2">
             Komunitas yang kamu ikut belum terdaftar?
           </h3>
           <p className="text-white/60 text-sm mb-4 max-w-xl mx-auto">
             Kirim usulan ke{' '}
-            <a href="mailto:hello@evhub.id?subject=Usulan%20komunitas%20EV" className="text-[#FFC300] hover:underline">
+            <a href="mailto:hello@evhub.id?subject=Usulan%20komunitas%20EV" className="text-volt hover:underline">
               hello@evhub.id
             </a>{' '}
             dengan nama komunitas, link grup atau formulir, dan info brand / wilayah / minat. Kami
@@ -177,7 +177,7 @@ export default function CommunityPage() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-[#FFC300] transition-colors"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-volt transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Kembali ke Beranda

@@ -24,14 +24,14 @@ function primaryInterest(interests: Community['interests']): Community['interest
 /** Empty state for any of the three tabs. */
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="text-center py-16 px-6 bg-forest-mid/30 border border-white/10 rounded-xl">
+    <div className="text-center py-16 px-6 bg-carbon-900/30 border border-white/10 rounded-xl">
       <Users className="w-10 h-10 text-white/20 mx-auto mb-3" />
       <p className="text-white/60">{message}</p>
       <p className="text-white/40 text-sm mt-1">
         Tahu komunitas yang harus masuk daftar?{' '}
         <a
           href="mailto:hello@evhub.id?subject=Usulan%20komunitas%20EV"
-          className="text-[#FFC300] hover:underline"
+          className="text-volt hover:underline"
         >
           Kirim usulan
         </a>
@@ -101,8 +101,8 @@ export function CommunitiesByBrand({ communities }: GroupsProps) {
       {crossBrand.length > 0 && (
         <section>
           <header className="flex items-center gap-3 mb-4">
-            <div className="w-7 h-7 rounded-md bg-[#FFC300]/20 flex items-center justify-center flex-shrink-0">
-              <Users className="w-4 h-4 text-[#FFC300]" />
+            <div className="w-7 h-7 rounded-md bg-volt/20 flex items-center justify-center flex-shrink-0">
+              <Users className="w-4 h-4 text-volt" />
             </div>
             <h2 className="text-white font-semibold text-lg">Lintas Merek</h2>
             <span className="text-white/40 text-xs">{crossBrand.length} komunitas</span>

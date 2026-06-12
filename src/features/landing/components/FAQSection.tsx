@@ -19,12 +19,12 @@ export function FAQSection() {
           {faqConfig.faqs.map((faq) => (
             <details
               key={faq.id}
-              className="group bg-forest-mid/50 rounded-xl border border-white/10 overflow-hidden"
+              className="group bg-carbon-900/50 rounded-xl border border-white/10 open:border-volt/30 transition-colors overflow-hidden"
             >
               <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
                 <span className="text-white font-semibold pr-4">{faq.question}</span>
                 <ChevronRight
-                  className="w-5 h-5 text-[#FFC300] transition-transform group-open:rotate-90 flex-shrink-0"
+                  className="w-5 h-5 text-volt transition-transform group-open:rotate-90 flex-shrink-0"
                   aria-hidden
                 />
               </summary>
@@ -35,7 +35,7 @@ export function FAQSection() {
 
         <p className="text-center text-white/60 mt-10">
           Masih punya pertanyaan?{' '}
-          <a href="mailto:hello@evhub.id" className="text-[#FFC300] hover:underline">
+          <a href="mailto:hello@evhub.id" className="text-volt hover:underline">
             Hubungi kami
           </a>
         </p>

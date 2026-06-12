@@ -26,20 +26,20 @@ export default function CalculatorPage() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-forest-dark">
+    <div className="relative w-full min-h-screen bg-carbon-950">
       {/* Compact header */}
       <div ref={headerRef} className="pt-8 pb-4">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="header-animate flex items-center gap-2 text-white/50 text-sm mb-4">
-            <Link to="/" className="hover:text-[#FFC300] transition-colors">Beranda</Link>
+            <Link to="/" className="hover:text-volt transition-colors">Beranda</Link>
             <span>/</span>
-            <span className="text-[#FFC300]">Kalkulator</span>
+            <span className="text-volt">Kalkulator</span>
           </div>
 
           <div className="header-animate flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 bg-[#FFC300]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Zap className="w-5 h-5 text-[#FFC300]" />
+              <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Zap className="w-5 h-5 text-volt" />
               </div>
               <div className="min-w-0">
                 <h1 className="text-white font-bold text-xl md:text-2xl leading-tight">
@@ -70,7 +70,7 @@ export default function CalculatorPage() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-[#FFC300] transition-colors"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-volt transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Kembali ke Beranda

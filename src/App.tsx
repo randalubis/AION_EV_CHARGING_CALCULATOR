@@ -17,7 +17,7 @@ const CommunityPage = lazy(() => import('./pages/CommunityPage'));
 function PageFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+      <div className="w-10 h-10 border-2 border-volt border-t-transparent rounded-full animate-spin" />
     </div>
   );
 }
@@ -37,7 +37,7 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-forest-dark">
+    <div className="relative w-full min-h-screen bg-carbon-950">
       <Navbar />
       <SpeedInsights />
       <Analytics />

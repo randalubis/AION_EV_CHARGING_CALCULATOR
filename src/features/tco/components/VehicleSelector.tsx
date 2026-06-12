@@ -47,7 +47,7 @@ export function VehicleSelector({
   return (
     <div className="grid md:grid-cols-2 gap-6">
       {/* EV Selection */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-[#27AE60]/20 rounded-xl flex items-center justify-center">
             <Zap className="w-6 h-6 text-[#27AE60]" />
@@ -75,7 +75,7 @@ export function VehicleSelector({
                 <select
                   value={evBrandFilter}
                   onChange={(e) => setEVBrandFilter(e.target.value)}
-                  className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-[#FFC300] focus:outline-none"
+                  className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-volt focus:outline-none"
                 >
                   <option value="all">Semua Merek</option>
                   {evBrands.map(brand => (
@@ -92,7 +92,7 @@ export function VehicleSelector({
                 <button
                   key={vehicle.id}
                   onClick={() => onSelectEV(vehicle.id)}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-white/10 bg-forest-dark/50 hover:border-[#27AE60]/50 hover:bg-forest-dark transition-all text-left"
+                  className="w-full flex items-center justify-between p-3 rounded-lg border border-white/10 bg-carbon-950/50 hover:border-[#27AE60]/50 hover:bg-carbon-950 transition-all text-left"
                 >
                   <div>
                     <div className="text-white font-medium text-sm">{vehicle.brand} {vehicle.series}</div>
@@ -112,7 +112,7 @@ export function VehicleSelector({
       </div>
       
       {/* ICE Selection */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-[#E67E22]/20 rounded-xl flex items-center justify-center">
             <Fuel className="w-6 h-6 text-[#E67E22]" />
@@ -140,7 +140,7 @@ export function VehicleSelector({
                 <select
                   value={iceBrandFilter}
                   onChange={(e) => setICEBrandFilter(e.target.value)}
-                  className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-[#FFC300] focus:outline-none"
+                  className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-3 text-white appearance-none cursor-pointer focus:border-volt focus:outline-none"
                 >
                   <option value="all">Semua Merek</option>
                   {iceBrands.map(brand => (
@@ -157,7 +157,7 @@ export function VehicleSelector({
                 <button
                   key={vehicle.id}
                   onClick={() => onSelectICE(vehicle.id)}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-white/10 bg-forest-dark/50 hover:border-[#E67E22]/50 hover:bg-forest-dark transition-all text-left"
+                  className="w-full flex items-center justify-between p-3 rounded-lg border border-white/10 bg-carbon-950/50 hover:border-[#E67E22]/50 hover:bg-carbon-950 transition-all text-left"
                 >
                   <div>
                     <div className="text-white font-medium text-sm">{vehicle.brand} {vehicle.model}</div>
@@ -192,7 +192,7 @@ function SelectedVehicleCard({ vehicle, type, onClear }: SelectedVehicleCardProp
   const iceVehicle = !isEV ? vehicle as ICEVehicle : null;
   
   return (
-    <div className={`bg-forest-dark rounded-xl p-4 border ${isEV ? 'border-[#27AE60]/30' : 'border-[#E67E22]/30'}`}>
+    <div className={`bg-carbon-950 rounded-xl p-4 border ${isEV ? 'border-[#27AE60]/30' : 'border-[#E67E22]/30'}`}>
       <div className="flex justify-between items-start mb-4">
         <div>
           <h4 className="text-white font-semibold text-lg">

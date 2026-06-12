@@ -5,8 +5,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
+        sans: ['Space Grotesk', 'sans-serif'],
         body: ['DM Sans', 'sans-serif'],
       },
       colors: {
@@ -15,10 +14,18 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        forest: {
-          dark: "#0d1310",
-          mid: "#1a2420",
-          light: "#2a3a34",
+        // Carbon scale — near-black surfaces with a faint green tint
+        carbon: {
+          950: "#0A0E0B",
+          900: "#111612",
+          800: "#1A211B",
+          700: "#28312A",
+        },
+        // Volt — neon green energy accent
+        volt: {
+          DEFAULT: "#C6FF4D",
+          bright: "#DBFF7E",
+          dim: "#A8DB3F",
         },
         offwhite: "#f4f4f4",
         softblack: "#1a1a1a",
@@ -92,6 +99,14 @@ module.exports = {
           "0%": { opacity: "0", transform: "scale(1.1)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "hero-zoom": {
+          "0%": { transform: "scale(1.06)" },
+          "100%": { transform: "scale(1)" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -99,6 +114,8 @@ module.exports = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "fade-in-up": "fade-in-up 0.6s ease-out forwards",
         "scale-in": "scale-in 0.8s ease-out forwards",
+        "hero-zoom": "hero-zoom 8s ease-out forwards",
+        marquee: "marquee 45s linear infinite",
       },
     },
   },

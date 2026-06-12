@@ -26,8 +26,8 @@ export function StationCard({ station, isSelected, onClick, distance }: StationC
       onClick={onClick}
       className={`p-3 rounded-lg border cursor-pointer transition-all ${
         isSelected
-          ? 'bg-[#FFC300]/10 border-[#FFC300]'
-          : 'bg-forest-mid/30 border-white/10 hover:border-white/20'
+          ? 'bg-volt/10 border-volt'
+          : 'bg-carbon-900/30 border-white/10 hover:border-white/20'
       }`}
     >
       {/* Header */}
@@ -37,7 +37,7 @@ export function StationCard({ station, isSelected, onClick, distance }: StationC
           <p className="text-white/50 text-xs truncate">{station.operator}</p>
         </div>
         {hasFastCharging && (
-          <span className="px-1.5 py-0.5 bg-[#FFC300]/20 text-[#FFC300] text-[10px] rounded font-medium flex-shrink-0">
+          <span className="px-1.5 py-0.5 bg-volt/20 text-volt text-[10px] rounded font-medium flex-shrink-0">
             Fast
           </span>
         )}
@@ -81,7 +81,7 @@ export function StationCard({ station, isSelected, onClick, distance }: StationC
           ))}
         </div>
         {hasPricing && (
-          <span className="text-[#FFC300] text-xs flex-shrink-0 ml-2">
+          <span className="text-volt text-xs flex-shrink-0 ml-2">
             Rp{ratePerKwh.toLocaleString('id-ID')}/kWh
           </span>
         )}

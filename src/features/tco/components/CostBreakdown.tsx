@@ -30,7 +30,7 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
   ];
   
   return (
-    <div className="bg-forest-mid/50 rounded-2xl border border-white/10 overflow-hidden">
+    <div className="bg-carbon-900/50 rounded-2xl border border-white/10 overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-white/10">
         <h3 className="text-white font-semibold text-lg">Rincian Biaya 5 Tahun</h3>
@@ -78,9 +78,9 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
             })}
             
             {/* Total Row */}
-            <tr className="bg-[#FFC300]/10">
+            <tr className="bg-volt/10">
               <td className="p-4 text-white font-semibold">Total Biaya Operasional</td>
-              <td className="p-4 text-right text-[#FFC300] font-bold">
+              <td className="p-4 text-right text-volt font-bold">
                 Rp {formatCompactNumber(ev.totalCost)}
               </td>
               <td className="p-4 text-right text-white font-bold">
@@ -99,7 +99,7 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-t border-white/10">
         {/* EV Total */}
-        <div className="bg-forest-dark/50 rounded-xl p-4">
+        <div className="bg-carbon-950/50 rounded-xl p-4">
           <div className="text-white/50 text-xs mb-1">Total Biaya EV</div>
           <div className="text-[#27AE60] font-bold text-lg">
             Rp {formatCompactNumber(ev.totalCost)}
@@ -110,7 +110,7 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
         </div>
         
         {/* ICE Total */}
-        <div className="bg-forest-dark/50 rounded-xl p-4">
+        <div className="bg-carbon-950/50 rounded-xl p-4">
           <div className="text-white/50 text-xs mb-1">Total Biaya ICE</div>
           <div className="text-[#E67E22] font-bold text-lg">
             Rp {formatCompactNumber(ice.totalCost)}
@@ -132,7 +132,7 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
         </div>
         
         {/* Break Even */}
-        <div className="bg-forest-dark/50 rounded-xl p-4">
+        <div className="bg-carbon-950/50 rounded-xl p-4">
           <div className="text-white/50 text-xs mb-1">Break-Even Point</div>
           <div className="text-white font-bold text-lg">
             {savings.breakEvenYear ? `Tahun ${savings.breakEvenYear}` : 'Tidak ada'}
@@ -146,9 +146,9 @@ export function CostBreakdown({ result }: CostBreakdownProps) {
       {/* Yearly Breakdown Toggle */}
       <div className="px-6 pb-6">
         <details className="group">
-          <summary className="flex items-center justify-between p-4 bg-forest-dark/50 rounded-xl cursor-pointer hover:bg-forest-dark transition-colors">
+          <summary className="flex items-center justify-between p-4 bg-carbon-950/50 rounded-xl cursor-pointer hover:bg-carbon-950 transition-colors">
             <span className="text-white font-medium text-sm">Lihat Rincian per Tahun</span>
-            <span className="text-[#FFC300] group-open:rotate-180 transition-transform">▼</span>
+            <span className="text-volt group-open:rotate-180 transition-transform">▼</span>
           </summary>
           
           <div className="mt-4 overflow-x-auto">

@@ -22,7 +22,7 @@ export function CostParameters({
   return (
     <div className="grid md:grid-cols-2 gap-6">
       {/* Insurance Type */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-[#3498DB]/20 rounded-lg flex items-center justify-center">
             <Shield className="w-5 h-5 text-[#3498DB]" />
@@ -40,7 +40,7 @@ export function CostParameters({
             className={`w-full p-4 rounded-xl border transition-all text-left ${
               insuranceType === 'comprehensive'
                 ? 'bg-[#3498DB]/10 border-[#3498DB]'
-                : 'bg-forest-dark border-white/10 hover:border-white/30'
+                : 'bg-carbon-950 border-white/10 hover:border-white/30'
             }`}
           >
             <div className="flex items-start gap-3">
@@ -68,7 +68,7 @@ export function CostParameters({
             className={`w-full p-4 rounded-xl border transition-all text-left ${
               insuranceType === 'tlo'
                 ? 'bg-[#3498DB]/10 border-[#3498DB]'
-                : 'bg-forest-dark border-white/10 hover:border-white/30'
+                : 'bg-carbon-950 border-white/10 hover:border-white/30'
             }`}
           >
             <div className="flex items-start gap-3">
@@ -97,7 +97,7 @@ export function CostParameters({
       </div>
       
       {/* Region & Tax */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-[#E74C3C]/20 rounded-lg flex items-center justify-center">
             <MapPin className="w-5 h-5 text-[#E74C3C]" />
@@ -120,12 +120,12 @@ export function CostParameters({
                 onClick={() => onRegionChange(r.region as TCOInputs['region'])}
                 className={`p-3 rounded-lg border transition-all text-left ${
                   region === r.region
-                    ? 'bg-[#FFC300] border-[#FFC300] text-forest-dark'
-                    : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
+                    ? 'bg-volt border-volt text-carbon-950'
+                    : 'bg-carbon-950 border-white/10 text-white hover:border-white/30'
                 }`}
               >
                 <div className="font-medium text-sm">{r.name}</div>
-                <div className={`text-xs ${region === r.region ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                <div className={`text-xs ${region === r.region ? 'text-carbon-950/70' : 'text-white/50'}`}>
                   PKB {(r.rate * 100).toFixed(1)}%
                 </div>
               </button>
@@ -134,7 +134,7 @@ export function CostParameters({
         </div>
         
         {/* Include Tax Toggle */}
-        <div className="bg-forest-dark rounded-xl p-4 border border-white/10">
+        <div className="bg-carbon-950 rounded-xl p-4 border border-white/10">
           <label className="flex items-center gap-3 cursor-pointer">
             <div className={`w-12 h-6 rounded-full transition-all relative ${
               includeTax ? 'bg-[#27AE60]' : 'bg-white/20'
