@@ -37,7 +37,7 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-forest-dark">
+    <div className="relative w-full min-h-screen bg-carbon-950">
       <Navbar />
       <SpeedInsights />
       <Analytics />

@@ -26,7 +26,7 @@ export function ToolsGrid() {
               <Link
                 key={tool.id}
                 to={tool.href}
-                className={`tool-card group relative flex flex-col bg-forest-mid/50 rounded-2xl border border-white/10 overflow-hidden transition-all ${
+                className={`tool-card group relative flex flex-col bg-carbon-900/50 rounded-2xl border border-white/10 overflow-hidden transition-all ${
                   isLive
                     ? 'hover:border-volt/50 hover:shadow-2xl hover:shadow-volt/10'
                     : 'opacity-75'
@@ -34,7 +34,7 @@ export function ToolsGrid() {
               >
                 {/* Decorative cover — gradient from tool accent, no photography */}
                 <div
-                  className="relative h-32 md:h-40 overflow-hidden bg-forest-mid/60"
+                  className="relative h-32 md:h-40 overflow-hidden bg-carbon-900/60"
                   style={{
                     background: `linear-gradient(135deg, ${tool.accent}26 0%, ${tool.accent}0d 45%, transparent 100%)`,
                   }}
@@ -58,7 +58,7 @@ export function ToolsGrid() {
                     className="absolute bottom-4 left-4 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
                     style={{ background: tool.accent }}
                   >
-                    <Icon className="w-6 h-6 text-forest-dark" />
+                    <Icon className="w-6 h-6 text-carbon-950" />
                   </div>
                 </div>
 

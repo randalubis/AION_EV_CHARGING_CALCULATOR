@@ -2,7 +2,7 @@ import { AlertTriangle } from 'lucide-react';
 
 export function DisclaimerCard() {
   return (
-    <div className="mt-6 bg-forest-mid/30 rounded-xl p-6 border-l-4 border-volt">
+    <div className="mt-6 bg-carbon-900/30 rounded-xl p-6 border-l-4 border-volt">
       <div className="text-volt text-sm font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
         <AlertTriangle className="w-4 h-4" />
         Catatan Penting

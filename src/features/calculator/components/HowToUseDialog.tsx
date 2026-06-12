@@ -29,7 +29,7 @@ export function HowToUseDialog({ trigger }: HowToUseDialogProps) {
         <Dialog.Overlay className="fixed inset-0 z-[9998] bg-black/80 backdrop-blur-sm" />
         <Dialog.Content
           className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]
-                     bg-forest-dark border border-white/10 rounded-2xl
+                     bg-carbon-950 border border-white/10 rounded-2xl
                      w-[calc(100%-2rem)] max-w-md max-h-[90vh] overflow-y-auto p-5"
           aria-describedby={undefined}
         >

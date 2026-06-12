@@ -152,7 +152,7 @@ export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initial
           <FormProvider {...methods}>
             <form
               onSubmit={onSubmit}
-              className="bg-forest-dark border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col"
+              className="bg-carbon-950 border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col"
             >
               {!submitSuccess && (
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
@@ -220,7 +220,7 @@ export function AddStationModal({ isOpen, onClose, onRequestPickFromMap, initial
                     <button
                       type="button"
                       onClick={goNext}
-                      className="flex items-center gap-2 bg-volt text-forest-dark px-5 py-2 rounded-lg font-semibold hover:bg-volt-dim transition-colors"
+                      className="flex items-center gap-2 bg-volt text-carbon-950 px-5 py-2 rounded-lg font-semibold hover:bg-volt-dim transition-colors"
                     >
                       Lanjut
                       <ChevronRight className="w-4 h-4" />
@@ -314,7 +314,7 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
           type="button"
           onClick={handleGetCurrentLocation}
           disabled={geoLoading}
-          className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-volt/50 transition-colors text-left"
+          className="w-full p-4 bg-carbon-900 border border-white/10 rounded-xl hover:border-volt/50 transition-colors text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#27AE60]/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -340,7 +340,7 @@ function StepLocation({ onRequestPickFromMap }: { onRequestPickFromMap?: () => v
           <button
             type="button"
             onClick={onRequestPickFromMap}
-            className="w-full p-4 bg-forest-mid border border-white/10 rounded-xl hover:border-volt/50 transition-colors text-left"
+            className="w-full p-4 bg-carbon-900 border border-white/10 rounded-xl hover:border-volt/50 transition-colors text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -402,9 +402,9 @@ function StepDetails() {
 
       <Field label="Operator *" error={errors.operator?.message}>
         <select {...register('operator')} className={inputClass}>
-          <option value="" className="bg-forest-dark">Pilih Operator</option>
+          <option value="" className="bg-carbon-950">Pilih Operator</option>
           {OPERATORS.map(op => (
-            <option key={op} value={op} className="bg-forest-dark">{op}</option>
+            <option key={op} value={op} className="bg-carbon-950">{op}</option>
           ))}
         </select>
       </Field>
@@ -424,9 +424,9 @@ function StepDetails() {
         </Field>
         <Field label="Provinsi *" error={errors.province?.message}>
           <select {...register('province')} className={inputClass}>
-            <option value="" className="bg-forest-dark">Pilih</option>
+            <option value="" className="bg-carbon-950">Pilih</option>
             {PROVINCES.map(p => (
-              <option key={p} value={p} className="bg-forest-dark">{p}</option>
+              <option key={p} value={p} className="bg-carbon-950">{p}</option>
             ))}
           </select>
         </Field>
@@ -451,7 +451,7 @@ function StepDetails() {
         </div>
 
         {fields.length === 0 && (
-          <p className="text-white/40 text-sm py-4 text-center bg-forest-mid/50 rounded-lg">
+          <p className="text-white/40 text-sm py-4 text-center bg-carbon-900/50 rounded-lg">
             Belum ada konektor. Klik &quot;Tambah&quot; untuk menambahkan.
           </p>
         )}
@@ -464,7 +464,7 @@ function StepDetails() {
               render={({ field }) => (
                 <select {...field} className={`flex-1 ${inputClass} text-sm`}>
                   {CONNECTOR_TYPES.map(t => (
-                    <option key={t.value} value={t.value} className="bg-forest-dark">{t.label}</option>
+                    <option key={t.value} value={t.value} className="bg-carbon-950">{t.label}</option>
                   ))}
                 </select>
               )}
@@ -481,8 +481,8 @@ function StepDetails() {
               name={`connectors.${idx}.currentType`}
               render={({ field }) => (
                 <select {...field} className={`w-20 ${inputClass} text-sm`}>
-                  <option value="AC" className="bg-forest-dark">AC</option>
-                  <option value="DC" className="bg-forest-dark">DC</option>
+                  <option value="AC" className="bg-carbon-950">AC</option>
+                  <option value="DC" className="bg-carbon-950">DC</option>
                 </select>
               )}
             />
@@ -523,8 +523,8 @@ function StepDetails() {
               onClick={() => toggleAmenity(a.value)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${
                 amenities.includes(a.value)
-                  ? 'bg-volt text-forest-dark'
-                  : 'bg-forest-mid text-white/70 hover:bg-forest-mid/80'
+                  ? 'bg-volt text-carbon-950'
+                  : 'bg-carbon-900 text-white/70 hover:bg-carbon-900/80'
               }`}
             >
               <span>{a.icon}</span>
@@ -604,7 +604,7 @@ function StepSubmitter({
         <input {...register('submittedBy.phone')} type="tel" placeholder="0812xxxxxxx" className={inputClass} />
       </Field>
 
-      <div className="p-4 bg-forest-mid/50 rounded-xl space-y-2">
+      <div className="p-4 bg-carbon-900/50 rounded-xl space-y-2">
         <p className="text-white font-medium">Ringkasan Pengajuan</p>
         <div className="text-sm space-y-1">
           <p className="text-white/60">
@@ -658,7 +658,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
       <button
         type="button"
         onClick={onClose}
-        className="bg-volt text-forest-dark px-6 py-2.5 rounded-lg font-semibold hover:bg-volt-dim transition-colors"
+        className="bg-volt text-carbon-950 px-6 py-2.5 rounded-lg font-semibold hover:bg-volt-dim transition-colors"
       >
         Tutup
       </button>
@@ -669,7 +669,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
 // ─── Helpers ─────────────────────────────────────────────
 
 const inputClass =
-  'w-full bg-forest-mid border border-white/20 rounded-lg px-4 py-2.5 text-white placeholder:text-white/30 focus:border-volt focus:outline-none';
+  'w-full bg-carbon-900 border border-white/20 rounded-lg px-4 py-2.5 text-white placeholder:text-white/30 focus:border-volt focus:outline-none';
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (

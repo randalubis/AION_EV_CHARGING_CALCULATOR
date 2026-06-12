@@ -26,7 +26,7 @@ export default function CalculatorPage() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-forest-dark">
+    <div className="relative w-full min-h-screen bg-carbon-950">
       {/* Compact header */}
       <div ref={headerRef} className="pt-8 pb-4">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

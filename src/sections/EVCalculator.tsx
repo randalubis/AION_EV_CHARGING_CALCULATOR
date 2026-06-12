@@ -287,7 +287,7 @@ Buka: ${shareUrl}`;
   );
 
   return (
-    <section ref={sectionRef} id="kalkulator" className="relative w-full pb-24 md:pb-32 bg-forest-dark">
+    <section ref={sectionRef} id="kalkulator" className="relative w-full pb-24 md:pb-32 bg-carbon-950">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Calculator — opacity-0 only when motion is allowed (GSAP fades it in) */}
         <div ref={calcRef} className={prefersReducedMotion ? '' : 'opacity-0'}>
@@ -295,7 +295,7 @@ Buka: ${shareUrl}`;
             {/* Left Column - Inputs */}
             <div className="space-y-6">
               {/* Brand Selector */}
-              <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+              <div className="bg-carbon-900/50 rounded-xl p-6 border border-white/10">
                 <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-3 block">
                   Pilih Merek
                 </label>
@@ -303,7 +303,7 @@ Buka: ${shareUrl}`;
                   <select
                     value={brandId}
                     onChange={(e) => handleBrandChange(e.target.value)}
-                    className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-body appearance-none cursor-pointer focus:border-volt focus:outline-none focus:ring-2 focus:ring-volt/20 transition-all"
+                    className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-3 text-white font-body appearance-none cursor-pointer focus:border-volt focus:outline-none focus:ring-2 focus:ring-volt/20 transition-all"
                   >
                     {BRANDS.map(b => (
                       <option key={b.id} value={b.id}>{b.name}</option>
@@ -314,7 +314,7 @@ Buka: ${shareUrl}`;
               </div>
 
         {/* Car Selector */}
-        <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+        <div className="bg-carbon-900/50 rounded-xl p-6 border border-white/10">
           <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-3 block">
             Pilih Model ({brandCars.length} varian)
           </label>
@@ -334,7 +334,7 @@ Buka: ${shareUrl}`;
               return seriesArray.map(([series, seriesCars]) => (
                 <div key={series} className="space-y-2">
                   {/* Series Header */}
-                  <div className="px-3 py-2 rounded-lg bg-forest-dark/50 border border-white/10">
+                  <div className="px-3 py-2 rounded-lg bg-carbon-950/50 border border-white/10">
                     <div className="text-white/70 text-xs font-semibold uppercase tracking-wider">
                       {series}
                     </div>
@@ -348,22 +348,22 @@ Buka: ${shareUrl}`;
                         onClick={() => handleCarChange(c.id)}
                         className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all text-left ${
                           carId === c.id
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white hover:border-white/30'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${carId === c.id ? 'bg-forest-dark' : 'bg-white/30'}`} />
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${carId === c.id ? 'bg-carbon-950' : 'bg-white/30'}`} />
                           <div className="min-w-0">
                             <div className="font-body font-semibold text-sm">{c.variant}</div>
-                            <div className={`text-xs truncate ${carId === c.id ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                            <div className={`text-xs truncate ${carId === c.id ? 'text-carbon-950/70' : 'text-white/50'}`}>
                               {c.battery} kWh · {c.maxRange} km
                             </div>
                           </div>
                         </div>
                         <span className={`text-xs font-semibold px-2 py-1 rounded flex-shrink-0 whitespace-nowrap ml-2 ${
                           carId === c.id 
-                            ? 'bg-forest-dark/20' 
+                            ? 'bg-carbon-950/20' 
                             : 'bg-volt/20 text-volt'
                         }`}>
                           {c.maxDcKw > 0 ? `DC ${c.maxDcKw}kW` : 'AC only'}
@@ -379,7 +379,7 @@ Buka: ${shareUrl}`;
 
               {/* Car Hero Card */}
               {car && brand && (
-                <div className="bg-gradient-to-br from-forest-mid to-forest-dark rounded-xl p-6 border border-white/10 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-carbon-900 to-carbon-950 rounded-xl p-6 border border-white/10 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-40 h-40 bg-volt/5 rounded-full blur-3xl" />
                   <div className="relative">
                     <div className="flex justify-between items-start mb-4">
@@ -435,16 +435,16 @@ Buka: ${shareUrl}`;
               )}
 
               {/* Mode Toggle */}
-              <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+              <div className="bg-carbon-900/50 rounded-xl p-6 border border-white/10">
                 <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-3 block">
                   Mode Input
                 </label>
-                <div className="flex bg-forest-dark rounded-lg p-1">
+                <div className="flex bg-carbon-950 rounded-lg p-1">
                   <button
                     onClick={() => handleModeChange('range')}
                     className={`flex-1 py-3 px-4 rounded-md text-sm font-body font-semibold transition-all flex items-center justify-center gap-2 ${
                       inputMode === 'range'
-                        ? 'bg-volt text-forest-dark'
+                        ? 'bg-volt text-carbon-950'
                         : 'text-white/70 hover:text-white'
                     }`}
                   >
@@ -455,7 +455,7 @@ Buka: ${shareUrl}`;
                     onClick={() => handleModeChange('pct')}
                     className={`flex-1 py-3 px-4 rounded-md text-sm font-body font-semibold transition-all flex items-center justify-center gap-2 ${
                       inputMode === 'pct'
-                        ? 'bg-volt text-forest-dark'
+                        ? 'bg-volt text-carbon-950'
                         : 'text-white/70 hover:text-white'
                     }`}
                   >
@@ -472,7 +472,7 @@ Buka: ${shareUrl}`;
             {/* Right Column - Sliders & Results */}
             <div className="space-y-6">
               {/* Current Status */}
-              <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+              <div className="bg-carbon-900/50 rounded-xl p-6 border border-white/10">
                 <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-4 block">
                   Status Sekarang
                 </label>
@@ -522,7 +522,7 @@ Buka: ${shareUrl}`;
                       }}
                       placeholder="0"
                       aria-label={`Level baterai saat ini dalam ${unit}`}
-                      className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-2 text-white font-body focus:border-volt focus:outline-none"
+                      className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-2 text-white font-body focus:border-volt focus:outline-none"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-sm">{unit}</span>
                   </div>
@@ -540,8 +540,8 @@ Buka: ${shareUrl}`;
                             onClick={() => setCurVal(Math.round(car.maxRange * p))}
                             className={`py-2 px-1 rounded-lg border text-xs font-semibold transition-all ${
                               curVal === Math.round(car.maxRange * p)
-                                ? 'bg-volt border-volt text-forest-dark'
-                                : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                                ? 'bg-volt border-volt text-carbon-950'
+                                : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                             }`}
                           >
                             {Math.round(car.maxRange * p)}km
@@ -557,8 +557,8 @@ Buka: ${shareUrl}`;
                             onClick={() => setCurVal(v)}
                             className={`py-2 px-1 rounded-lg border text-xs font-semibold transition-all ${
                               curVal === v
-                                ? 'bg-volt border-volt text-forest-dark'
-                                : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                                ? 'bg-volt border-volt text-carbon-950'
+                                : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                             }`}
                           >
                             {v}%
@@ -571,7 +571,7 @@ Buka: ${shareUrl}`;
 
                 {/* Conversion hint */}
                 {curVal > 0 && (
-                  <div className="mt-4 bg-forest-dark rounded-lg p-3 border border-white/10">
+                  <div className="mt-4 bg-carbon-950 rounded-lg p-3 border border-white/10">
                     <div className="flex items-center gap-2 text-white/50 text-xs mb-1">
                       <Info className="w-3 h-3" />
                       Konversi
@@ -587,7 +587,7 @@ Buka: ${shareUrl}`;
               </div>
 
               {/* Target */}
-              <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+              <div className="bg-carbon-900/50 rounded-xl p-6 border border-white/10">
                 <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-4 block">
                   → Target Pengisian
                 </label>
@@ -624,8 +624,8 @@ Buka: ${shareUrl}`;
                         onClick={() => setTgtVal(Math.round(car.maxRange * 0.8))}
                         className={`py-3 px-4 rounded-lg border text-sm font-semibold transition-all ${
                           tgtVal === Math.round(car.maxRange * 0.8)
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                         }`}
                       >
                         {Math.round(car.maxRange * 0.8)}km
@@ -635,8 +635,8 @@ Buka: ${shareUrl}`;
                         onClick={() => setTgtVal(car.maxRange)}
                         className={`py-3 px-4 rounded-lg border text-sm font-semibold transition-all ${
                           tgtVal === car.maxRange
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                         }`}
                       >
                         {car.maxRange}km
@@ -649,8 +649,8 @@ Buka: ${shareUrl}`;
                         onClick={() => setTgtVal(80)}
                         className={`py-3 px-4 rounded-lg border text-sm font-semibold transition-all ${
                           tgtVal === 80
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                         }`}
                       >
                         80%
@@ -660,8 +660,8 @@ Buka: ${shareUrl}`;
                         onClick={() => setTgtVal(100)}
                         className={`py-3 px-4 rounded-lg border text-sm font-semibold transition-all ${
                           tgtVal === 100
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                         }`}
                       >
                         100%
@@ -673,7 +673,7 @@ Buka: ${shareUrl}`;
               </div>
 
               {/* Cost & Charger */}
-              <div className="bg-forest-mid/50 rounded-xl p-6 border border-white/10">
+              <div className="bg-carbon-900/50 rounded-xl p-6 border border-white/10">
                 <label className="text-white/50 text-xs font-body uppercase tracking-widest mb-4 block">
                   Biaya Listrik & Charger
                 </label>
@@ -689,12 +689,12 @@ Buka: ${shareUrl}`;
                         title={t.desc}
                         className={`py-2 px-2 rounded-lg border text-xs font-semibold transition-all ${
                           tariff === t.val
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white/70 hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white/70 hover:border-white/30'
                         }`}
                       >
                         <div>{t.label}</div>
-                        <div className={`text-[10px] mt-0.5 ${tariff === t.val ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                        <div className={`text-[10px] mt-0.5 ${tariff === t.val ? 'text-carbon-950/70' : 'text-white/50'}`}>
                           Rp{t.val.toLocaleString('id-ID')}
                         </div>
                       </button>
@@ -711,7 +711,7 @@ Buka: ${shareUrl}`;
                         value={tariff}
                         onChange={(e) => setTariff(parseInt(e.target.value) || 0)}
                         aria-label="Tarif kustom per kWh"
-                        className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-2 text-white text-sm focus:border-volt focus:outline-none"
+                        className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-2 text-white text-sm focus:border-volt focus:outline-none"
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-xs">Rp/kWh</span>
                     </div>
@@ -739,19 +739,19 @@ Buka: ${shareUrl}`;
                         onClick={() => setChargerIdx(actualIdx)}
                         className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
                           chargerIdx === actualIdx
-                            ? 'bg-volt border-volt text-forest-dark'
-                            : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
+                            ? 'bg-volt border-volt text-carbon-950'
+                            : 'bg-carbon-950 border-white/10 text-white hover:border-white/30'
                         }`}
                       >
                         <div className="text-left">
                           <div className="font-semibold text-sm">{c.label}</div>
                           {isBest && (
-                            <div className={`text-xs ${chargerIdx === actualIdx ? 'text-forest-dark/70' : 'text-volt-bright'}`}>
+                            <div className={`text-xs ${chargerIdx === actualIdx ? 'text-carbon-950/70' : 'text-volt-bright'}`}>
                               ✦ Terbaik untuk mobil ini
                             </div>
                           )}
                         </div>
-                        <span className={`font-bold ${chargerIdx === actualIdx ? 'text-forest-dark' : 'text-volt'}`}>
+                        <span className={`font-bold ${chargerIdx === actualIdx ? 'text-carbon-950' : 'text-volt'}`}>
                           {effPwr} kW
                         </span>
                       </button>
@@ -775,24 +775,24 @@ Buka: ${shareUrl}`;
                             onClick={() => setChargerIdx(actualIdx)}
                             className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
                               chargerIdx === actualIdx
-                                ? 'bg-volt border-volt text-forest-dark'
-                                : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
+                                ? 'bg-volt border-volt text-carbon-950'
+                                : 'bg-carbon-950 border-white/10 text-white hover:border-white/30'
                             }`}
                           >
                             <div className="text-left">
                               <div className="font-semibold text-sm">{c.label}</div>
                               {isBest && (
-                                <div className={`text-xs ${chargerIdx === actualIdx ? 'text-forest-dark/70' : 'text-volt-bright'}`}>
+                                <div className={`text-xs ${chargerIdx === actualIdx ? 'text-carbon-950/70' : 'text-volt-bright'}`}>
                                   ✦ Terbaik untuk mobil ini
                                 </div>
                               )}
                               {isCapped && (
-                                <div className={`text-xs ${chargerIdx === actualIdx ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                                <div className={`text-xs ${chargerIdx === actualIdx ? 'text-carbon-950/70' : 'text-white/50'}`}>
                                   ⚠ Mobil maks {car.maxDcKw} kW DC
                                 </div>
                               )}
                             </div>
-                            <span className={`font-bold ${chargerIdx === actualIdx ? 'text-forest-dark' : 'text-volt'}`}>
+                            <span className={`font-bold ${chargerIdx === actualIdx ? 'text-carbon-950' : 'text-volt'}`}>
                               {effPwr} kW
                             </span>
                           </button>

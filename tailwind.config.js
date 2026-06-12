@@ -27,12 +27,6 @@ module.exports = {
           bright: "#DBFF7E",
           dim: "#A8DB3F",
         },
-        // Legacy aliases retargeted to carbon (removed after the rename sweep)
-        forest: {
-          dark: "#0A0E0B",
-          mid: "#111612",
-          light: "#1A211B",
-        },
         offwhite: "#f4f4f4",
         softblack: "#1a1a1a",
         primary: {

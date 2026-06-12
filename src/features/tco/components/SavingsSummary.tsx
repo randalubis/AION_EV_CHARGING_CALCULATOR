@@ -50,7 +50,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
         
         <div className="grid md:grid-cols-3 gap-6">
           {/* Savings Amount */}
-          <div className="bg-forest-dark/50 rounded-xl p-6">
+          <div className="bg-carbon-950/50 rounded-xl p-6">
             <div className="text-white/50 text-sm mb-2">Total Penghematan</div>
             <div className={`text-3xl font-bold ${isEvbetter ? 'text-[#27AE60]' : 'text-[#E74C3C]'}`}>
               Rp {formatCompactNumber(Math.abs(savings.absolute))}
@@ -61,7 +61,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
           </div>
           
           {/* Monthly Savings */}
-          <div className="bg-forest-dark/50 rounded-xl p-6">
+          <div className="bg-carbon-950/50 rounded-xl p-6">
             <div className="text-white/50 text-sm mb-2">Penghematan per Bulan</div>
             <div className={`text-3xl font-bold ${isEvbetter ? 'text-[#27AE60]' : 'text-[#E74C3C]'}`}>
               Rp {formatCompactNumber(Math.abs(savings.absolute) / (ev.yearlyCosts.length * 12))}
@@ -72,7 +72,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
           </div>
           
           {/* Cost per km */}
-          <div className="bg-forest-dark/50 rounded-xl p-6">
+          <div className="bg-carbon-950/50 rounded-xl p-6">
             <div className="text-white/50 text-sm mb-2">Biaya per Kilometer</div>
             <div className="flex items-center gap-4">
               <div>
@@ -90,7 +90,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
         
         {/* Break Even Info */}
         {savings.breakEvenYear && (
-          <div className="mt-6 bg-forest-dark/50 rounded-xl p-4 flex items-center gap-4">
+          <div className="mt-6 bg-carbon-950/50 rounded-xl p-4 flex items-center gap-4">
             <div className="w-12 h-12 bg-volt/20 rounded-xl flex items-center justify-center">
               <Award className="w-6 h-6 text-volt" />
             </div>
@@ -117,17 +117,17 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
         </div>
         
         <div className="grid md:grid-cols-3 gap-4">
-          <div className="bg-forest-dark/50 rounded-xl p-4 text-center">
+          <div className="bg-carbon-950/50 rounded-xl p-4 text-center">
             <div className="text-3xl font-bold text-[#27AE60]">{Math.round(co2Saved).toLocaleString('id-ID')}</div>
             <div className="text-white/50 text-sm">kg CO₂ dihemat</div>
           </div>
           
-          <div className="bg-forest-dark/50 rounded-xl p-4 text-center">
+          <div className="bg-carbon-950/50 rounded-xl p-4 text-center">
             <div className="text-3xl font-bold text-[#27AE60]">{treesEquivalent}</div>
             <div className="text-white/50 text-sm">setara pohon ditumbuhkan</div>
           </div>
           
-          <div className="bg-forest-dark/50 rounded-xl p-4 text-center">
+          <div className="bg-carbon-950/50 rounded-xl p-4 text-center">
             <div className="text-3xl font-bold text-[#27AE60]">{(iceCo2 / evCo2).toFixed(1)}x</div>
             <div className="text-white/50 text-sm">lebih rendah emisi</div>
           </div>
@@ -139,12 +139,12 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
       </div>
       
       {/* Quick Comparison */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <h3 className="text-white font-semibold mb-4">Perbandingan Cepat</h3>
         
         <div className="space-y-4">
           {/* Purchase Price */}
-          <div className="flex items-center justify-between p-4 bg-forest-dark/50 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-carbon-950/50 rounded-xl">
             <span className="text-white/70">Harga Beli</span>
             <div className="flex items-center gap-6">
               <span className="text-[#27AE60] font-medium">Rp {formatCompactNumber(ev.initialPrice)}</span>
@@ -153,7 +153,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
           </div>
           
           {/* Residual Value */}
-          <div className="flex items-center justify-between p-4 bg-forest-dark/50 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-carbon-950/50 rounded-xl">
             <span className="text-white/70">Nilai Jual (5 tahun)</span>
             <div className="flex items-center gap-6">
               <span className="text-[#27AE60] font-medium">Rp {formatCompactNumber(ev.residualValue)}</span>
@@ -162,7 +162,7 @@ export function SavingsSummary({ result }: SavingsSummaryProps) {
           </div>
           
           {/* Total Depreciation */}
-          <div className="flex items-center justify-between p-4 bg-forest-dark/50 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-carbon-950/50 rounded-xl">
             <span className="text-white/70">Total Depresiasi</span>
             <div className="flex items-center gap-6">
               <span className="text-white font-medium">Rp {formatCompactNumber(ev.totalDepreciation)}</span>

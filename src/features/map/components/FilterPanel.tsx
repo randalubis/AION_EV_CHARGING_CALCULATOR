@@ -87,10 +87,10 @@ export function FilterPanel({
           value={sortBy}
           onChange={(e) => onSortChange(e.target.value as SortBy)}
           aria-label="Urutkan stasiun"
-          className="w-full bg-forest-mid border border-white/20 rounded-md px-2.5 py-1.5 text-xs text-white/80 focus:border-volt focus:outline-none"
+          className="w-full bg-carbon-900 border border-white/20 rounded-md px-2.5 py-1.5 text-xs text-white/80 focus:border-volt focus:outline-none"
         >
           {SORT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value} className="bg-forest-dark">{o.label}</option>
+            <option key={o.value} value={o.value} className="bg-carbon-950">{o.label}</option>
           ))}
         </select>
       </div>
@@ -105,8 +105,8 @@ export function FilterPanel({
               onClick={() => toggleConnectorType(type)}
               className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                 filters.connectorTypes.includes(type)
-                  ? 'bg-volt text-forest-dark'
-                  : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
+                  ? 'bg-volt text-carbon-950'
+                  : 'bg-carbon-900 text-white/60 hover:text-white border border-white/10'
               }`}
             >
               {label}
@@ -125,8 +125,8 @@ export function FilterPanel({
               onClick={() => onUpdateFilters({ minPowerKw: value })}
               className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                 filters.minPowerKw === value
-                  ? 'bg-volt text-forest-dark'
-                  : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
+                  ? 'bg-volt text-carbon-950'
+                  : 'bg-carbon-900 text-white/60 hover:text-white border border-white/10'
               }`}
             >
               {label}
@@ -146,8 +146,8 @@ export function FilterPanel({
                 onClick={() => toggleOperator(operator)}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                   filters.operators.includes(operator)
-                    ? 'bg-volt text-forest-dark'
-                    : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
+                    ? 'bg-volt text-carbon-950'
+                    : 'bg-carbon-900 text-white/60 hover:text-white border border-white/10'
                 }`}
               >
                 {operator}
@@ -168,8 +168,8 @@ export function FilterPanel({
                 onClick={() => toggleAmenity(a as AmenityType)}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                   filters.amenities.includes(a as AmenityType)
-                    ? 'bg-volt text-forest-dark'
-                    : 'bg-forest-mid text-white/60 hover:text-white border border-white/10'
+                    ? 'bg-volt text-carbon-950'
+                    : 'bg-carbon-900 text-white/60 hover:text-white border border-white/10'
                 }`}
               >
                 {AMENITY_LABELS[a] ?? a}

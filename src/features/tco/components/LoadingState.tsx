@@ -2,7 +2,7 @@ import { Calculator } from 'lucide-react';
 
 export function LoadingState() {
   return (
-    <div className="bg-forest-mid/30 rounded-2xl p-12 border border-white/10 text-center">
+    <div className="bg-carbon-900/30 rounded-2xl p-12 border border-white/10 text-center">
       <div className="relative w-20 h-20 mx-auto mb-6">
         <div className="absolute inset-0 border-4 border-volt/20 rounded-full" />
         <div className="absolute inset-0 border-4 border-volt border-t-transparent rounded-full animate-spin" />

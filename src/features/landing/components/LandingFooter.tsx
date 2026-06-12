@@ -28,7 +28,7 @@ export function LandingFooter() {
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-volt rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-forest-dark" />
+                <Zap className="w-6 h-6 text-carbon-950" />
               </div>
               <span className="text-white font-sans font-bold text-xl">
                 evhub<span className="text-volt">.id</span>
@@ -48,7 +48,7 @@ export function LandingFooter() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="w-10 h-10 bg-white/10 hover:bg-volt rounded-lg flex items-center justify-center text-white hover:text-forest-dark transition-all"
+                    className="w-10 h-10 bg-white/10 hover:bg-volt rounded-lg flex items-center justify-center text-white hover:text-carbon-950 transition-all"
                   >
                     <Icon className="w-5 h-5" />
                   </a>

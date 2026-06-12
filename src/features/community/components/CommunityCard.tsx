@@ -29,7 +29,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
   );
 
   return (
-    <article className="bg-forest-mid/40 border border-white/10 rounded-xl p-4 sm:p-5 flex gap-4 hover:border-white/20 transition-colors">
+    <article className="bg-carbon-900/40 border border-white/10 rounded-xl p-4 sm:p-5 flex gap-4 hover:border-white/20 transition-colors">
       {/* Identity badge — brand logo if available, generic Users icon otherwise */}
       <div className="flex-shrink-0">
         {primaryBrandId ? (
@@ -103,7 +103,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
             href={community.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 bg-volt text-forest-dark text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-volt-bright transition-colors flex-shrink-0"
+            className="flex items-center gap-1 bg-volt text-carbon-950 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-volt-bright transition-colors flex-shrink-0"
           >
             {platform.cta}
             <ExternalLink className="w-3 h-3" />

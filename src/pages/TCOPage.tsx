@@ -105,7 +105,7 @@ Buka: ${shareUrl}`;
   const bothVehiclesSelected = !!evVehicle && !!iceVehicle;
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
+    <div ref={containerRef} className="relative w-full min-h-screen bg-carbon-950">
       {/* Compact header — matches the Calculator/SPKLU pattern */}
       <div className="pt-8 pb-4">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -147,7 +147,7 @@ Buka: ${shareUrl}`;
           {/* Step 1 — Vehicle Selection */}
           <section className="animate-in">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-forest-dark font-bold">
+              <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-carbon-950 font-bold">
                 1
               </div>
               <div>
@@ -174,7 +174,7 @@ Buka: ${shareUrl}`;
           {bothVehiclesSelected && (
             <section className="animate-in">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-forest-dark font-bold">
+                <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-carbon-950 font-bold">
                   2
                 </div>
                 <div>
@@ -200,7 +200,7 @@ Buka: ${shareUrl}`;
           {bothVehiclesSelected && (
             <section className="animate-in">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-forest-dark font-bold">
+                <div className="w-10 h-10 bg-volt rounded-full flex items-center justify-center text-carbon-950 font-bold">
                   3
                 </div>
                 <div>

@@ -8,7 +8,7 @@ export function HowItWorks() {
   const ref = useReveal<HTMLDivElement>({ selector: '.step-item' });
 
   return (
-    <section className="bg-forest-mid/30 py-24 md:py-32">
+    <section className="bg-carbon-900/30 py-24 md:py-32">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <SectionHeading
           eyebrow="Cara Kerja"

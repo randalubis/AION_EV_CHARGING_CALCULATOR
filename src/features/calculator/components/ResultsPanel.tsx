@@ -29,7 +29,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
   const r = result;
 
   return (
-    <div className="mt-8 bg-gradient-to-br from-forest-mid to-forest-dark rounded-2xl p-6 md:p-8 border border-white/10">
+    <div className="mt-8 bg-gradient-to-br from-carbon-900 to-carbon-950 rounded-2xl p-6 md:p-8 border border-white/10">
       <div className="flex items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-2 text-volt text-sm uppercase tracking-wider">
           <Zap className="w-4 h-4" />
@@ -91,7 +91,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
       </div>
 
       {/* Charger summary */}
-      <div className="bg-forest-dark/40 rounded-xl p-4 border border-white/10 mb-4 flex items-center justify-between gap-3">
+      <div className="bg-carbon-950/40 rounded-xl p-4 border border-white/10 mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 bg-volt/20 rounded-lg flex items-center justify-center flex-shrink-0">
             <Zap className="w-4 h-4 text-volt" />
@@ -133,7 +133,7 @@ export function ResultsPanel({ result, onReset, onShare }: ResultsPanelProps) {
           trigger={
             <button
               type="button"
-              className="flex-1 bg-forest-dark hover:bg-forest-mid border border-white/20 hover:border-volt text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+              className="flex-1 bg-carbon-950 hover:bg-carbon-900 border border-white/20 hover:border-volt text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
             >
               <MapPin className="w-5 h-5" />
               Cari SPKLU Terdekat
@@ -167,7 +167,7 @@ function ResultStat({
   accent?: boolean;
 }) {
   return (
-    <div className="bg-forest-dark/50 rounded-xl p-3 md:p-4 border border-white/10">
+    <div className="bg-carbon-950/50 rounded-xl p-3 md:p-4 border border-white/10">
       <div className="flex items-center gap-1.5 text-white/50 text-[10px] md:text-xs uppercase tracking-wider mb-1.5">
         <Icon className="w-3.5 h-3.5" />
         {label}

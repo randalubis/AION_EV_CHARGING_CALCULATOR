@@ -27,7 +27,7 @@ export function StationCard({ station, isSelected, onClick, distance }: StationC
       className={`p-3 rounded-lg border cursor-pointer transition-all ${
         isSelected
           ? 'bg-volt/10 border-volt'
-          : 'bg-forest-mid/30 border-white/10 hover:border-white/20'
+          : 'bg-carbon-900/30 border-white/10 hover:border-white/20'
       }`}
     >
       {/* Header */}

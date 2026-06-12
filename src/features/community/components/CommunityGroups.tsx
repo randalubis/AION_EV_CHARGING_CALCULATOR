@@ -24,7 +24,7 @@ function primaryInterest(interests: Community['interests']): Community['interest
 /** Empty state for any of the three tabs. */
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="text-center py-16 px-6 bg-forest-mid/30 border border-white/10 rounded-xl">
+    <div className="text-center py-16 px-6 bg-carbon-900/30 border border-white/10 rounded-xl">
       <Users className="w-10 h-10 text-white/20 mx-auto mb-3" />
       <p className="text-white/60">{message}</p>
       <p className="text-white/40 text-sm mt-1">

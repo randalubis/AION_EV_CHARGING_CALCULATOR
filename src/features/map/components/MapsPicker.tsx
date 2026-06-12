@@ -27,7 +27,7 @@ export function MapsPicker({ trigger, targets, align = 'end' }: MapsPickerProps)
         <Popover.Content
           align={align}
           sideOffset={6}
-          className="z-[10000] bg-forest-dark border border-white/10 rounded-lg shadow-2xl p-1 min-w-[200px]"
+          className="z-[10000] bg-carbon-950 border border-white/10 rounded-lg shadow-2xl p-1 min-w-[200px]"
         >
           {targets.map((t) => (
             <a

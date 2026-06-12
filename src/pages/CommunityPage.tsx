@@ -45,7 +45,7 @@ export default function CommunityPage() {
   }, [prefersReducedMotion]);
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen bg-forest-dark">
+    <div ref={containerRef} className="relative w-full min-h-screen bg-carbon-950">
       {/* Compact header */}
       <div className="pt-8 pb-4">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -92,7 +92,7 @@ export default function CommunityPage() {
           className="animate-in relative overflow-hidden rounded-2xl border border-white/10 p-6 sm:p-8"
           style={{
             background:
-              'radial-gradient(120% 100% at 0% 0%, rgba(198, 255, 77, 0.18) 0%, transparent 60%), radial-gradient(120% 100% at 100% 100%, rgba(39, 174, 96, 0.14) 0%, transparent 60%), #1f2922',
+              'radial-gradient(120% 100% at 0% 0%, rgba(198, 255, 77, 0.18) 0%, transparent 60%), radial-gradient(120% 100% at 100% 100%, rgba(39, 174, 96, 0.14) 0%, transparent 60%), #161C17',
           }}
         >
           {/* Soft decorative icons in the background */}
@@ -132,13 +132,13 @@ export default function CommunityPage() {
         >
           <Tabs.List
             aria-label="Pilih cara menelusuri komunitas"
-            className="inline-flex p-1 bg-forest-mid/40 border border-white/10 rounded-lg gap-1 mb-8"
+            className="inline-flex p-1 bg-carbon-900/40 border border-white/10 rounded-lg gap-1 mb-8"
           >
             {(Object.keys(TAB_LABELS) as TabKey[]).map((k) => (
               <Tabs.Trigger
                 key={k}
                 value={k}
-                className="px-3 sm:px-4 py-2 text-sm rounded-md text-white/60 hover:text-white data-[state=active]:bg-volt data-[state=active]:text-forest-dark data-[state=active]:font-semibold transition-colors"
+                className="px-3 sm:px-4 py-2 text-sm rounded-md text-white/60 hover:text-white data-[state=active]:bg-volt data-[state=active]:text-carbon-950 data-[state=active]:font-semibold transition-colors"
               >
                 {TAB_LABELS[k]}
               </Tabs.Trigger>

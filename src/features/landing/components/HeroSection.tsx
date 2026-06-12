@@ -16,7 +16,7 @@ export function HeroSection() {
       className="relative min-h-[88vh] flex items-center justify-center overflow-hidden"
     >
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-forest-dark via-forest-mid to-forest-dark" />
+      <div className="absolute inset-0 bg-gradient-to-b from-carbon-950 via-carbon-900 to-carbon-950" />
 
       {/* Decorative glow circles */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-volt/5 rounded-full blur-3xl" />
@@ -47,7 +47,7 @@ export function HeroSection() {
             <div className="hero-animate flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 to="/kalkulator"
-                className="inline-flex items-center justify-center gap-2 bg-volt hover:bg-volt-bright text-forest-dark font-sans font-bold py-4 px-8 rounded-xl transition-all hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 bg-volt hover:bg-volt-bright text-carbon-950 font-sans font-bold py-4 px-8 rounded-xl transition-all hover:scale-105"
               >
                 <Zap className="w-5 h-5" />
                 Coba Kalkulator
@@ -94,7 +94,7 @@ export function HeroSection() {
               />
               <Link
                 to="/kalkulator"
-                className="absolute -bottom-4 -left-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-volt/40 transition-colors"
+                className="absolute -bottom-4 -left-4 bg-carbon-900/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-volt/40 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
@@ -108,7 +108,7 @@ export function HeroSection() {
               </Link>
               <Link
                 to="/tco-calculator"
-                className="absolute -top-4 -right-4 bg-forest-mid/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-[#27AE60]/40 transition-colors"
+                className="absolute -top-4 -right-4 bg-carbon-900/90 backdrop-blur-md rounded-xl p-4 border border-white/10 shadow-xl hover:border-[#27AE60]/40 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#27AE60]/20 rounded-lg flex items-center justify-center">

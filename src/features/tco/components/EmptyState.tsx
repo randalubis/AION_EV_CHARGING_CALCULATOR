@@ -6,7 +6,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ onSelectExample }: EmptyStateProps) {
   return (
-    <div className="bg-forest-mid/30 rounded-2xl p-12 border border-white/10 text-center">
+    <div className="bg-carbon-900/30 rounded-2xl p-12 border border-white/10 text-center">
       <div className="flex justify-center gap-4 mb-6">
         <div className="w-16 h-16 bg-[#27AE60]/20 rounded-2xl flex items-center justify-center">
           <Zap className="w-8 h-8 text-[#27AE60]" />
@@ -30,7 +30,7 @@ export function EmptyState({ onSelectExample }: EmptyStateProps) {
       {onSelectExample && (
         <button
           onClick={onSelectExample}
-          className="inline-flex items-center gap-2 bg-volt hover:bg-volt-bright text-forest-dark font-semibold px-6 py-3 rounded-xl transition-all"
+          className="inline-flex items-center gap-2 bg-volt hover:bg-volt-bright text-carbon-950 font-semibold px-6 py-3 rounded-xl transition-all"
         >
           Contoh Perbandingan
           <ArrowRight className="w-4 h-4" />
@@ -38,19 +38,19 @@ export function EmptyState({ onSelectExample }: EmptyStateProps) {
       )}
       
       <div className="grid md:grid-cols-3 gap-4 mt-8 text-left">
-        <div className="bg-forest-dark/50 rounded-xl p-4">
+        <div className="bg-carbon-950/50 rounded-xl p-4">
           <div className="text-volt font-semibold text-sm mb-1">1. Pilih Kendaraan</div>
           <p className="text-white/50 text-xs">
             Pilih EV dan mobil bensin yang ingin dibandingkan
           </p>
         </div>
-        <div className="bg-forest-dark/50 rounded-xl p-4">
+        <div className="bg-carbon-950/50 rounded-xl p-4">
           <div className="text-volt font-semibold text-sm mb-1">2. Atur Penggunaan</div>
           <p className="text-white/50 text-xs">
             Tentukan jarak tempuh tahunan dan pola charging
           </p>
         </div>
-        <div className="bg-forest-dark/50 rounded-xl p-4">
+        <div className="bg-carbon-950/50 rounded-xl p-4">
           <div className="text-volt font-semibold text-sm mb-1">3. Lihat Hasil</div>
           <p className="text-white/50 text-xs">
             Analisis biaya total dan penghematan

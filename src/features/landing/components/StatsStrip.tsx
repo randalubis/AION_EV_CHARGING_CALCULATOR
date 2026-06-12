@@ -52,7 +52,7 @@ function CountUp({ value }: { value: number }) {
 
 export function StatsStrip() {
   return (
-    <section className="py-16 bg-forest-mid/30 border-y border-white/5">
+    <section className="py-16 bg-carbon-900/30 border-y border-white/5">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((stat) => (

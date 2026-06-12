@@ -64,8 +64,8 @@ export function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
           isScrolled
-            ? 'bg-forest-dark/95 backdrop-blur-md border-b border-white/10'
-            : 'bg-forest-dark'
+            ? 'bg-carbon-950/95 backdrop-blur-md border-b border-white/10'
+            : 'bg-carbon-950'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -73,7 +73,7 @@ export function Navbar() {
             {/* Logo */}
             <NavLink href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 bg-volt rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
-                <Zap className="w-6 h-6 text-forest-dark" />
+                <Zap className="w-6 h-6 text-carbon-950" />
               </div>
               <span className="text-white font-sans font-bold text-xl tracking-tight">
                 evhub<span className="text-volt">.id</span>
@@ -88,7 +88,7 @@ export function Navbar() {
                   href={link.href}
                   className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${
                     isActive(link.href)
-                      ? 'bg-volt text-forest-dark'
+                      ? 'bg-volt text-carbon-950'
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -128,7 +128,7 @@ export function Navbar() {
 
         {/* Menu Panel */}
         <div
-          className={`absolute top-20 left-4 right-4 bg-forest-mid rounded-2xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 ${
+          className={`absolute top-20 left-4 right-4 bg-carbon-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 ${
             isMobileMenuOpen
               ? 'translate-y-0 opacity-100'
               : '-translate-y-4 opacity-0'
@@ -143,7 +143,7 @@ export function Navbar() {
                   href={link.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-body font-medium transition-all ${
                     isActive(link.href)
-                      ? 'bg-volt text-forest-dark'
+                      ? 'bg-volt text-carbon-950'
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >

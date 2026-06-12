@@ -31,7 +31,7 @@ export function UsageInput({
   return (
     <div className="grid md:grid-cols-2 gap-6">
       {/* Annual Distance */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
             <MapPin className="w-5 h-5 text-volt" />
@@ -50,8 +50,8 @@ export function UsageInput({
               onClick={() => onAnnualKmChange(km)}
               className={`py-2 px-1 rounded-lg text-xs font-medium transition-all ${
                 annualKm === km
-                  ? 'bg-volt text-forest-dark'
-                  : 'bg-forest-dark border border-white/10 text-white/70 hover:border-white/30'
+                  ? 'bg-volt text-carbon-950'
+                  : 'bg-carbon-950 border border-white/10 text-white/70 hover:border-white/30'
               }`}
             >
               {(km / 1000)}K
@@ -65,7 +65,7 @@ export function UsageInput({
             type="number"
             value={annualKm}
             onChange={(e) => onAnnualKmChange(parseInt(e.target.value) || 0)}
-            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-volt focus:outline-none"
+            className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-volt focus:outline-none"
             min={0}
             step={1000}
           />
@@ -80,7 +80,7 @@ export function UsageInput({
       </div>
       
       {/* Ownership Duration */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-volt/20 rounded-lg flex items-center justify-center">
             <span className="text-volt font-bold text-sm">Yr</span>
@@ -98,8 +98,8 @@ export function UsageInput({
               onClick={() => onOwnershipYearsChange(years)}
               className={`py-3 rounded-xl text-center font-semibold transition-all ${
                 ownershipYears === years
-                  ? 'bg-volt text-forest-dark'
-                  : 'bg-forest-dark border border-white/10 text-white/70 hover:border-white/30'
+                  ? 'bg-volt text-carbon-950'
+                  : 'bg-carbon-950 border border-white/10 text-white/70 hover:border-white/30'
               }`}
             >
               <div className="text-xl">{years}</div>
@@ -118,7 +118,7 @@ export function UsageInput({
               if (val >= 1 && val <= 20) onOwnershipYearsChange(val);
             }}
             placeholder="Lainnya (6-20 thn)"
-            className="w-full bg-forest-dark border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-volt focus:outline-none placeholder:text-white/30"
+            className="w-full bg-carbon-950 border border-white/20 rounded-lg px-4 py-3 text-white font-medium focus:border-volt focus:outline-none placeholder:text-white/30"
             min={6}
             max={20}
           />
@@ -133,7 +133,7 @@ export function UsageInput({
       </div>
       
       {/* Electricity Settings */}
-      <div className="bg-forest-mid/50 rounded-2xl p-6 border border-white/10 md:col-span-2">
+      <div className="bg-carbon-900/50 rounded-2xl p-6 border border-white/10 md:col-span-2">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-[#27AE60]/20 rounded-lg flex items-center justify-center">
             <Zap className="w-5 h-5 text-[#27AE60]" />
@@ -157,17 +157,17 @@ export function UsageInput({
                   onClick={() => onElectricityRateChange(rate.category)}
                   className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all text-left ${
                     electricityRateCategory === rate.category
-                      ? 'bg-volt border-volt text-forest-dark'
-                      : 'bg-forest-dark border-white/10 text-white hover:border-white/30'
+                      ? 'bg-volt border-volt text-carbon-950'
+                      : 'bg-carbon-950 border-white/10 text-white hover:border-white/30'
                   }`}
                 >
                   <div>
                     <div className="font-medium text-sm">{rate.name}</div>
-                    <div className={`text-xs ${electricityRateCategory === rate.category ? 'text-forest-dark/70' : 'text-white/50'}`}>
+                    <div className={`text-xs ${electricityRateCategory === rate.category ? 'text-carbon-950/70' : 'text-white/50'}`}>
                       {rate.description}
                     </div>
                   </div>
-                  <div className={`font-bold text-sm ${electricityRateCategory === rate.category ? 'text-forest-dark' : 'text-volt'}`}>
+                  <div className={`font-bold text-sm ${electricityRateCategory === rate.category ? 'text-carbon-950' : 'text-volt'}`}>
                     Rp {rate.ratePerKwh.toLocaleString('id-ID')}
                   </div>
                 </button>
@@ -182,7 +182,7 @@ export function UsageInput({
             </label>
             
             {/* Slider */}
-            <div className="bg-forest-dark rounded-xl p-4 border border-white/10 mb-4">
+            <div className="bg-carbon-950 rounded-xl p-4 border border-white/10 mb-4">
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-white/70 flex items-center gap-1">
                   <Home className="w-4 h-4" /> Rumah
@@ -225,7 +225,7 @@ export function UsageInput({
                   className={`py-2 rounded-lg text-sm font-medium transition-all ${
                     homeChargingPercentage === pct
                       ? 'bg-[#27AE60] text-white'
-                      : 'bg-forest-dark border border-white/10 text-white/70 hover:border-white/30'
+                      : 'bg-carbon-950 border border-white/10 text-white/70 hover:border-white/30'
                   }`}
                 >
                   {pct}%

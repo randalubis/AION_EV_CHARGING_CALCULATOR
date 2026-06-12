@@ -5,7 +5,7 @@ export function CalculationMethodology() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-forest-mid/30 rounded-2xl border border-white/10 overflow-hidden">
+    <div className="bg-carbon-900/30 rounded-2xl border border-white/10 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-colors"
@@ -25,7 +25,7 @@ export function CalculationMethodology() {
       {isOpen && (
         <div className="px-6 pb-6 space-y-6">
           {/* Formula */}
-          <div className="bg-forest-dark/50 rounded-xl p-4 border border-white/10">
+          <div className="bg-carbon-950/50 rounded-xl p-4 border border-white/10">
             <div className="text-volt font-medium mb-2">Rumus TCO</div>
             <div className="text-white font-mono text-sm">
               TCO = Harga Beli + Biaya Operasional - Nilai Sisa

@@ -139,7 +139,7 @@ function LocateButton({ onLocate }: LocateButtonProps) {
           );
         }
       }}
-      className="absolute bottom-24 right-6 z-[1000] w-10 h-10 bg-volt/90 text-forest-dark rounded-lg shadow-lg hover:bg-volt-dim transition-colors flex items-center justify-center pointer-events-auto"
+      className="absolute bottom-24 right-6 z-[1000] w-10 h-10 bg-volt/90 text-carbon-950 rounded-lg shadow-lg hover:bg-volt-dim transition-colors flex items-center justify-center pointer-events-auto"
       title="Lokasi saya"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -305,7 +305,7 @@ export function MapView({
 
 function LegendOverlay() {
   return (
-    <div className="absolute bottom-4 left-4 z-[1000] bg-forest-dark/85 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 text-xs flex flex-col gap-1.5 pointer-events-none">
+    <div className="absolute bottom-4 left-4 z-[1000] bg-carbon-950/85 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 text-xs flex flex-col gap-1.5 pointer-events-none">
       <span className="flex items-center gap-2 text-white/70">
         <LegendDot color="#27AE60">⚡</LegendDot>
         Tersedia

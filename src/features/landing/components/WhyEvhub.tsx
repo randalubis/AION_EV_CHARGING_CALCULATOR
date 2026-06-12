@@ -21,7 +21,7 @@ export function WhyEvhub() {
             return (
               <div
                 key={prop.title}
-                className="why-card bg-forest-mid/40 border border-white/10 rounded-2xl p-6 hover:border-volt/30 transition"
+                className="why-card bg-carbon-900/40 border border-white/10 rounded-2xl p-6 hover:border-volt/30 transition"
               >
                 <div className="w-11 h-11 rounded-lg bg-volt/15 flex items-center justify-center">
                   <Icon className="w-5 h-5 text-volt" aria-hidden />
