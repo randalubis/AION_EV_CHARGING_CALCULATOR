@@ -1,6 +1,9 @@
 import { HeroCover } from '../features/landing/components/HeroCover';
-import { ToolsGrid } from '../features/landing/components/ToolsGrid';
+import { BrandMarquee } from '../features/landing/components/BrandMarquee';
+import { ToolsBento } from '../features/landing/components/ToolsBento';
+import { MapTeaser } from '../features/landing/components/MapTeaser';
 import { HowItWorks } from '../features/landing/components/HowItWorks';
+import { Testimonials } from '../features/landing/components/Testimonials';
 import { WhyEvhub } from '../features/landing/components/WhyEvhub';
 import { FAQSection } from '../features/landing/components/FAQSection';
 import { FinalCTA } from '../features/landing/components/FinalCTA';
@@ -10,8 +13,11 @@ export default function LandingPage() {
   return (
     <div className="relative w-full">
       <HeroCover />
-      <ToolsGrid />
+      <BrandMarquee />
+      <ToolsBento />
+      <MapTeaser />
       <HowItWorks />
+      <Testimonials />
       <WhyEvhub />
       <FAQSection />
       <FinalCTA />

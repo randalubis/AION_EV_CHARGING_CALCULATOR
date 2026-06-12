@@ -21,7 +21,11 @@ const SOCIAL_ICONS: Record<string, LucideIcon> = {
 
 export function LandingFooter() {
   return (
-    <footer className="py-16 border-t border-white/10">
+    <footer className="relative py-16 border-t border-white/10">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-volt/40 to-transparent"
+      />
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}

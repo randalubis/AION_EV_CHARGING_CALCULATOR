@@ -19,7 +19,7 @@ export function FAQSection() {
           {faqConfig.faqs.map((faq) => (
             <details
               key={faq.id}
-              className="group bg-carbon-900/50 rounded-xl border border-white/10 overflow-hidden"
+              className="group bg-carbon-900/50 rounded-xl border border-white/10 open:border-volt/30 transition-colors overflow-hidden"
             >
               <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
                 <span className="text-white font-semibold pr-4">{faq.question}</span>
